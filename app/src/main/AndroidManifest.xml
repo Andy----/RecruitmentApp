@@ -18,7 +18,8 @@
         </activity>
         <activity
             android:name=".secondScreen"
-            android:label="@string/title_activity_second_screen" >
+            android:label="@string/title_activity_second_screen"
+            android:theme="@style/AppTheme">
         </activity>
     </application>
 
