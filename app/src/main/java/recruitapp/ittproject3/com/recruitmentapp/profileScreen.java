@@ -14,8 +14,7 @@ import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 
 
-public class profileScreen extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+public class profileScreen extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
