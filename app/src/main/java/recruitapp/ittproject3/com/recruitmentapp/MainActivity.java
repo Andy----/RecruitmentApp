@@ -40,7 +40,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void onGetClick(View view) {
-        Intent getScreenIntent = new Intent(this, secondScreen.class);
+        Intent getScreenIntent = new Intent(this, profileScreen.class);
         startActivity(getScreenIntent);
     }
 }
