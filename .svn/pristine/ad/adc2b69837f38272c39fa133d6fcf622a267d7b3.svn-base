@@ -1,0 +1,116 @@
+<!-- A DrawerLayout is intended to be used as the top-level content view using match_parent for both width and height to consume the full space available. -->
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:id="@+id/drawer_layout"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    tools:context="recruitapp.ittproject3.com.recruitmentapp.profileScreen">
+
+    <!-- As the main content view, the view below consumes the entire
+         space available using match_parent in both dimensions. -->
+    <RelativeLayout android:id="@+id/container" android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="180dp"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentTop="true"
+            android:padding="20dp"
+            android:background="#CCCCCC"
+            android:id="@+id/relativeLayout">
+
+            <ImageView
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:id="@+id/profileImage"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:src="@drawable/blank_profile"
+                android:padding="5dp"
+                android:background="#FFF"
+                android:layout_marginRight="10dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Name"
+                android:textSize="20sp"
+                android:textColor="#000"
+                android:id="@+id/nameText"
+                android:layout_above="@+id/locationText"
+                android:layout_toRightOf="@+id/profileImage"
+                android:layout_toEndOf="@+id/profileImage" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Location"
+                android:textSize="20sp"
+                android:textColor="#000"
+                android:drawableRight="@drawable/map_marker"
+                android:id="@+id/locationText"
+                android:layout_alignBottom="@+id/profileImage"
+                android:layout_toRightOf="@+id/profileImage"
+                android:layout_toEndOf="@+id/profileImage" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/editProfileButton"
+                android:text="edit profile"
+                android:textColor="#000"
+                android:textSize="12sp"
+                android:drawableLeft="@drawable/pencil_icon"
+                android:background="@drawable/buttonshape"
+                android:layout_alignTop="@+id/profileImage"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Information"
+            android:id="@+id/textView"
+            android:layout_below="@+id/relativeLayout"
+            android:layout_centerHorizontal="true"
+            android:background="#ADADAD"
+            android:padding="10dp"/>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@+id/textView"
+            android:layout_centerHorizontal="true"
+            android:padding="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="QUALIFICATIONS"
+                android:textSize="20sp"
+                android:textColor="#000"
+                android:id="@+id/qualificationsHeading"
+                 />
+
+            </LinearLayout>
+
+    </RelativeLayout>
+
+    <!-- android:layout_gravity="start" tells DrawerLayout to treat
+         this as a sliding drawer on the left side for left-to-right
+         languages and on the right side for right-to-left languages.
+         If you're not building against API 17 or higher, use
+         android:layout_gravity="left" instead. -->
+    <!-- The drawer is given a fixed width in dp and extends the full height of
+         the container. -->
+    <fragment android:id="@+id/navigation_drawer"
+        android:layout_width="@dimen/navigation_drawer_width" android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:name="recruitapp.ittproject3.com.recruitmentapp.NavigationDrawerFragment"
+        tools:layout="@layout/fragment_navigation_drawer" />
+
+</android.support.v4.widget.DrawerLayout>
+<!-- From: file:/C:/Users/Andrew/OneDrive/AndroidStudioProjects/RecruitmentApp/app/src/main/res/layout/activity_profile_screen.xml -->
