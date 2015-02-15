@@ -28,7 +28,8 @@
                 android:src="@drawable/blank_profile"
                 android:padding="5dp"
                 android:background="#FFF"
-                android:layout_marginRight="10dp" />
+                android:layout_marginRight="10dp"
+                android:clickable="true"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -57,7 +58,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/editProfileButton"
-                android:text="edit profile"
+                android:text=" edit profile"
                 android:textColor="#000"
                 android:textSize="12sp"
                 android:drawableLeft="@drawable/pencil_icon"
@@ -71,11 +72,11 @@
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Information"
+            android:text=""
             android:id="@+id/textView"
             android:layout_below="@+id/relativeLayout"
             android:layout_centerHorizontal="true"
-            android:background="#ADADAD"
+            android:background="#6e8398"
             android:padding="10dp"/>
 
         <LinearLayout
@@ -86,14 +87,29 @@
             android:layout_centerHorizontal="true"
             android:padding="20dp">
 
-            <TextView
+            <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="QUALIFICATIONS"
-                android:textSize="20sp"
+                android:id="@+id/uploadCVButton"
+                android:text=" Upload CV"
                 android:textColor="#000"
-                android:id="@+id/qualificationsHeading"
-                 />
+                android:textSize="20sp"
+                android:drawableLeft="@drawable/upload_icon"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="20dp"
+                android:padding="15dp" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/beginIntroButton"
+                android:text=" Add introduction video"
+                android:textColor="#000"
+                android:textSize="20sp"
+                android:drawableLeft="@drawable/add_video_icon"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="20dp"
+                android:padding="15dp" />
 
             </LinearLayout>
 
