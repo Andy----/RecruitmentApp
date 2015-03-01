@@ -1,6 +1,7 @@
 package recruitapp.ittproject3.com.recruitmentapp;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -141,4 +142,8 @@ public class profileScreen extends ActionBarActivity
         }
     }
 
+    public void onGetClick(View view) {
+        Intent getScreenIntent = new Intent(this, videoScreen.class);
+        startActivity(getScreenIntent);
+    }
 }
