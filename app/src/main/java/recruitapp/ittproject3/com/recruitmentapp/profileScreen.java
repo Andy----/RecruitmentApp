@@ -14,7 +14,8 @@ import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 
 
-public class profileScreen extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+public class profileScreen extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks
+{
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -44,16 +45,29 @@ public class profileScreen extends ActionBarActivity implements NavigationDrawer
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
+        Fragment fragment = null;
         FragmentManager fragmentManager = getSupportFragmentManager();
+
+        switch(position) {
+            default:
+            case 0:
+                fragment = new ProfileFragment().newInstance(position + 1);
+                break;
+            case 1:
+                fragment = new InterviewFragment().newInstance(position + 1);
+                break;
+        }
+
         fragmentManager.beginTransaction()
-                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
+                .replace(R.id.container, fragment)
                 .commit();
     }
 
     public void onSectionAttached(int number) {
         switch (number) {
             case 1:
-                mTitle = "Profile";
+                mTitle = getString(R.string.title_section1);
+
                 break;
             case 2:
                 mTitle = getString(R.string.title_section2);
@@ -97,10 +111,14 @@ public class profileScreen extends ActionBarActivity implements NavigationDrawer
         return super.onOptionsItemSelected(item);
     }
 
+    // Image chooser for profile image
+    public void profileImageClick() {
+    }
+
     /**
-     * A placeholder fragment containing a simple view.
+     * USER PROFILE FRAGMENT.
      */
-    public static class PlaceholderFragment extends Fragment {
+    public static class ProfileFragment extends Fragment {
         /**
          * The fragment argument representing the section number for this
          * fragment.
@@ -111,15 +129,15 @@ public class profileScreen extends ActionBarActivity implements NavigationDrawer
          * Returns a new instance of this fragment for the given section
          * number.
          */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
+        public static ProfileFragment newInstance(int sectionNumber) {
+            ProfileFragment fragment = new ProfileFragment();
             Bundle args = new Bundle();
             args.putInt(ARG_SECTION_NUMBER, sectionNumber);
             fragment.setArguments(args);
             return fragment;
         }
 
-        public PlaceholderFragment() {
+        public ProfileFragment() {
         }
 
         @Override
@@ -137,4 +155,44 @@ public class profileScreen extends ActionBarActivity implements NavigationDrawer
         }
     }
 
+
+    /**
+     * INTERVIEW SCREEN FRAGMENT.
+     */
+    public static class InterviewFragment extends Fragment {
+        /**
+         * The fragment argument representing the section number for this
+         * fragment.
+         */
+        private static final String ARG_SECTION_NUMBER = "section_number";
+
+        /**
+         * Returns a new instance of this fragment for the given section
+         * number.
+         */
+        public static InterviewFragment newInstance(int sectionNumber) {
+            InterviewFragment fragment = new InterviewFragment();
+            Bundle args = new Bundle();
+            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+            fragment.setArguments(args);
+            return fragment;
+        }
+
+        public InterviewFragment() {
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_interview_screen, container, false);
+            return rootView;
+        }
+
+        @Override
+        public void onAttach(Activity activity) {
+            super.onAttach(activity);
+            ((profileScreen) activity).onSectionAttached(
+                    getArguments().getInt(ARG_SECTION_NUMBER));
+        }
+    }
 }
