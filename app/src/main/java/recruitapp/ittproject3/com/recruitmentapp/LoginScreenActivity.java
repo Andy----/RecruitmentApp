@@ -8,12 +8,12 @@ import android.view.MenuItem;
 import android.view.View;
 
 
-public class MainActivity extends ActionBarActivity {
+public class LoginScreenActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login_screen);
     }
 
 
@@ -40,7 +40,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void onGetClick(View view) {
-        Intent getScreenIntent = new Intent(this, profileScreen.class);
+        Intent getScreenIntent = new Intent(this, UserProfileInterviewScreenActivity.class);
         startActivity(getScreenIntent);
     }
 }
