@@ -46,4 +46,14 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="44dp"
         android:onClick="onGetClick"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Sign up?"
+        android:id="@+id/textView"
+        android:layout_below="@+id/loginButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp" />
 </RelativeLayout>
