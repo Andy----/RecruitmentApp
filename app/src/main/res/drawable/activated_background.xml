@@ -1,0 +1,4 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@color/menu_highlight_color" android:state_activated="true" />
+    <item android:drawable="@android:color/transparent" />
+</selector>
