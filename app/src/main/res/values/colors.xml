@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="dark_background_color" type="color">#16171a</item>
+    <item name="light_background_color" type="color">#16171a</item>
+    <item name="menu_highlight_color" type="color">#333439</item>
+    <item name="recruit_blue_color" type="color">#226bb3</item>
+    <item name="light_blue" type="color">#D9226bb3</item>
+</resources>
