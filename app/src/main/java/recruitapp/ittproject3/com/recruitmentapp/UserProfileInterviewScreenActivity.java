@@ -1,5 +1,8 @@
 package recruitapp.ittproject3.com.recruitmentapp;
 
+import android.content.Intent;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -8,20 +11,25 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.widget.DrawerLayout;
+import android.view.View;
+import android.widget.Toast;
+
+import java.io.File;
 
 
 public class UserProfileInterviewScreenActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks
 {
-
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
-
+    static final int REQUEST_VIDEO_CAPTURE = 1;
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
+
+    File mediaFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +44,7 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
     }
 
     @Override
@@ -68,6 +77,7 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
             case 2:
                 mTitle = getString(R.string.title_section2);
                 break;
+
         }
     }
 
@@ -77,7 +87,6 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(mTitle);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -110,6 +119,56 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
     // Image chooser for profile image
     public void profileImageClick() {
     }
+
+
+    // Creates a directory in the app cache to store the videos if one does not exist
+    // Creates the file to store the video and passes control to the android camera
+    public void buttonOnClickRecord(View v){
+        File newDir = new File(getExternalCacheDir(), "RecruitSwift");
+        if(!newDir.isDirectory())
+            newDir.mkdirs();
+        else
+            Toast.makeText(this, "Dir already exist", Toast.LENGTH_LONG).show();
+
+        if(newDir.canWrite())
+            mediaFile = new File(newDir, "myvideo.mp4");
+        else
+            Toast.makeText(this, "Dir not writable", Toast.LENGTH_LONG).show();
+
+
+        Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        if (takeVideoIntent.resolveActivity(getPackageManager()) != null) {
+
+            Uri videoUri = Uri.fromFile(mediaFile);
+            takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri);
+            startActivityForResult(takeVideoIntent, REQUEST_VIDEO_CAPTURE);
+        }
+    }
+
+
+    // Call the VideoPlayerActivity and start it
+    public void buttonOnClickView(View v){
+
+        Intent intent = new Intent(this, VideoPlayerActivity.class);
+        this.startActivity(intent);
+        }
+
+
+    // This Method gives you information about the buttonOnClickRecord method
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
+
+            Toast.makeText(this, "Video saved to:\n" +
+                    data.getData(), Toast.LENGTH_LONG).show();
+        } else if (resultCode == RESULT_CANCELED) {
+            Toast.makeText(this, "Video recording cancelled.",
+                    Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this, "Failed to record video",
+                    Toast.LENGTH_LONG).show();
+        }
+        }
 
 
 }

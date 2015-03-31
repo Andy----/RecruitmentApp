@@ -83,9 +83,11 @@
             android:text=" Upload CV"
             android:textColor="#000"
             android:textSize="15sp"
+
             android:drawableLeft="@drawable/upload_icon"
             android:layout_gravity="center_horizontal"
             android:layout_margin="20dp"
+
             android:padding="15dp" />
 
             <Button
@@ -95,10 +97,24 @@
             android:text=" Add introduction video"
             android:textColor="#000"
             android:textSize="15sp"
+            android:onClick="buttonOnClickRecord"
             android:drawableLeft="@drawable/add_video_icon"
             android:layout_gravity="center_horizontal"
             android:layout_margin="20dp"
             android:padding="15dp" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/viewVideoButton"
+                android:text=" View introduction video"
+                android:textColor="#000"
+                android:textSize="15sp"
+                android:onClick="buttonOnClickView"
+                android:drawableLeft="@drawable/add_video_icon"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="20dp"
+                android:padding="15dp" />
 
         </LinearLayout>
     </LinearLayout>

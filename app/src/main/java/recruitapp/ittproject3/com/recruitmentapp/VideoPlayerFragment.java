@@ -2,15 +2,14 @@ package recruitapp.ittproject3.com.recruitmentapp;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 /**
- * USER PROFILE FRAGMENT.
+ * VIDEO PLAYER FRAGMENT.
  */
-public class ProfileFragment extends Fragment {
+public class VideoPlayerFragment extends android.support.v4.app.Fragment {
     /**
      * The fragment argument representing the section number for this
      * fragment.
@@ -21,21 +20,21 @@ public class ProfileFragment extends Fragment {
      * Returns a new instance of this fragment for the given section
      * number.
      */
-    public static ProfileFragment newInstance(int sectionNumber) {
-        ProfileFragment fragment = new ProfileFragment();
+    public static VideoPlayerFragment newInstance(int sectionNumber) {
+        VideoPlayerFragment fragment = new VideoPlayerFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_SECTION_NUMBER, sectionNumber);
         fragment.setArguments(args);
         return fragment;
     }
 
-    public ProfileFragment() {
+    public VideoPlayerFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_profile_screen, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_video_player, container, false);
         return rootView;
     }
 
@@ -45,6 +44,5 @@ public class ProfileFragment extends Fragment {
         ((UserProfileInterviewScreenActivity) activity).onSectionAttached(
                 getArguments().getInt(ARG_SECTION_NUMBER));
     }
-
 
 }
