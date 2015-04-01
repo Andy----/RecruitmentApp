@@ -8,13 +8,26 @@ import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.widget.Toast;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.protocol.ClientContext;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HttpContext;
+import org.apache.http.util.EntityUtils;
+
 import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
 
 
 public class UserProfileInterviewScreenActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks
@@ -120,7 +133,6 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
     public void profileImageClick() {
     }
 
-
     // Creates a directory in the app cache to store the videos if one does not exist
     // Creates the file to store the video and passes control to the android camera
     public void buttonOnClickRecord(View v){
@@ -153,6 +165,11 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
         this.startActivity(intent);
         }
 
+    public void buttonOnClickUpload(View v){
+
+        Intent intent = new Intent(this, JSONActivity.class);
+        this.startActivity(intent);
+    }
 
     // This Method gives you information about the buttonOnClickRecord method
     @Override
@@ -169,6 +186,7 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
                     Toast.LENGTH_LONG).show();
         }
         }
+
 
 
 }

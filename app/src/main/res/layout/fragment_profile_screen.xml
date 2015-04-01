@@ -35,6 +35,7 @@
                 android:id="@+id/profileImage"
                 android:layout_centerHorizontal="true"
                 android:src="@drawable/profile_photo"/>
+
         </RelativeLayout>
 
         <TextView
@@ -111,6 +112,19 @@
                 android:textColor="#000"
                 android:textSize="15sp"
                 android:onClick="buttonOnClickView"
+                android:drawableLeft="@drawable/add_video_icon"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="20dp"
+                android:padding="15dp" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/buttonOnClickUpload"
+                android:text=" View JSON"
+                android:textColor="#000"
+                android:textSize="15sp"
+                android:onClick="buttonOnClickUpload"
                 android:drawableLeft="@drawable/add_video_icon"
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="20dp"

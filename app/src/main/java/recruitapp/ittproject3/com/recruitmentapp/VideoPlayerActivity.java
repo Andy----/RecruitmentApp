@@ -7,6 +7,14 @@ import android.view.MenuItem;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+
+import org.json.JSONObject;
+
 public class VideoPlayerActivity extends ActionBarActivity {
 
 
@@ -28,6 +36,8 @@ public class VideoPlayerActivity extends ActionBarActivity {
 
         videoView.start();
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
