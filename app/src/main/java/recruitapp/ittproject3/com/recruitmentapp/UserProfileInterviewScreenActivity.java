@@ -41,7 +41,6 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
-
     File mediaFile;
 
     @Override

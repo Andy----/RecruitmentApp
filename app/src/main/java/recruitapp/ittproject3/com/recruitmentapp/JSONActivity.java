@@ -14,20 +14,30 @@ import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class JSONActivity extends ActionBarActivity {
 
     private TextView mTextView;
+    Map<String, String> myMap;
+    File myFile;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_json);
+        myFile  = new File(getExternalCacheDir() + "/RecruitSwift/myvideo.mp4");
+        mTextView = (TextView) findViewById(R.id.text);
+        myMap = new HashMap<>();
     }
 
     public void getJsonBtn(View v){
-
-        mTextView = (TextView) findViewById(R.id.text);
 
         JsonObjectRequest request = new JsonObjectRequest("http://192.168.1.2:9000/json", null,
                 new Response.Listener<JSONObject>() {
@@ -58,8 +68,26 @@ public class JSONActivity extends ActionBarActivity {
 
     public void postJsonBtn(View v){
 
+        MultipartRequest request = new MultipartRequest("http://192.168.1.2:9000/jsonPost", myFile, myMap,
+                new Response.Listener<String>() {
 
+                    @Override
+                    public void onResponse(String response) {
 
+                        mTextView.setText(response.toString());
+                    }
+                },
+
+                new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        mTextView.setText(error.toString());
+                    }
+                }
+        );
+        request.addStringBody("param1", "test-1");
+        VolleyApplication.getInstance().getRequestQueue().add(request);
     }
 
     @Override
