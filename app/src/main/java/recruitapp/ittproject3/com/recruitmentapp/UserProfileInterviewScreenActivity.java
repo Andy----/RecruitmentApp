@@ -73,6 +73,9 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
             case 1:
                 fragment = new InterviewFragment().newInstance(position + 1);
                 break;
+            case 2:
+                fragment = new EditProfileFragment().newInstance(position + 1);
+                break;
         }
 
         fragmentManager.beginTransaction()
@@ -82,11 +85,11 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
 
     public void onSectionAttached(int number) {
         switch (number) {
-            case 1:
+            case 0:
                 mTitle = getString(R.string.title_section1);
 
                 break;
-            case 2:
+            case 1:
                 mTitle = getString(R.string.title_section2);
                 break;
 
