@@ -8,26 +8,15 @@ import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.widget.Toast;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.protocol.ClientContext;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.HttpContext;
-import org.apache.http.util.EntityUtils;
+
 
 import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
 
 
 public class UserProfileInterviewScreenActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks
@@ -85,12 +74,18 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
 
     public void onSectionAttached(int number) {
         switch (number) {
+            default:
             case 0:
-                mTitle = getString(R.string.title_section1);
-
+                mTitle = getString(R.string.title_section0);
+//                mTitle = "Edit Profile";
                 break;
             case 1:
+               mTitle = getString(R.string.title_section1);
+//                mTitle = "Profile";
+                break;
+            case 2:
                 mTitle = getString(R.string.title_section2);
+//                mTitle = "Interview";
                 break;
 
         }
@@ -188,7 +183,4 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
                     Toast.LENGTH_LONG).show();
         }
         }
-
-
-
 }
