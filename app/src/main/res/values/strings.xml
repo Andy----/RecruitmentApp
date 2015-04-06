@@ -9,16 +9,14 @@
     <string name="profile_age">29</string>
     <string name="title_section1">Profile</string>
     <string name="title_section2">Interview</string>
+    <string name="title_section0">Edit Profile</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>
     <string name="btnUploadToServer">Upload</string>
 
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_video_player">VideoPlayerActivity</string>
 
-    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_video_player">VideoPlayerActivity</string>
     <string name="title_activity_upload">UploadActivity</string>
     <string name="title_activity_json">JSONActivity</string>
 
