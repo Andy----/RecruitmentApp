@@ -20,6 +20,7 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
 import android.util.Log;
 import android.widget.Toast;
 
@@ -27,26 +28,29 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request.Method;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 
 
 public class LoginScreenActivity extends ActionBarActivity {
 
     // LogCat tag
-    private static final String TAG = LoginScreenActivity.class.getSimpleName();
+    private static final String TAG = RegisterActivity.class.getSimpleName();
     private EditText emailIn, passwordIn;
-    private Button submit;
+    private Button submit, signup;
     private ProgressDialog pDialog;
     private SessionManager session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_login_screen);
 
         emailIn = (EditText) findViewById(R.id.emailInput);
         passwordIn = (EditText) findViewById(R.id.passwordInput);
         submit = (Button) findViewById(R.id.loginButton);
+        signup = (Button) findViewById(R.id.signupButton);
 
         // Progress dialog
         pDialog = new ProgressDialog(this);
@@ -117,63 +121,64 @@ public class LoginScreenActivity extends ActionBarActivity {
         pDialog.setMessage("Logging in ...");
         showDialog();
 
-        StringRequest strReq = new StringRequest(Method.POST, AppConfig.URL_LOGIN, new Response.Listener<String>() {
+        Map<String, String> postParams = new HashMap<String, String>();
+        postParams.put("email", email);
+        postParams.put("password", password);
 
-            @Override
-            public void onResponse(String response) {
-                Log.d(TAG, "Login Response: " + response.toString());
-                hideDialog();
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Method.POST, AppConfig.URL_LOGIN, new JSONObject(postParams),
+                new Response.Listener<JSONObject>() {
 
-                try {
-                    JSONObject jObj = new JSONObject(response);
-                    boolean error = jObj.getBoolean("error");
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d(TAG, response.toString());
+                        pDialog.setMessage(response.toString());
+                        hideDialog();
 
-                    // Check for error node in json
-                    if (!error) {
-                        // user successfully logged in
-                        // Create login session
-                        session.setLogin(true);
+                        try {
+                            boolean error = response.getBoolean("error");
 
-                        // Launch main activity
-                        Intent intent = new Intent(LoginScreenActivity.this, UserProfileInterviewScreenActivity.class);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        // Error in login. Get the error message
-                        String errorMsg = jObj.getString("error_msg");
-                        Toast.makeText(getApplicationContext(),
-                                errorMsg, Toast.LENGTH_LONG).show();
+                            // Check for error node in json
+                            if (!error) {
+                                // user successfully logged in
+                                // Create login session
+                                session.setLogin(true);
+
+                                // Launch main activity
+                                Intent intent = new Intent(LoginScreenActivity.this, UserProfileInterviewScreenActivity.class);
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                // Error in login. Get the error message
+                                String errorMsg = response.getString("error_msg");
+                                Toast.makeText(getApplicationContext(),
+                                        errorMsg, Toast.LENGTH_LONG).show();
+                            }
+                        } catch (JSONException e) {
+                            // JSON error
+                            e.printStackTrace();
+                        }
                     }
-                } catch (JSONException e) {
-                    // JSON error
-                    e.printStackTrace();
-                }
-
-            }
-        }, new Response.ErrorListener() {
+                }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                VolleyLog.d(TAG, "Error: " + error.getMessage());
                 hideDialog();
             }
         }) {
 
             @Override
-            protected Map<String, String> getParams() {
-                // Posting parameters to login url
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("tag", "login");
-                params.put("email", email);
-                params.put("password", password);
-
-                return params;
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json");
+                headers.put( "charset", "utf-8");
+                return headers;
             }
 
         };
 
         // Adding request to request queue
-        VolleyApplication.getInstance().addToRequestQueue(strReq, tag_string_req);
+        VolleyApplication.getInstance().addToRequestQueue(jsonObjReq, tag_string_req);
     }
 
     private void showDialog() {

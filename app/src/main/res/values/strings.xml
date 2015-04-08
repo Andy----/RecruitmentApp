@@ -12,9 +12,8 @@
     <string name="title_section0">Edit Profile</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="action_example">Example action</string>
+    <string name="action_logout">Logout</string>
     <string name="btnUploadToServer">Upload</string>
-
 
     <string name="title_activity_video_player">VideoPlayerActivity</string>
     <string name="title_activity_upload">UploadActivity</string>

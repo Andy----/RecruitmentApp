@@ -12,11 +12,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
-
-
 import java.io.File;
+
+import recruitapp.ittproject3.com.recruitmentapp.helper.SQLiteHandler;
+import recruitapp.ittproject3.com.recruitmentapp.helper.SessionManager;
 
 
 public class UserProfileInterviewScreenActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks
@@ -31,20 +33,31 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
      */
     private CharSequence mTitle;
     File mediaFile;
+    private SessionManager session;
+    private SQLiteHandler db;
+    private Button btnLogout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile_interview_screen);
 
-        mNavigationDrawerFragment = (NavigationDrawerFragment)
-                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
+        mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
 
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
+        btnLogout = (Button) findViewById(R.id.action_logout);
+
+        // Session manager
+        session = new SessionManager(getApplicationContext());
+
+        if (!session.isLoggedIn()) {
+            logoutUser();
+        }
 
     }
 
@@ -104,7 +117,7 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
-            getMenuInflater().inflate(R.menu.second_screen, menu);
+            getMenuInflater().inflate(R.menu.menu_user_profile_screen, menu);
             restoreActionBar();
             return true;
         }
@@ -183,4 +196,19 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
                     Toast.LENGTH_LONG).show();
         }
         }
+
+    /**
+     * Logging out the user. Will set isLoggedIn flag to false in shared
+     * preferences Clears the user data from sqlite users table
+     * */
+    private void logoutUser() {
+        session.setLogin(false);
+
+        db.deleteUsers();
+
+        // Launching the login activity
+        Intent intent = new Intent(UserProfileInterviewScreenActivity.this, LoginScreenActivity.class);
+        startActivity(intent);
+        finish();
+    }
 }

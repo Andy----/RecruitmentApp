@@ -50,12 +50,12 @@
         android:layout_marginTop="44dp"
         android:onClick="OnClick"/>
 
-    <TextView
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Sign up?"
-        android:id="@+id/textView"
+        android:id="@+id/signupButton"
         android:layout_below="@+id/loginButton"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="25dp" />

@@ -1,0 +1,15 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="recruitapp.ittproject3.com.recruitmentapp.UserProfileInterviewScreenActivity">
+
+    <!-- Logout, should appear as action button -->
+    <item android:id="@+id/action_logout" android:title="@string/action_logout"
+        app:showAsAction="ifRoom" />
+
+    <!--<item android:id="@+id/action_example" android:title="@string/action_example"-->
+        <!--android:showAsAction="withText|ifRoom" />-->
+
+    <!--<item android:id="@+id/action_settings" android:title="@string/action_settings"-->
+        <!--android:orderInCategory="100" android:showAsAction="never" />-->
+</menu>

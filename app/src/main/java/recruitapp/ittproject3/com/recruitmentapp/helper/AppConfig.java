@@ -6,6 +6,12 @@ package recruitapp.ittproject3.com.recruitmentapp.helper;
 
 
 public class AppConfig {
+
+    private static String URL = "http://192.168.0.27:9000";
+
     // Server user login url
-    public static String URL_LOGIN = "http://192.168.0.27:9000/androidlogin";
+    public static String URL_LOGIN = URL + "/androidlogin";
+
+    // Server register URL
+    public static String URL_REGISTER = URL + "/androidregister";
 }
