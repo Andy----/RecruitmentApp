@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="dark_background_color" type="color">#16171a</item>
+    <item name="dark_background_color1" type="color">#16171a</item>
+    <item name="dark_background_color" type="color">#2e3237</item>
     <item name="light_background_color" type="color">#16171a</item>
     <item name="menu_highlight_color" type="color">#333439</item>
     <item name="recruit_blue_color" type="color">#226bb3</item>
     <item name="light_blue" type="color">#D9226bb3</item>
 
     <color name="bg_login">#26ae90</color>
-    <color name="bg_register">#2e3237</color>
     <color name="bg_main">#428bca</color>
     <color name="white">#ffffff</color>
     <color name="input_login">#222222</color>
     <color name="input_login_hint">#999999</color>
-    <color name="input_register">#888888</color>
-    <color name="input_register_bg">#3b4148</color>
-    <color name="input_register_hint">#5e6266</color>
+    <color name="input_text">#888888</color>
+    <color name="input_bg">#3b4148</color>
+    <color name="input_hint">#5e6266</color>
     <color name="btn_login">#26ae90</color>
     <color name="btn_login_bg">#eceef1</color>
     <color name="lbl_name">#333333</color>

@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/bg_register"
+    android:background="@color/dark_background_color"
     android:gravity="center"
     android:orientation="vertical"
     android:padding="10dp" >
@@ -15,44 +15,99 @@
         android:paddingLeft="20dp"
         android:paddingRight="20dp" >
 
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
+
+            <Spinner
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/reg_spinner"
+                android:spinnerMode="dropdown"
+                android:layout_marginLeft="-10dp"
+                style="@style/spinnerStyle" />
+
+            <EditText
+                android:id="@+id/firstName"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@color/input_bg"
+                android:hint="@string/hint_first_name"
+                android:padding="10dp"
+                android:singleLine="true"
+                android:orientation="horizontal"
+                android:inputType="textCapWords"
+                android:textColor="@color/input_text"
+                android:textColorHint="@color/input_hint" />
+        </LinearLayout>
+
         <EditText
-            android:id="@+id/name"
+            android:id="@+id/lastName"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:background="@color/input_register_bg"
-            android:hint=""
+            android:background="@color/input_bg"
+            android:hint="@string/hint_last_name"
             android:padding="10dp"
             android:singleLine="true"
             android:inputType="textCapWords"
-            android:textColor="@color/input_register"
-            android:textColorHint="@color/input_register_hint" />
+            android:textColor="@color/input_text"
+            android:textColorHint="@color/input_hint" />
+
+        <EditText
+            android:id="@+id/city"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@color/input_bg"
+            android:hint="@string/hint_city"
+            android:inputType="textCapWords"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:textColor="@color/input_text"
+            android:textColorHint="@color/input_hint" />
 
         <EditText
             android:id="@+id/email"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:background="@color/input_register_bg"
-            android:hint=""
+            android:background="@color/input_bg"
+            android:hint="@string/hint_email"
             android:inputType="textEmailAddress"
             android:padding="10dp"
             android:singleLine="true"
-            android:textColor="@color/input_register"
-            android:textColorHint="@color/input_register_hint" />
+            android:textColor="@color/input_text"
+            android:textColorHint="@color/input_hint" />
 
         <EditText
             android:id="@+id/password"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:background="@color/input_register_bg"
-            android:hint=""
+            android:background="@color/input_bg"
+            android:hint="@string/hint_password"
             android:inputType="textPassword"
             android:padding="10dp"
             android:singleLine="true"
-            android:textColor="@color/input_register"
-            android:textColorHint="@color/input_register_hint" />
+            android:textColor="@color/input_text"
+            android:textColorHint="@color/input_hint" />
+
+        <EditText
+            android:id="@+id/passwordConfirm"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@color/input_bg"
+            android:hint="@string/hint_password_confirm"
+            android:inputType="textPassword"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:textColor="@color/input_text"
+            android:textColorHint="@color/input_hint" />
 
         <!-- Login Button -->
 
@@ -61,8 +116,8 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dip"
-            android:background="#ea4c88"
-            android:text=""
+            android:background="@color/light_blue"
+            android:text="Sign Up"
             android:textColor="@color/white" />
 
         <!-- Link to Login Screen -->
@@ -73,7 +128,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="40dip"
             android:background="@null"
-            android:text=""
+            android:text="Already Registered? Login"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="15dp" />
