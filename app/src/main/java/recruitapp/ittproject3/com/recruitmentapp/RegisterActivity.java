@@ -55,19 +55,19 @@ public class RegisterActivity extends Activity {
         pDialog.setCancelable(false);
 
         // Session manager
-        session = new SessionManager(getApplicationContext());
+//        session = new SessionManager(getApplicationContext());
 
         // SQLite database handler
-        db = new SQLiteHandler(getApplicationContext());
+//        db = new SQLiteHandler(getApplicationContext());
 
         // Check if user is already logged in or not
-        if (session.isLoggedIn()) {
-            // User is already logged in. Take him to main activity
-            Intent intent = new Intent(RegisterActivity.this,
-                    UserProfileInterviewScreenActivity.class);
-            startActivity(intent);
-            finish();
-        }
+//        if (session.isLoggedIn()) {
+//            // User is already logged in. Take him to main activity
+//            Intent intent = new Intent(RegisterActivity.this,
+//                    UserProfileInterviewScreenActivity.class);
+//            startActivity(intent);
+//            finish();
+//        }
 
         // Register Button Click event
         btnRegister.setOnClickListener(new View.OnClickListener() {
@@ -137,7 +137,7 @@ public class RegisterActivity extends Activity {
                         String profileImage = user.getString("profileImage");
 
                         // Inserting row in users table
-                        db.addUser(appId, firstName, lastName, email, city, cvFilePath, profileImage);
+//                        db.addUser(appId, firstName, lastName, email, city, cvFilePath, profileImage);
 
                         // Launch login activity
                         Intent intent = new Intent(
