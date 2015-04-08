@@ -31,16 +31,22 @@
         <activity
             android:name=".UserProfileInterviewScreenActivity"
             android:label="@string/title_activity_profile_interview_screen"
-            android:theme="@style/AppTheme" >
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden">>
         </activity>
         <activity
             android:name=".RegisterActivity"
             android:label="@string/title_activity_register_screen"
-            android:theme="@style/AppTheme" >
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden">>
         </activity>
         <activity
             android:name=".VideoPlayerActivity"
-            android:label="@string/title_activity_video_player" >
+            android:label="@string/title_activity_video_player"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden">>
         </activity>
         <activity
             android:name=".JSONActivity"
