@@ -29,10 +29,13 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 
     // Login Table Columns names
     private static final String KEY_ID = "id";
-    private static final String KEY_NAME = "name";
+    private static final String KEY_FIRST_NAME = "first_name";
+    private static final String KEY_LAST_NAME = "last_name";
     private static final String KEY_EMAIL = "email";
-    private static final String KEY_UID = "uid";
-    private static final String KEY_CREATED_AT = "created_at";
+    private static final String KEY_CITY = "city";
+    private static final String KEY_APP_ID = "app_id";
+    private static final String KEY_CV_PATH = "cvFilePath";
+    private static final String KEY_PROFILE_IMAGE_PATH = "profileImage";
 
     public SQLiteHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -42,9 +45,10 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_LOGIN_TABLE = "CREATE TABLE " + TABLE_LOGIN + "("
-                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT,"
-                + KEY_EMAIL + " TEXT UNIQUE," + KEY_UID + " TEXT,"
-                + KEY_CREATED_AT + " TEXT" + ")";
+                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_FIRST_NAME + " TEXT,"
+                + KEY_LAST_NAME + " TEXT," + KEY_EMAIL + " TEXT UNIQUE,"
+                + KEY_CITY + " TEXT," + KEY_APP_ID + " INTEGER,"
+                + KEY_CV_PATH + " TEXT" + KEY_PROFILE_IMAGE_PATH + " TEXT" + ")";
         db.execSQL(CREATE_LOGIN_TABLE);
 
         Log.d(TAG, "Database tables created");
@@ -63,14 +67,17 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     /**
      * Storing user details in database
      * */
-    public void addUser(String name, String email, String uid, String created_at) {
+    public void addUser(Long app_id, String firstName, String lastName, String email, String city, String cvFilePath, String profileImage) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(KEY_NAME, name); // Name
-        values.put(KEY_EMAIL, email); // Email
-        values.put(KEY_UID, uid); // Email
-        values.put(KEY_CREATED_AT, created_at); // Created At
+        values.put(KEY_APP_ID, app_id);
+        values.put(KEY_FIRST_NAME, firstName);
+        values.put(KEY_LAST_NAME, lastName);
+        values.put(KEY_EMAIL, email);
+        values.put(KEY_CITY, city);
+        values.put(KEY_CV_PATH, cvFilePath);
+        values.put(KEY_PROFILE_IMAGE_PATH, profileImage);
 
         // Inserting Row
         long id = db.insert(TABLE_LOGIN, null, values);
@@ -91,10 +98,13 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         // Move to first row
         cursor.moveToFirst();
         if (cursor.getCount() > 0) {
-            user.put("name", cursor.getString(1));
-            user.put("email", cursor.getString(2));
-            user.put("uid", cursor.getString(3));
-            user.put("created_at", cursor.getString(4));
+            user.put("app_id" ,cursor.getString(1));
+            user.put("firstName", cursor.getString(2));
+            user.put("lastName",cursor.getString(3));
+            user.put("email" , cursor.getString(4));
+            user.put("city" ,cursor.getString(5));
+            user.put("cvFilePath" ,cursor.getString(6));
+            user.put("profileImage" ,cursor.getString(7));
         }
         cursor.close();
         db.close();

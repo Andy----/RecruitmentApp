@@ -250,11 +250,6 @@ public class NavigationDrawerFragment extends Fragment {
             return true;
         }
 
-        if (item.getItemId() == R.id.action_logout) {
-
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
