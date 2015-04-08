@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.Activity;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -32,14 +32,13 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 
 
-public class LoginScreenActivity extends ActionBarActivity {
+public class LoginScreenActivity extends Activity {
 
     // LogCat tag
     private static final String TAG = RegisterActivity.class.getSimpleName();
     private EditText emailIn, passwordIn;
-    private Button submit, signup;
     private ProgressDialog pDialog;
-//    private SessionManager session;
+    private SessionManager session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,23 +48,23 @@ public class LoginScreenActivity extends ActionBarActivity {
 
         emailIn = (EditText) findViewById(R.id.emailInput);
         passwordIn = (EditText) findViewById(R.id.passwordInput);
-        submit = (Button) findViewById(R.id.loginButton);
-        signup = (Button) findViewById(R.id.signupButton);
+        Button submit = (Button) findViewById(R.id.loginButton);
+        Button signUp = (Button) findViewById(R.id.signupButton);
 
         // Progress dialog
         pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);
 
         // Session manager
-//        session = new SessionManager(getApplicationContext());
-
+        session = new SessionManager(getApplicationContext());
+        session.setLogin(false);
         // Check if user is already logged in or not
-//        if (session.isLoggedIn()) {
-//            // IF user is already logged in. Redirect to main activity
-//            Intent intent = new Intent(LoginScreenActivity.this, UserProfileInterviewScreenActivity.class);
-//            startActivity(intent);
-//            finish();
-//        }
+        if (session.isLoggedIn()) {
+            // IF user is already logged in. Redirect to main activity
+            Intent intent = new Intent(LoginScreenActivity.this, UserProfileInterviewScreenActivity.class);
+            startActivity(intent);
+            finish();
+        }
 
         // Login button Click Event
         submit.setOnClickListener(new View.OnClickListener() {
@@ -86,28 +85,18 @@ public class LoginScreenActivity extends ActionBarActivity {
             }
 
         });
-    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
+        signUp.setOnClickListener(new View.OnClickListener() {
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+            public void onClick(View view) {
+                // Launch main activity
+                Intent intent = new Intent(LoginScreenActivity.this, RegisterActivity.class);
+                startActivity(intent);
+                finish();
+            }
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+        });
 
-        return super.onOptionsItemSelected(item);
     }
 
 
@@ -141,7 +130,7 @@ public class LoginScreenActivity extends ActionBarActivity {
                             if (!error) {
                                 // user successfully logged in
                                 // Create login session
-//                                session.setLogin(true);
+                                session.setLogin(true);
 
                                 // Launch main activity
                                 Intent intent = new Intent(LoginScreenActivity.this, UserProfileInterviewScreenActivity.class);
