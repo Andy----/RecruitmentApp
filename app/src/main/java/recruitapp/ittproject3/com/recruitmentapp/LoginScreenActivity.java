@@ -39,7 +39,7 @@ public class LoginScreenActivity extends ActionBarActivity {
     private EditText emailIn, passwordIn;
     private Button submit, signup;
     private ProgressDialog pDialog;
-    private SessionManager session;
+//    private SessionManager session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,15 +57,15 @@ public class LoginScreenActivity extends ActionBarActivity {
         pDialog.setCancelable(false);
 
         // Session manager
-        session = new SessionManager(getApplicationContext());
+//        session = new SessionManager(getApplicationContext());
 
         // Check if user is already logged in or not
-        if (session.isLoggedIn()) {
-            // IF user is already logged in. Redirect to main activity
-            Intent intent = new Intent(LoginScreenActivity.this, UserProfileInterviewScreenActivity.class);
-            startActivity(intent);
-            finish();
-        }
+//        if (session.isLoggedIn()) {
+//            // IF user is already logged in. Redirect to main activity
+//            Intent intent = new Intent(LoginScreenActivity.this, UserProfileInterviewScreenActivity.class);
+//            startActivity(intent);
+//            finish();
+//        }
 
         // Login button Click Event
         submit.setOnClickListener(new View.OnClickListener() {
@@ -141,7 +141,7 @@ public class LoginScreenActivity extends ActionBarActivity {
                             if (!error) {
                                 // user successfully logged in
                                 // Create login session
-                                session.setLogin(true);
+//                                session.setLogin(true);
 
                                 // Launch main activity
                                 Intent intent = new Intent(LoginScreenActivity.this, UserProfileInterviewScreenActivity.class);

@@ -128,13 +128,16 @@ public class RegisterActivity extends Activity {
                         String uid = jObj.getString("uid");
 
                         JSONObject user = jObj.getJSONObject("user");
-                        String name = user.getString("name");
+                        Long appId = user.getLong("app_id");
+                        String firstName = user.getString("first_name");
+                        String lastName = user.getString("last_name");
                         String email = user.getString("email");
-                        String created_at = user
-                                .getString("created_at");
+                        String city = user.getString("city");
+                        String cvFilePath = user.getString("cvFilePath");
+                        String profileImage = user.getString("profileImage");
 
                         // Inserting row in users table
-                        db.addUser(name, email, uid, created_at);
+                        db.addUser(appId, firstName, lastName, email, city, cvFilePath, profileImage);
 
                         // Launch login activity
                         Intent intent = new Intent(

@@ -132,7 +132,8 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (item.getItemId() == R.id.action_logout) {
+            logoutUser();
             return true;
         }
 
@@ -201,10 +202,10 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
      * Logging out the user. Will set isLoggedIn flag to false in shared
      * preferences Clears the user data from sqlite users table
      * */
-    private void logoutUser() {
+    public void logoutUser() {
         session.setLogin(false);
 
-        db.deleteUsers();
+//        db.deleteUsers();
 
         // Launching the login activity
         Intent intent = new Intent(UserProfileInterviewScreenActivity.this, LoginScreenActivity.class);
