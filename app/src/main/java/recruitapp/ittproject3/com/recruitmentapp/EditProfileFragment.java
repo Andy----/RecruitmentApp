@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,6 +23,8 @@ public class EditProfileFragment extends Fragment {
      */
     private static final String ARG_SECTION_NUMBER = "section_number";
     private JSONObject jsonObject;
+    private TextView mTextView = null;
+    private View rootView;
     /**
      * Returns a new instance of this fragment for the given section
      * number.
@@ -41,7 +44,13 @@ public class EditProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_edit_profile, container, false);
+         rootView = inflater.inflate(R.layout.fragment_edit_profile, container, false);
+
+        try {
+            setUserDetails();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         return rootView;
     }
 
@@ -57,5 +66,17 @@ public class EditProfileFragment extends Fragment {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void setUserDetails() throws JSONException {
+
+        UserDetails setDetails = new UserDetails(jsonObject);
+        mTextView = (TextView) rootView.findViewById(R.id.cityText);
+        mTextView.setText(setDetails.getCity());
+        mTextView = (TextView) rootView.findViewById(R.id.emailText);
+        mTextView.setText(setDetails.getEmail());
+        mTextView = (TextView) rootView.findViewById(R.id.nameText);
+        mTextView.setText(setDetails.getFirstName() + " " + setDetails.getSurname());
+
     }
 }

@@ -23,8 +23,8 @@ public class ProfileFragment extends Fragment {
      */
     private static final String ARG_SECTION_NUMBER = "section_number";
     private JSONObject jsonObject =null;
-    private TextView mTextView;
-
+    private TextView mTextView = null;
+    private View rootView;
     /**
      * Returns a new instance of this fragment for the given section
      * number.
@@ -43,8 +43,13 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_profile_screen, container, false);
-//        mTextView = (TextView) getView().findViewById(R.id.AgeView);
+        rootView = inflater.inflate(R.layout.fragment_profile_screen, container, false);
+
+        try {
+            setUserDetails();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         return rootView;
     }
 
@@ -54,7 +59,6 @@ public class ProfileFragment extends Fragment {
         String userProfileString= getArguments().getString("JsonString");
         try {
              jsonObject = new JSONObject(userProfileString);
-            setUserDetails();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -64,8 +68,12 @@ public class ProfileFragment extends Fragment {
     public void setUserDetails() throws JSONException {
 
         UserDetails setDetails = new UserDetails(jsonObject);
+        mTextView = (TextView) rootView.findViewById(R.id.cityView);
+        mTextView.setText(setDetails.getCity());
+        mTextView = (TextView) rootView.findViewById(R.id.emailView);
+        mTextView.setText(setDetails.getEmail());
+        mTextView = (TextView) rootView.findViewById(R.id.nameView);
+        mTextView.setText(setDetails.getFirstName() + " " + setDetails.getSurname());
 
-        System.out.println(setDetails.getCity());
-//        mTextView.setText(setDetails.getCity());
     }
 }
