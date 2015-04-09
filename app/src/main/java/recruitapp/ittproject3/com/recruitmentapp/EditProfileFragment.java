@@ -7,6 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import recruitapp.ittproject3.com.recruitmentapp.helper.UserDetails;
+
 /**
  * USER PROFILE FRAGMENT.
  */
@@ -16,7 +21,7 @@ public class EditProfileFragment extends Fragment {
      * fragment.
      */
     private static final String ARG_SECTION_NUMBER = "section_number";
-
+    private JSONObject jsonObject;
     /**
      * Returns a new instance of this fragment for the given section
      * number.
@@ -32,6 +37,7 @@ public class EditProfileFragment extends Fragment {
     public EditProfileFragment() {
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -42,9 +48,14 @@ public class EditProfileFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        ((UserProfileInterviewScreenActivity) activity).onSectionAttached(
-                getArguments().getInt(ARG_SECTION_NUMBER));
+        if (getArguments() != null) {
+            String userProfileString= getArguments().getString("JsonString");
+
+            try {
+                jsonObject = new JSONObject(userProfileString);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
-
-
 }

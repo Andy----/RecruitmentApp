@@ -15,10 +15,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 
 import recruitapp.ittproject3.com.recruitmentapp.helper.SQLiteHandler;
 import recruitapp.ittproject3.com.recruitmentapp.helper.SessionManager;
+import recruitapp.ittproject3.com.recruitmentapp.helper.UserDetails;
 
 
 public class UserProfileInterviewScreenActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks
@@ -36,6 +40,9 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
     private SessionManager session;
     private SQLiteHandler db;
     private Button btnLogout;
+    private Bundle bundle = new Bundle();
+    String JsonString = "";
+    JSONObject Jsonobj = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +66,16 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
             logoutUser();
         }
 
+        try {
+            Jsonobj = new JSONObject(getIntent().getStringExtra("userDetailsClass"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonString = Jsonobj.toString();
+        bundle.putString("JsonString", JsonString);
     }
+
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
@@ -71,12 +87,14 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
             default:
             case 0:
                 fragment = new ProfileFragment().newInstance(position + 1);
+                fragment.setArguments(bundle);
                 break;
             case 1:
                 fragment = new InterviewFragment().newInstance(position + 1);
                 break;
             case 2:
                 fragment = new EditProfileFragment().newInstance(position + 1);
+                fragment.setArguments(bundle);
                 break;
         }
 
@@ -89,16 +107,16 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
         switch (number) {
             default:
             case 0:
-                mTitle = getString(R.string.title_section0);
-//                mTitle = "Edit Profile";
+//                mTitle = getString(R.string.title_section0);
+                mTitle = "Edit Profile";
                 break;
             case 1:
-               mTitle = getString(R.string.title_section1);
-//                mTitle = "Profile";
+//               mTitle = getString(R.string.title_section1);
+                mTitle = "Profile";
                 break;
             case 2:
-                mTitle = getString(R.string.title_section2);
-//                mTitle = "Interview";
+//                mTitle = getString(R.string.title_section2);
+                mTitle = "Interview";
                 break;
 
         }

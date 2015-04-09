@@ -1,5 +1,4 @@
-<com.nirhart.parallaxscroll.views.ParallaxScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.nirhart.parallaxscroll.views.ParallaxScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -11,7 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -25,152 +24,172 @@
                 android:layout_height="match_parent"
                 android:id="@+id/profileImage"
                 android:layout_centerHorizontal="true"
-                android:src="@drawable/profile_photo"
-                android:contentDescription="image1" />
+                android:src="@drawable/profile_photo"/>
+
         </RelativeLayout>
 
         <EditText
-            android:layout_width="fill_parent"
-            android:layout_height="65dp"
-            android:text="@string/profile_name"
-            android:id="@+id/profileTextHeader"
-            android:background="@color/light_blue"
-            android:textColor="#FFF"
-            android:textSize="30sp"
-            android:gravity="center_vertical"
-            android:paddingLeft="10dp"
-            android:inputType="none" />
+        android:layout_width="fill_parent"
+        android:layout_height="65dp"
+        android:text="@string/profile_name"
+        android:id="@+id/profileTextHeader"
+        android:background="@color/light_blue"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textColor="#FFF"
+        android:textSize="30dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="700dp"
+            android:orientation="vertical"
             android:background="@color/dark_background_color"
-            tools:ignore="HardcodedText"
-            android:textColor="#ffffff"
-            android:paddingLeft="10dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Age: "
-                android:textSize="@dimen/profile_below"
-                android:textColor="@android:color/white"
-                android:id="@+id/ageText"/>
-
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/editText"
-                android:text="29"
-                android:textColor="#ffffff"
-                android:inputType="number|numberDecimal"
-                android:autoText="false"
-                android:textSize="@dimen/profile_below" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@color/dark_background_color"
-            tools:ignore="HardcodedText"
-            android:textColor="#ffffff"
-            android:paddingLeft="10dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Location: "
-                android:textSize="@dimen/profile_below"
-                android:textColor="@android:color/white"
-                />
-
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Dublin"
-                android:textColor="#ffffff"
-                android:inputType="number|numberDecimal"
-                android:autoText="false"
-                android:textSize="@dimen/profile_below" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@color/dark_background_color"
-            android:paddingLeft="10dp"
+            android:padding="10dp"
             tools:ignore="HardcodedText"
             android:textColor="#ffffff">
 
-            <Button
+            <GridLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/beginIntroButton"
-                android:text=" Add Intro video"
-                android:textColor="#000"
-                android:textSize="15sp"
-                android:onClick="buttonOnClickRecord"
-                android:drawableLeft="@drawable/add_video_icon"
-                android:layout_gravity="center_horizontal"
-                android:padding="10dp"
-                android:paddingBottom="5dp" />
-        </LinearLayout>
+                android:rowCount="8"
+                android:columnCount="5">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Age: "
+                    android:textSize="@dimen/profile_below"
+                    android:textColor="@android:color/white"
+                    android:id="@+id/ageText"
+                    android:layout_row="0"
+                    android:layout_column="0"
+                    android:padding="10dp" />
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/editText"
+                    android:text="29"
+                    android:textColor="#ffffff"
+                    android:inputType="number|numberDecimal"
+                    android:autoText="false"
+                    android:textSize="@dimen/profile_below"
+                    android:layout_row="0"
+                    android:layout_column="1"
+                    android:padding="10dp" />
+
+                <Space
+                    android:layout_row="0"
+                    android:layout_column="2"
+                    android:layout_width="100dp"
+                    android:layout_height="10dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Location: "
+                    android:textSize="@dimen/profile_below"
+                    android:textColor="@android:color/white"
+                    android:layout_row="1"
+                    android:layout_column="0"
+                    android:padding="10dp" />
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Dublin"
+                    android:textColor="#ffffff"
+                    android:inputType="number|numberDecimal"
+                    android:autoText="false"
+                    android:textSize="@dimen/profile_below"
+                    android:layout_row="1"
+                    android:layout_column="1"
+                    android:padding="10dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Email: "
+                    android:textSize="@dimen/profile_below"
+                    android:textColor="@android:color/white"
+                    android:layout_row="3"
+                    android:layout_column="0"
+                    android:padding="10dp" />
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="jobswift@gmail.com"
+                    android:textColor="#ffffff"
+                    android:inputType="number|numberDecimal"
+                    android:autoText="false"
+                    android:textSize="@dimen/profile_below"
+                    android:layout_row="3"
+                    android:layout_column="1"
+                    android:padding="10dp" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/beginIntroButton"
+                    android:text=" Add Intro video"
+                    android:textColor="#000"
+                    android:textSize="15sp"
+                    android:onClick="buttonOnClickRecord"
+                    android:drawableLeft="@drawable/add_video_icon"
+                    android:padding="10dp"
+                    android:paddingBottom="5dp"
+                    android:layout_gravity="left"
+                    android:layout_row="4"
+                    android:layout_column="0"
+                    android:layout_columnSpan="2" />
+
+                <Space
+                    android:layout_row="4"
+                    android:layout_column="1"
+                    android:layout_width="100dp"
+                    android:layout_height="10dp" />
+
+                <Button
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/uploadCVButton"
+                    android:text=" Add CV"
+                    android:textColor="#000"
+                    android:textSize="15sp"
+                    android:drawableLeft="@drawable/upload_icon"
+                    android:paddingBottom="5dp"
+                    android:padding="10dp"
+                    android:layout_gravity="left"
+                    android:layout_row="5"
+                    android:layout_column="0" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/buttonOnClickUpload"
+                    android:text=" Save"
+                    android:textColor="#000"
+                    android:textSize="15sp"
+                    android:onClick="buttonOnClickUpload"
+
+                    android:layout_gravity="left|center_horizontal"
+                    android:paddingBottom="5dp"
+                    android:padding="10dp"
+                    android:layout_row="7"
+                    android:layout_column="0" />
 
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@color/dark_background_color"
-            tools:ignore="HardcodedText"
-            android:textColor="#ffffff"
-            android:paddingLeft="10dp">
+            </GridLayout>
 
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/uploadCVButton"
-                android:text=" Add CV"
-                android:textColor="#000"
-                android:textSize="15sp"
-                android:drawableLeft="@drawable/upload_icon"
-                android:layout_gravity="center_horizontal"
-                android:paddingBottom="5dp"
-                android:padding="10dp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@color/dark_background_color"
-            tools:ignore="HardcodedText"
-            android:textColor="#ffffff"
-            android:paddingLeft="10dp">
-
-
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/buttonOnClickUpload"
-                android:text=" Save"
-                android:textColor="#000"
-                android:textSize="15sp"
-                android:onClick="buttonOnClickUpload"
-
-                android:layout_gravity="center_horizontal"
-                android:paddingBottom="5dp"
-                android:padding="10dp" />
         </LinearLayout>
 
 
     </LinearLayout>
 
 </com.nirhart.parallaxscroll.views.ParallaxScrollView>
+
 
 
