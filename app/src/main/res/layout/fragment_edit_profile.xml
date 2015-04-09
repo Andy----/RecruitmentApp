@@ -32,7 +32,7 @@
         android:layout_width="fill_parent"
         android:layout_height="65dp"
         android:text="@string/profile_name"
-        android:id="@+id/profileTextHeader"
+        android:id="@+id/nameText"
         android:background="@color/light_blue"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
@@ -43,7 +43,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="700dp"
+            android:layout_height="300dp"
             android:orientation="vertical"
             android:background="@color/dark_background_color"
             android:padding="10dp"
@@ -70,7 +70,7 @@
                 <EditText
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/editText"
+                    android:id="@+id/ageText"
                     android:text="29"
                     android:textColor="#ffffff"
                     android:inputType="number|numberDecimal"
@@ -106,7 +106,8 @@
                     android:textSize="@dimen/profile_below"
                     android:layout_row="1"
                     android:layout_column="1"
-                    android:padding="10dp" />
+                    android:padding="10dp"
+                    android:id="@+id/cityText" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -128,7 +129,8 @@
                     android:textSize="@dimen/profile_below"
                     android:layout_row="3"
                     android:layout_column="1"
-                    android:padding="10dp" />
+                    android:padding="10dp"
+                    android:id="@+id/emailText" />
 
                 <Button
                     android:layout_width="wrap_content"
