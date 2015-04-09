@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cust_view"
+    android:minWidth="60dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="start"
+    android:textSize="18sp"
+    android:background="@color/input_bg"
+    android:textColor="@color/input_text"
+    android:layout_marginBottom="10dp"
+    android:padding="10dp"
+    android:orientation="horizontal"
+    android:textIsSelectable="false"/>
