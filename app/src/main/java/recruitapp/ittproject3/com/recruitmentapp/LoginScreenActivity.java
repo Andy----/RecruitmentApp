@@ -1,4 +1,3 @@
-
 package recruitapp.ittproject3.com.recruitmentapp;
 
 import recruitapp.ittproject3.com.recruitmentapp.helper.*;
@@ -10,7 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.Activity;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -32,14 +31,17 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 
 
-public class LoginScreenActivity extends ActionBarActivity {
+public class LoginScreenActivity extends Activity {
 
     // LogCat tag
     private static final String TAG = RegisterActivity.class.getSimpleName();
     private EditText emailIn, passwordIn;
-    private Button submit, signup;
     private ProgressDialog pDialog;
-//    private SessionManager session;
+    private SessionManager session;
+
+    JSONObject userDetailsObject;
+    private UserDetails userDetailsClass;
+    Bundle bundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,23 +51,26 @@ public class LoginScreenActivity extends ActionBarActivity {
 
         emailIn = (EditText) findViewById(R.id.emailInput);
         passwordIn = (EditText) findViewById(R.id.passwordInput);
-        submit = (Button) findViewById(R.id.loginButton);
-        signup = (Button) findViewById(R.id.signupButton);
+        Button submit = (Button) findViewById(R.id.loginButton);
+        Button signUp = (Button) findViewById(R.id.signupButton);
 
         // Progress dialog
         pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);
 
         // Session manager
-//        session = new SessionManager(getApplicationContext());
-
+        session = new SessionManager(getApplicationContext());
+        session.setLogin(false);
         // Check if user is already logged in or not
-//        if (session.isLoggedIn()) {
-//            // IF user is already logged in. Redirect to main activity
-//            Intent intent = new Intent(LoginScreenActivity.this, UserProfileInterviewScreenActivity.class);
-//            startActivity(intent);
-//            finish();
-//        }
+        if (session.isLoggedIn()) {
+            // IF user is already logged in. Redirect to main activity
+            UserProfileInterviewScreenActivity act = new UserProfileInterviewScreenActivity();
+
+            Intent intent = new Intent(LoginScreenActivity.this, act.getClass());
+
+            startActivity(intent);
+            finish();
+        }
 
         // Login button Click Event
         submit.setOnClickListener(new View.OnClickListener() {
@@ -86,7 +91,23 @@ public class LoginScreenActivity extends ActionBarActivity {
             }
 
         });
+
+        signUp.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View view) {
+                // Launch main activity
+                Intent intent = new Intent(LoginScreenActivity.this, RegisterActivity.class);
+                startActivity(intent);
+                finish();
+            }
+
+        });
+
+
+
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -141,10 +162,14 @@ public class LoginScreenActivity extends ActionBarActivity {
                             if (!error) {
                                 // user successfully logged in
                                 // Create login session
-//                                session.setLogin(true);
+                                session.setLogin(true);
 
                                 // Launch main activity
+                                userDetailsObject = new JSONObject(response.toString());
                                 Intent intent = new Intent(LoginScreenActivity.this, UserProfileInterviewScreenActivity.class);
+
+                                // Pass JSON response object to userDetailsClass class
+                                intent.putExtra("userDetailsClass",userDetailsObject.toString());
                                 startActivity(intent);
                                 finish();
                             } else {
@@ -179,7 +204,14 @@ public class LoginScreenActivity extends ActionBarActivity {
 
         // Adding request to request queue
         VolleyApplication.getInstance().addToRequestQueue(jsonObjReq, tag_string_req);
+
     }
+
+    public void setUserDetails(){
+
+
+
+    };
 
     private void showDialog() {
         if (!pDialog.isShowing())

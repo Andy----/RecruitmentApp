@@ -42,83 +42,108 @@
         android:paddingLeft="10dp" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:orientation="vertical"
             android:background="@color/dark_background_color"
             android:padding="10dp"
             tools:ignore="HardcodedText"
             android:textColor="#ffffff">
 
-            <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Age: "
-            android:textSize="@dimen/profile_below"
-            android:textColor="@android:color/white"
-            android:id="@+id/ageText"/>
-
-            <TextView
+            <GridLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/editText"
-                android:text="29"
-                android:textColor="#ffffff"
-                android:inputType="number|numberDecimal"
-                android:autoText="false"
-                android:textSize="@dimen/profile_below" />
+                android:rowCount="6"
+                android:columnCount="4">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Age: "
+                    android:textSize="@dimen/profile_below"
+                    android:textColor="@android:color/white"
+                    android:id="@+id/ageText"
+                    android:layout_row="0"
+                    android:layout_column="0"
+                    android:layout_rowSpan="2"
+                    android:padding="10dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/AgeView"
+                    android:text="29"
+                    android:textColor="#ffffff"
+                    android:inputType="number|numberDecimal"
+                    android:autoText="false"
+                    android:textSize="@dimen/profile_below"
+                    android:layout_row="0"
+                    android:layout_column="1"
+                    android:padding="10dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Location: "
+                    android:textSize="@dimen/profile_below"
+                    android:textColor="@android:color/white"
+                    android:layout_row="1"
+                    android:layout_column="0"
+                    android:padding="10dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Dublin"
+                    android:textColor="#ffffff"
+                    android:inputType="number|numberDecimal"
+                    android:autoText="false"
+                    android:textSize="@dimen/profile_below"
+                    android:layout_row="1"
+                    android:layout_column="1"
+                    android:padding="10dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Email: "
+                    android:textSize="@dimen/profile_below"
+                    android:textColor="@android:color/white"
+                    android:layout_row="3"
+                    android:layout_column="0"
+                    android:padding="10dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="jobswift@gmail.com"
+                    android:textColor="#ffffff"
+                    android:inputType="number|numberDecimal"
+                    android:autoText="false"
+                    android:textSize="@dimen/profile_below"
+                    android:layout_row="3"
+                    android:layout_column="1"
+                    android:padding="10dp" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/viewVideoButton"
+                    android:text=" View introduction video"
+                    android:textColor="#000"
+                    android:textSize="15sp"
+                    android:onClick="buttonOnClickView"
+                    android:drawableLeft="@drawable/add_video_icon"
+                    android:padding="15dp"
+                    android:layout_gravity="center_vertical"
+                    android:paddingBottom="5dp"
+                    android:layout_row="4"
+                    android:layout_column="0"
+                    android:layout_columnSpan="2" />
+
+            </GridLayout>
+
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@color/dark_background_color"
-            android:padding="10dp"
-            tools:ignore="HardcodedText"
-            android:textColor="#ffffff">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Location: "
-                android:textSize="@dimen/profile_below"
-                android:textColor="@android:color/white"
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Dublin"
-                android:textColor="#ffffff"
-                android:inputType="number|numberDecimal"
-                android:autoText="false"
-                android:textSize="@dimen/profile_below" />
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@color/dark_background_color"
-            android:padding="10dp"
-            tools:ignore="HardcodedText"
-            android:textColor="#ffffff">
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/viewVideoButton"
-                android:text=" View introduction video"
-                android:textColor="#000"
-                android:textSize="15sp"
-                android:onClick="buttonOnClickView"
-                android:drawableLeft="@drawable/add_video_icon"
-                android:layout_gravity="center_horizontal"
-                android:padding="15dp" />
-        </LinearLayout>
-
 
 
     </LinearLayout>
