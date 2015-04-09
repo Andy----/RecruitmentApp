@@ -38,10 +38,13 @@ public class LoginScreenActivity extends Activity {
     private EditText emailIn, passwordIn;
     private ProgressDialog pDialog;
     private SessionManager session;
+<<<<<<< HEAD
 
     JSONObject userDetailsObject;
     private UserDetails userDetailsClass;
     Bundle bundle;
+=======
+>>>>>>> origin/master
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,10 +67,14 @@ public class LoginScreenActivity extends Activity {
         // Check if user is already logged in or not
         if (session.isLoggedIn()) {
             // IF user is already logged in. Redirect to main activity
+<<<<<<< HEAD
             UserProfileInterviewScreenActivity act = new UserProfileInterviewScreenActivity();
 
             Intent intent = new Intent(LoginScreenActivity.this, act.getClass());
 
+=======
+            Intent intent = new Intent(LoginScreenActivity.this, UserProfileInterviewScreenActivity.class);
+>>>>>>> origin/master
             startActivity(intent);
             finish();
         }
@@ -91,6 +98,7 @@ public class LoginScreenActivity extends Activity {
             }
 
         });
+<<<<<<< HEAD
 
         signUp.setOnClickListener(new View.OnClickListener() {
 
@@ -115,20 +123,20 @@ public class LoginScreenActivity extends Activity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
+=======
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        signUp.setOnClickListener(new View.OnClickListener() {
+>>>>>>> origin/master
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+            public void onClick(View view) {
+                // Launch main activity
+                Intent intent = new Intent(LoginScreenActivity.this, RegisterActivity.class);
+                startActivity(intent);
+                finish();
+            }
 
-        return super.onOptionsItemSelected(item);
+        });
+
     }
 
 
