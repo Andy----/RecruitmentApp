@@ -22,6 +22,7 @@ public class ProfileFragment extends Fragment {
      * fragment.
      */
     private static final String ARG_SECTION_NUMBER = "section_number";
+    private static final String JSON_STRING = "JsonString";
     private JSONObject jsonObject =null;
     private TextView mTextView = null;
     private View rootView;
@@ -56,13 +57,16 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        String userProfileString= getArguments().getString("JsonString");
-        try {
-             jsonObject = new JSONObject(userProfileString);
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (getArguments() != null) {
+            String userProfileString = getArguments().getString(JSON_STRING);
+            ((UserProfileInterviewScreenActivity) activity).onSectionAttached(
+                    getArguments().getInt(ARG_SECTION_NUMBER));
+            try {
+                jsonObject = new JSONObject(userProfileString);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
-
     }
 
     public void setUserDetails() throws JSONException {

@@ -10,15 +10,12 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import android.app.Activity;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
 
 import android.util.Log;
 import android.widget.Toast;

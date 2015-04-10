@@ -39,7 +39,7 @@ public class JSONActivity extends ActionBarActivity {
 
     public void getJsonBtn(View v){
 
-        JsonObjectRequest request = new JsonObjectRequest("http://192.168.0.27:9000/json", null,
+        JsonObjectRequest request = new JsonObjectRequest("http://192.168.1.2:9000/json", null,
                 new Response.Listener<JSONObject>() {
 
                     @Override
@@ -68,7 +68,7 @@ public class JSONActivity extends ActionBarActivity {
 
     public void postJsonBtn(View v){
 
-        MultipartRequest request = new MultipartRequest("http://192.168.0.27:9000/jsonPost", myFile, myMap,
+        MultipartRequest request = new MultipartRequest("http://192.168.1.2:9000/jsonPost", myFile, myMap,
                 new Response.Listener<String>() {
 
                     @Override

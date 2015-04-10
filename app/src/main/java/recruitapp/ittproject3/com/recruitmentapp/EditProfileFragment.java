@@ -6,11 +6,21 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+
+import recruitapp.ittproject3.com.recruitmentapp.helper.AppConfig;
 import recruitapp.ittproject3.com.recruitmentapp.helper.UserDetails;
 
 /**
@@ -22,9 +32,12 @@ public class EditProfileFragment extends Fragment {
      * fragment.
      */
     private static final String ARG_SECTION_NUMBER = "section_number";
+    private static final String JSON_STRING = "JsonString";
     private JSONObject jsonObject;
-    private TextView mTextView = null;
+    private TextView mEditText = null;
     private View rootView;
+    private Map<String, String> myMap;
+    private File myFile;
     /**
      * Returns a new instance of this fragment for the given section
      * number.
@@ -44,13 +57,57 @@ public class EditProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-         rootView = inflater.inflate(R.layout.fragment_edit_profile, container, false);
-
+        rootView = inflater.inflate(R.layout.fragment_edit_profile, container, false);
+        myFile  = new File(getActivity().getExternalCacheDir() + "/RecruitSwift/myvideo.mp4");
+        myMap = new HashMap<>();
         try {
             setUserDetails();
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+
+
+
+        Button mButton = (Button) rootView.findViewById(R.id.saveBtn);
+        mButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MultipartRequest request = new MultipartRequest(AppConfig.URL_UPDATE, myFile, myMap,
+                        new Response.Listener<String>() {
+
+                            @Override
+                            public void onResponse(String response) {
+
+                                mEditText.setText(response.toString());
+
+                            }
+                        },
+
+                        new Response.ErrorListener() {
+
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                mEditText.setText(error.toString());
+                            }
+                        }
+                );
+
+                mEditText = (EditText) rootView.findViewById(R.id.nameText);
+                String name = mEditText.getText().toString();
+                String[] names = name.split(" ");
+                String firstName = names[0];
+                String sureName = names[1];
+                myMap.put("param1",firstName);
+                myMap.put("param2", sureName);
+                mEditText = (TextView) rootView.findViewById(R.id.emailText);
+                myMap.put("param3", mEditText.getText().toString());
+                mEditText = (TextView) rootView.findViewById(R.id.cityText);
+                myMap.put("param4", mEditText.getText().toString());
+                VolleyApplication.getInstance().getRequestQueue().add(request);
+            }
+        });
+
         return rootView;
     }
 
@@ -58,8 +115,9 @@ public class EditProfileFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         if (getArguments() != null) {
-            String userProfileString= getArguments().getString("JsonString");
-
+            String userProfileString= getArguments().getString(JSON_STRING);
+            ((UserProfileInterviewScreenActivity) activity).onSectionAttached(
+                    getArguments().getInt(ARG_SECTION_NUMBER));
             try {
                 jsonObject = new JSONObject(userProfileString);
             } catch (JSONException e) {
@@ -71,12 +129,14 @@ public class EditProfileFragment extends Fragment {
     public void setUserDetails() throws JSONException {
 
         UserDetails setDetails = new UserDetails(jsonObject);
-        mTextView = (TextView) rootView.findViewById(R.id.cityText);
-        mTextView.setText(setDetails.getCity());
-        mTextView = (TextView) rootView.findViewById(R.id.emailText);
-        mTextView.setText(setDetails.getEmail());
-        mTextView = (TextView) rootView.findViewById(R.id.nameText);
-        mTextView.setText(setDetails.getFirstName() + " " + setDetails.getSurname());
+        mEditText = (EditText) rootView.findViewById(R.id.cityText);
+        mEditText.setText(setDetails.getCity());
+        mEditText = (EditText) rootView.findViewById(R.id.emailText);
+        mEditText.setText(setDetails.getEmail());
+        mEditText = (EditText) rootView.findViewById(R.id.nameText);
+        mEditText.setText(setDetails.getFirstName() + " " + setDetails.getSurname());
 
     }
+
+
 }

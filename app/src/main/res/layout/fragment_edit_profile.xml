@@ -171,17 +171,18 @@
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:id="@+id/buttonOnClickUpload"
+                    android:id="@+id/saveBtn"
                     android:text=" Save"
                     android:textColor="#000"
                     android:textSize="15sp"
-                    android:onClick="buttonOnClickUpload"
+                    android:onClick="postJsonBtn"
 
                     android:layout_gravity="left|center_horizontal"
                     android:paddingBottom="5dp"
                     android:padding="10dp"
                     android:layout_row="7"
-                    android:layout_column="0" />
+                    android:layout_column="0"
+                    android:nestedScrollingEnabled="true" />
 
 
             </GridLayout>

@@ -42,7 +42,7 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
     private Button btnLogout;
     private Bundle bundle = new Bundle();
     String JsonString = "";
-    JSONObject Jsonobj = null;
+    JSONObject JsonObj = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,13 +66,14 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
             logoutUser();
         }
 
+        // Add user details to Bundle
         try {
-            Jsonobj = new JSONObject(getIntent().getStringExtra("userDetailsClass"));
+            JsonObj = new JSONObject(getIntent().getStringExtra("userDetailsClass"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        JsonString = Jsonobj.toString();
+        JsonString = JsonObj.toString();
         bundle.putString("JsonString", JsonString);
     }
 
@@ -107,16 +108,16 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
         switch (number) {
             default:
             case 0:
-//                mTitle = getString(R.string.title_section0);
-                mTitle = "Edit Profile";
+                mTitle = getString(R.string.title_section0);
+//                mTitle = "Edit Profile";
                 break;
             case 1:
-//               mTitle = getString(R.string.title_section1);
-                mTitle = "Profile";
+              mTitle = getString(R.string.title_section1);
+//                mTitle = "Profile";
                 break;
             case 2:
-//                mTitle = getString(R.string.title_section2);
-                mTitle = "Interview";
+                mTitle = getString(R.string.title_section2);
+//                mTitle = "Interview";
                 break;
 
         }
