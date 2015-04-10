@@ -1,10 +1,23 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="recruitapp.ittproject3.com.recruitmentapp.InterviewFragment">
+    android:background="@color/dark_background_color"
+    tools:context=".MainActivity"
+    android:padding="10dp"
+    android:gravity="center">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-         />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Your Interviews"
+        android:textColor="@color/white"
+        android:background="@color/light_blue"
+        android:padding="10dp"
+        android:id="@+id/interviewHeading"
+        android:gravity="center" />
 
-</FrameLayout>
+
+
+</RelativeLayout>
