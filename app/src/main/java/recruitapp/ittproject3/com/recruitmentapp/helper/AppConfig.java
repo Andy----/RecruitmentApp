@@ -21,4 +21,7 @@ public class AppConfig {
 
     // Server Update URL
     public static String URL_UPDATE = URL + "/update";
+
+    // Server Interview request URL
+    public static String URL_GET_INTERVIEWS = URL + "/getinterviews";
 }
