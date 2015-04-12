@@ -21,4 +21,7 @@ public class AppConfig {
 
     // Server Update URL
     public static String URL_UPDATE = URL + "/update";
+
+    // Refresh URL
+    public static String URL_REFRESH = URL + "/refresh";
 }
