@@ -22,7 +22,7 @@ public class UserDetails implements Parcelable {
     String surname;
     String email;
     String city;
-    String appID;
+//    Long appID;
 
 
     public UserDetails(){};
@@ -37,7 +37,7 @@ public class UserDetails implements Parcelable {
         this.surname = userDetailsIn.getString("last_name");
         this.email = userDetailsIn.getString("email");
         this.city = userDetailsIn.getString("city");
-        this.appID = userDetailsIn.getString("app_id");
+//        this.appID = userDetailsIn.getLong("app_id");
 
     }
 
@@ -48,7 +48,7 @@ public class UserDetails implements Parcelable {
         setSurname(p.readString());
         setEmail(p.readString());
         setCity(p.readString());
-        setAppID(p.readString());
+//        setAppID(p.readLong());
 
     };
 
@@ -70,9 +70,9 @@ public class UserDetails implements Parcelable {
         return city;
     }
 
-    public String getAppID() {
-        return appID;
-    }
+//    public Long getAppID() {
+//        return appID;
+//    }
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
@@ -90,9 +90,9 @@ public class UserDetails implements Parcelable {
         this.city = city;
     }
 
-    public void setAppID(String appID) {
-        this.appID = appID;
-    }
+//    public void setAppID(Long appID) {
+//        this.appID = appID;
+//    }
 
 
 
