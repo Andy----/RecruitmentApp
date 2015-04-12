@@ -35,7 +35,8 @@ public class LoginScreenActivity extends Activity {
     private EditText emailIn, passwordIn;
     private ProgressDialog pDialog;
     private SessionManager session;
-    JSONObject userDetailsObject;
+    private SQLiteHandler db;
+    private JSONObject userDetailsObject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,8 @@ public class LoginScreenActivity extends Activity {
         passwordIn = (EditText) findViewById(R.id.passwordInput);
         Button submit = (Button) findViewById(R.id.loginButton);
         Button signUp = (Button) findViewById(R.id.signupButton);
+
+        db = new SQLiteHandler(getApplicationContext());
 
         // Progress dialog
         pDialog = new ProgressDialog(this);
@@ -129,10 +132,20 @@ public class LoginScreenActivity extends Activity {
                                 // Create login session
                                 session.setLogin(true);
 
+
+                                // SQLite database handler
+                                // (Long app_id, String firstName, String lastName, String email, String city, String cvFilePath, String profileImage)
+
+                                db.addUser(response.getLong("app_id"), response.getString("first_name"), response.getString("last_name"), response.getString("email"),
+                                        response.getString("city"), response.getString("cvFilePath"), response.getString("profileImage"));
+
+//                                db.addUser((long) 1,"sdf","sdf","sdf","sdf","sdf","sdf");
+
                                 userDetailsObject = new JSONObject(response.toString());
                                 // Launch main activity
                                 Intent intent = new Intent(LoginScreenActivity.this, UserProfileInterviewScreenActivity.class);
                                 intent.putExtra("userDetailsClass",userDetailsObject.toString());
+
                                 startActivity(intent);
                                 finish();
                             } else {
