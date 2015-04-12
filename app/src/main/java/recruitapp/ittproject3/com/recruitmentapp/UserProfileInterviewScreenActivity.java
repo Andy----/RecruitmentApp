@@ -62,6 +62,8 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
         // Session manager
         session = new SessionManager(getApplicationContext());
 
+        db = new SQLiteHandler(getApplicationContext());
+
         if (!session.isLoggedIn()) {
             logoutUser();
         }
@@ -224,7 +226,7 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
     public void logoutUser() {
         session.setLogin(false);
 
-//        db.deleteUsers();
+        db.deleteUsers();
 
         // Launching the login activity
         Intent intent = new Intent(UserProfileInterviewScreenActivity.this, LoginScreenActivity.class);
