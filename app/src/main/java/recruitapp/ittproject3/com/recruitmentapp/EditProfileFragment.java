@@ -3,6 +3,7 @@ package recruitapp.ittproject3.com.recruitmentapp;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +12,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,15 +37,17 @@ public class EditProfileFragment extends Fragment {
      * The fragment argument representing the section number for this
      * fragment.
      */
+    private static final String TAG = RegisterActivity.class.getSimpleName();
     private static final String ARG_SECTION_NUMBER = "section_number";
-    String userProfileString;
     private static final String JSON_STRING = "JsonString";
-    private JSONObject jsonObject;
-    private TextView mEditText = null;
-    private View rootView;
     private Map<String, String> myMap;
-    private File myFile;
+    private String userProfileString;
     private UserDetails setDetails;
+    private JSONObject jsonObject;
+    private TextView mEditText;
+    private View rootView;
+    private File myFile;
+
     /**
      * Returns a new instance of this fragment for the given section
      * number.
@@ -63,17 +70,22 @@ public class EditProfileFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_edit_profile, container, false);
         myFile  = new File(getActivity().getExternalCacheDir() + "/RecruitSwift/myvideo.mp4");
         myMap = new HashMap<>();
+
         try {
             jsonObject = new JSONObject(userProfileString);
         } catch (JSONException e) {
             e.printStackTrace();
         }
         try {
-            setUserDetails();
+            updateUser(jsonObject.getString("email"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
+//        try {
+//            setUserDetails(jsonObject);
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
         Button mButton = (Button) rootView.findViewById(R.id.saveBtn);
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,6 +94,8 @@ public class EditProfileFragment extends Fragment {
             }
         });
 
+//        mEditText = (TextView) rootView.findViewById(R.id.emailText);
+//        updateUser(mEditText.getText().toString());
         return rootView;
     }
 
@@ -91,19 +105,18 @@ public class EditProfileFragment extends Fragment {
         if (getArguments() != null) {
             ((UserProfileInterviewScreenActivity) activity).onSectionAttached(
                     getArguments().getInt(ARG_SECTION_NUMBER));
-             userProfileString= getArguments().getString(JSON_STRING);
+             userProfileString = getArguments().getString(JSON_STRING);
         }
     }
 
 
     public void saveDetails(){
+        updateUser();
         MultipartRequest request = new MultipartRequest(AppConfig.URL_UPDATE, myFile, myMap,
                 new Response.Listener<String>() {
 
                     @Override
                     public void onResponse(String response) {
-
-//                                mEditText.setText(response.toString());
 
                         Toast.makeText(getActivity().getApplicationContext(),
                                 response, Toast.LENGTH_LONG).show();
@@ -114,58 +127,113 @@ public class EditProfileFragment extends Fragment {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-//                                mEditText.setText(error.toString());
+
                         Toast.makeText(getActivity().getApplicationContext(),
                                 error.toString(), Toast.LENGTH_LONG).show();
                     }
                 }
         );
-
-//                mEditText = (EditText) rootView.findViewById(R.id.nameText);
-//                String name = mEditText.getText().toString();
-//                String[] names = name.split(" ");
-//                String firstName = names[0];
-//                String sureName = names[1];
-//                myMap.put("param1",firstName);
-//                myMap.put("param2", sureName);
-//                mEditText = (TextView) rootView.findViewById(R.id.emailText);
-//                myMap.put("param3", mEditText.getText().toString());
-//                mEditText = (TextView) rootView.findViewById(R.id.cityText);
-//                myMap.put("param4", mEditText.getText().toString());
-
-        updateUser(request);
         VolleyApplication.getInstance().getRequestQueue().add(request);
     }
 
 
-    public void setUserDetails() throws JSONException {
+    public void setUserDetails(JSONObject userDetailsObject) throws JSONException {
 
-        setDetails = new UserDetails(jsonObject);
-        System.out.println(setDetails.getCity());
+        setDetails = new UserDetails(userDetailsObject);
         mEditText = (EditText) rootView.findViewById(R.id.cityText);
         mEditText.setText(setDetails.getCity());
-        mEditText = (EditText) rootView.findViewById(R.id.emailText);
+        mEditText = (TextView) rootView.findViewById(R.id.emailText);
         mEditText.setText(setDetails.getEmail());
         mEditText = (EditText) rootView.findViewById(R.id.nameText);
         mEditText.setText(setDetails.getFirstName() + " " + setDetails.getSurname());
-
     }
 
-    public void updateUser(MultipartRequest request) {
-
-        mEditText = (EditText) rootView.findViewById(R.id.nameText);
-        String name = mEditText.getText().toString();
-        String[] names = name.split(" ");
-        String firstName = names[0];
-        String sureName = names[1];
-
-        request.addStringBody("first_name", firstName);
-        request.addStringBody("last_name", sureName);
-        mEditText = (TextView) rootView.findViewById(R.id.emailText);
-        request.addStringBody("email", mEditText.getText().toString());
-        mEditText = (TextView) rootView.findViewById(R.id.cityText);
-        request.addStringBody("city", mEditText.getText().toString());
+    public void updateUser() {
+//        mEditText = (EditText) rootView.findViewById(R.id.nameText);
+//        String name = mEditText.getText().toString();
+//        String[] names = name.split(" ");
+//        String firstName = names[0];
+//        String sureName = names[1];
+//
+//        request.addStringBody("first_name", firstName);
+//        request.addStringBody("last_name", sureName);
+//        mEditText = (TextView) rootView.findViewById(R.id.emailText);
+//        request.addStringBody("email", mEditText.getText().toString());
+//        mEditText = (TextView) rootView.findViewById(R.id.cityText);
+//        request.addStringBody("city", mEditText.getText().toString());
+                mEditText = (EditText) rootView.findViewById(R.id.nameText);
+                String name = mEditText.getText().toString();
+                String[] names = name.split(" ");
+                String firstName = names[0];
+                String sureName = names[1];
+                myMap.put("first_name",firstName);
+                myMap.put("last_name", sureName);
+                mEditText = (TextView) rootView.findViewById(R.id.emailText);
+                myMap.put("email", mEditText.getText().toString());
+                mEditText = (TextView) rootView.findViewById(R.id.cityText);
+                myMap.put("city", mEditText.getText().toString());
     }
 
+    private void updateUser(final String email) {
+        String tag_string_req = "req_login";
+        Map<String, String> postParams = new HashMap<>();
+        postParams.put("email", email);
 
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, AppConfig.URL_REFRESH, new JSONObject(postParams),
+                new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d(TAG, response.toString());
+//                        Toast.makeText(getActivity().getApplicationContext(),
+//                                response.toString(), Toast.LENGTH_LONG).show();
+
+                        try {
+                            boolean error = response.getBoolean("error");
+
+                            // Check for error node in json
+                            if (!error) {
+                                jsonObject = new JSONObject(response.toString());
+                                try {
+                                    setUserDetails(jsonObject);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            } else {
+                                // Error in login. Get the error message
+                                String errorMsg = response.getString("error_msg");
+                                Toast.makeText(getActivity().getApplicationContext(),
+                                        errorMsg, Toast.LENGTH_LONG).show();
+                            }
+                        } catch (JSONException e) {
+                            // JSON error
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(TAG, "Error: " + error.getMessage());
+            }
+        }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json");
+                headers.put( "charset", "utf-8");
+                return headers;
+            }
+        };
+
+        // Adding request to request queue
+        VolleyApplication.getInstance().addToRequestQueue(jsonObjReq, tag_string_req);
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+    }
 }

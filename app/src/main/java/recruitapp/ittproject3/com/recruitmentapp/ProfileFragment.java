@@ -38,9 +38,10 @@ public class ProfileFragment extends Fragment {
     private static final String TAG = RegisterActivity.class.getSimpleName();
     private static final String ARG_SECTION_NUMBER = "section_number";
     private static final String JSON_STRING = "JsonString";
-    private JSONObject jsonObject =null;
+    private String userProfileString;
+    private JSONObject jsonObject;
     private JSONObject userDetailsObject;
-    private TextView mTextView = null;
+    private TextView mTextView;
     private View rootView;
     private UserDetails setDetails;
     /**
@@ -64,7 +65,12 @@ public class ProfileFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_profile_screen, container, false);
 
         try {
-            setUserDetails();
+            jsonObject = new JSONObject(userProfileString);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        try {
+            updateUser(jsonObject.getString("email"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -75,21 +81,16 @@ public class ProfileFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         if (getArguments() != null) {
-            String userProfileString = getArguments().getString(JSON_STRING);
             ((UserProfileInterviewScreenActivity) activity).onSectionAttached(
                     getArguments().getInt(ARG_SECTION_NUMBER));
-            try {
-                jsonObject = new JSONObject(userProfileString);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            userProfileString = getArguments().getString(JSON_STRING);
 
         }
     }
 
-    public void setUserDetails() throws JSONException {
+    public void setUserDetails(JSONObject userDetailsObject) throws JSONException {
 
-        setDetails = new UserDetails(jsonObject);
+        setDetails = new UserDetails(userDetailsObject);
         mTextView = (TextView) rootView.findViewById(R.id.cityView);
         mTextView.setText(setDetails.getCity());
         mTextView = (TextView) rootView.findViewById(R.id.emailView);
@@ -100,7 +101,7 @@ public class ProfileFragment extends Fragment {
 
     private void updateUser(final String email) {
         String tag_string_req = "req_login";
-        Map<String, String> postParams = new HashMap<>();
+        Map<String, String> postParams = new HashMap<String, String>();
         postParams.put("email", email);
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, AppConfig.URL_REFRESH, new JSONObject(postParams),
@@ -109,16 +110,20 @@ public class ProfileFragment extends Fragment {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.d(TAG, response.toString());
-                        Toast.makeText(getActivity().getApplicationContext(),
-                                response.toString(), Toast.LENGTH_LONG).show();
+//                        Toast.makeText(getActivity().getApplicationContext(),
+//                                response.toString(), Toast.LENGTH_LONG).show();
 
                         try {
                             boolean error = response.getBoolean("error");
 
                             // Check for error node in json
                             if (!error) {
-                                userDetailsObject = new JSONObject(response.toString());
-
+                                jsonObject = new JSONObject(response.toString());
+                                try {
+                                    setUserDetails(jsonObject);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
                             } else {
                                 // Error in login. Get the error message
                                 String errorMsg = response.getString("error_msg");
@@ -146,7 +151,6 @@ public class ProfileFragment extends Fragment {
                 headers.put( "charset", "utf-8");
                 return headers;
             }
-
         };
 
         // Adding request to request queue
@@ -156,8 +160,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
-        mTextView = (TextView) rootView.findViewById(R.id.emailView);
-        System.out.println();
-        updateUser(mTextView.getText().toString());
+//        mTextView = (TextView) rootView.findViewById(R.id.emailView);
+//        updateUser(mTextView.getText().toString());
     }
 }
