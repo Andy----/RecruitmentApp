@@ -31,7 +31,7 @@
         <TextView
         android:layout_width="fill_parent"
         android:layout_height="65dp"
-        android:text="@string/profile_name"
+        android:text=""
         android:id="@+id/nameView"
         android:background="@color/light_blue"
         android:layout_alignParentTop="true"
@@ -59,31 +59,6 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Age: "
-                    android:textSize="@dimen/profile_below"
-                    android:textColor="@android:color/white"
-                    android:id="@+id/ageText"
-                    android:layout_row="0"
-                    android:layout_column="0"
-                    android:layout_rowSpan="2"
-                    android:padding="10dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/AgeView"
-                    android:text="29"
-                    android:textColor="#ffffff"
-                    android:inputType="number|numberDecimal"
-                    android:autoText="false"
-                    android:textSize="@dimen/profile_below"
-                    android:layout_row="0"
-                    android:layout_column="1"
-                    android:padding="10dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:text="Location: "
                     android:textSize="@dimen/profile_below"
                     android:textColor="@android:color/white"
@@ -95,7 +70,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Dublin"
+                    android:text=""
                     android:textColor="#ffffff"
                     android:inputType="number|numberDecimal"
                     android:autoText="false"
@@ -118,7 +93,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="jobswift@gmail.com"
+                    android:text=""
                     android:textColor="#ffffff"
                     android:inputType="number|numberDecimal"
                     android:autoText="false"
