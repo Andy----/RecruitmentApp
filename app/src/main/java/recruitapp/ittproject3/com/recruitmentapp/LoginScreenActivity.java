@@ -63,7 +63,7 @@ public class LoginScreenActivity extends Activity {
             // IF user is already logged in. Redirect to main activity
             Intent intent = new Intent(LoginScreenActivity.this, UserProfileInterviewScreenActivity.class);
 
-                userDetailsObject = new JSONObject(db.getUserDetails());
+            userDetailsObject = new JSONObject(db.getUserDetails());
 
             intent.putExtra("userDetailsClass",userDetailsObject.toString());
             startActivity(intent);
