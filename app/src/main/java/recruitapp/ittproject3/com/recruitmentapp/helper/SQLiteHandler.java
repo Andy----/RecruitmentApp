@@ -82,13 +82,12 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         // Move to first row
         cursor.moveToFirst();
         if (cursor.getCount() > 0) {
-            user.put("app_id" ,cursor.getString(1));
-            user.put("first_name", cursor.getString(2));
-            user.put("last_name",cursor.getString(3));
-            user.put("email" , cursor.getString(4));
-            user.put("city" ,cursor.getString(5));
-            user.put("cv_filePath" ,cursor.getString(6));
-            user.put("profile_image_path" ,cursor.getString(7));
+            user.put("first_name", cursor.getString(1));
+            user.put("last_name",cursor.getString(2));
+            user.put("email" , cursor.getString(3));
+            user.put("city" ,cursor.getString(4));
+            user.put("cv_filePath" ,cursor.getString(5));
+            user.put("profile_image_path" ,cursor.getString(6));
         }
         cursor.close();
         db.close();

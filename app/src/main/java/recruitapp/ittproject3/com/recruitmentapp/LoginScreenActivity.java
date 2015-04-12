@@ -57,11 +57,15 @@ public class LoginScreenActivity extends Activity {
 
         // Session manager
         session = new SessionManager(getApplicationContext());
-        session.setLogin(false);
+//        session.setLogin(false);
         // Check if user is already logged in or not
         if (session.isLoggedIn()) {
             // IF user is already logged in. Redirect to main activity
             Intent intent = new Intent(LoginScreenActivity.this, UserProfileInterviewScreenActivity.class);
+
+                userDetailsObject = new JSONObject(db.getUserDetails());
+
+            intent.putExtra("userDetailsClass",userDetailsObject.toString());
             startActivity(intent);
             finish();
         }
