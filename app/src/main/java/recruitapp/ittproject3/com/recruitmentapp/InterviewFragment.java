@@ -6,8 +6,16 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONObject;
+
+import java.util.List;
 
 import recruitapp.ittproject3.com.recruitmentapp.helper.*;
 
@@ -20,6 +28,8 @@ public class InterviewFragment extends Fragment {
      * fragment.
      */
     private static final String ARG_SECTION_NUMBER = "section_number";
+
+    private SQLiteHandler db;
 
     /**
      * Returns a new instance of this fragment for the given section
@@ -37,9 +47,9 @@ public class InterviewFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_interview_screen, container, false);
+
         return rootView;
     }
 
@@ -48,26 +58,34 @@ public class InterviewFragment extends Fragment {
         super.onAttach(activity);
         ((UserProfileInterviewScreenActivity) activity).onSectionAttached(
                 getArguments().getInt(ARG_SECTION_NUMBER));
-
-
-//        if(db.getJobApplicationRowCount() > 0) {
-//            //Set a linearLayout to add buttons
-//            LinearLayout linearLayout = new LinearLayout(getActivity());
-//            // Set the layout full width, full height
-//            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-//            linearLayout.setLayoutParams(params);
-//            linearLayout.setOrientation(LinearLayout.HORIZONTAL);
-//
-//            LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-//
-//            List<JobApplication> jobApplicationList = db.getJobApplicationDetails();
-//            for (int i = 0; i < jobApplicationList.size(); i++) {
-//                Button button = new Button(getActivity());
-//                button.setLayoutParams(params1);
-//                linearLayout.addView(button);
-//            }
-//        }
-
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+
+        db = new SQLiteHandler(getActivity().getApplicationContext());
+        LinearLayout ll = (LinearLayout)(this.getActivity().findViewById(R.id.interviewLinearLayout));
+
+            List<JobApplication> jobApplicationList = db.getJobApplicationDetails();
+
+            LinearLayout ll1 = new LinearLayout(this.getActivity());
+            ll1.setOrientation(LinearLayout.VERTICAL);
+
+            for(int i=0; i<jobApplicationList.size(); i++){
+
+                TextView tv = new TextView(this.getActivity());
+                tv.setText(jobApplicationList.get(i).getJob_description() + " " + jobApplicationList.get(i).getJob_location());
+                tv.setTextColor(getResources().getColor(R.color.white));
+                ll.addView(tv);
+
+                Button button = new Button(this.getActivity());
+                button.setId(i);
+                ll1.addView(button);
+            }
+
+            Toast.makeText(getActivity().getApplicationContext(), jobApplicationList.size()+" Job Applications On File", Toast.LENGTH_LONG).show();
+
+            ll.addView(ll1);
+        }
 }
