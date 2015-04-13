@@ -130,13 +130,11 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.rawQuery(selectQuery, null);
-
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                do {
-                    JobApplication ja = new JobApplication(cursor.getLong(1), cursor.getLong(2), cursor.getString(3), cursor.getString(4), cursor.getString(5));
-                } while (cursor.moveToNext());
-            }
+        cursor.moveToFirst();
+        if (cursor.getCount() > 0) {
+            do {
+                JobApplication ja = new JobApplication(cursor.getLong(0), cursor.getLong(1), cursor.getString(2), cursor.getString(3), cursor.getString(4));
+            } while (cursor.moveToNext());
         }
 
         cursor.close();
@@ -150,8 +148,23 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     /**
      * Getting user login status return true if rows are there in table
      * */
-    public int getRowCount() {
+    public int getUserRowCount() {
         String countQuery = "SELECT  * FROM user";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+        int rowCount = cursor.getCount();
+        db.close();
+        cursor.close();
+
+        // return row count
+        return rowCount;
+    }
+
+    /**
+     * Getting user login status return true if rows are there in table
+     * */
+    public int getJobApplicationRowCount() {
+        String countQuery = "SELECT  * FROM jobapplication";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(countQuery, null);
         int rowCount = cursor.getCount();
