@@ -15,8 +15,9 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.*;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -97,28 +98,29 @@ public class InterviewFragment extends Fragment {
         Map<String, String> postParams = new HashMap<String, String>();
         postParams.put("email", email);
 
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, AppConfig.URL_GET_INTERVIEWS, new JSONObject(postParams),
-                new Response.Listener<JSONObject>() {
+        JsonArrayRequest jsonObjReq = new JsonArrayRequest(Request.Method.POST, AppConfig.URL_GET_INTERVIEWS, new JSONObject(postParams),
+                new Response.Listener<JSONArray>() {
 
                     @Override
-                    public void onResponse(JSONObject response) {
+                    public void onResponse(JSONArray response) {
                         Log.d(TAG, response.toString());
                         pDialog.setMessage(response.toString());
                         hideDialog();
 
                         try {
-                            boolean error = response.getBoolean("error");
-
                             // Check for error node in json
-                            if (!error) {
+                            if (response != null) {
+
+                                for (int i = 0; i < response.length(); i++) {
+                                    JSONObject jsonObject = response.getJSONObject(i);
+                                    db.addJobApplciation(jsonObject.getLong("app_id"), jsonObject.getLong("job_id"), jsonObject.getString("job_title"), jsonObject.getString("job_description"), jsonObject.getString("job_location"));
+                                }
 
                             } else {
-                                // Get the error message
-                                String errorMsg = response.getString("error_msg");
                                 Toast.makeText(getActivity().getApplicationContext(),
-                                        errorMsg, Toast.LENGTH_LONG).show();
+                                        "No Interviews to Show", Toast.LENGTH_LONG).show();
                             }
-                        } catch (JSONException e) {
+                        } catch (Exception e) {
                             // JSON error
                             e.printStackTrace();
                         }
