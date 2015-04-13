@@ -136,14 +136,8 @@ public class LoginScreenActivity extends Activity {
                                 // Create login session
                                 session.setLogin(true);
 
-
-                                // SQLite database handler
-                                // (Long app_id, String firstName, String lastName, String email, String city, String cvFilePath, String profileImage)
-
                                 db.addUser(response.getLong("app_id"), response.getString("first_name"), response.getString("last_name"), response.getString("email"),
                                         response.getString("city"), response.getString("cvFilePath"), response.getString("profileImage"));
-
-//                                db.addUser((long) 1,"sdf","sdf","sdf","sdf","sdf","sdf");
 
                                 userDetailsObject = new JSONObject(response.toString());
                                 // Launch main activity
