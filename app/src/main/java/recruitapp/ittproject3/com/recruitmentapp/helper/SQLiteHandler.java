@@ -37,7 +37,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_LOGIN_TABLE = "CREATE TABLE user(app_id LONG PRIMARY KEY, first_name VARCHAR, last_name VARCHAR, email VARCHAR, city VARCHAR, cv_filePath VARCHAR, profile_image_path VARCHAR);";
-        String CREATE_JOB_APPLICATION_TABLE = "CREATE TABLE jobapplication (app_id LONG PRIMARY KEY, job_id LONG, job_title VARCHAR, job_description TEXT, job_location VARCHAR);";
+        String CREATE_JOB_APPLICATION_TABLE = "CREATE TABLE jobapplication (app_id LONG PRIMARY KEY, job_id LONG, job_title VARCHAR, job_description TEXT, job_location VARCHAR, status VARCHAR);";
         String CREATE_QUESTION_TABLE = "CREATE TABLE questiontable (question_id LONG PRIMARY KEY, question VARCHAR, job_id LONG, FOREIGN KEY(job_id) REFERENCES joblisting(job_id));";
         db.execSQL(CREATE_LOGIN_TABLE);
         db.execSQL(CREATE_JOB_APPLICATION_TABLE);
@@ -77,7 +77,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         Log.d(TAG, "New user inserted into sqlite: " + email );
     }
 
-    public void addJobApplciation (Long app_id, Long job_id, String job_title, String job_description, String job_location) {
+    public void addJobApplciation (Long app_id, Long job_id, String job_title, String job_description, String job_location, String status) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -86,6 +86,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         values.put("job_title", job_title);
         values.put("job_description", job_description);
         values.put("job_location", job_location);
+        values.put("status", status);
 
         // Inserting Row
         db.insert("jobapplication", null, values);
@@ -133,15 +134,14 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         cursor.moveToFirst();
         if (cursor.getCount() > 0) {
             do {
-                JobApplication ja = new JobApplication(cursor.getLong(0), cursor.getLong(1), cursor.getString(2), cursor.getString(3), cursor.getString(4));
+                JobApplication ja = new JobApplication(cursor.getLong(0), cursor.getLong(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5));
+                jobApplicationList.add(ja);
+                Log.d(TAG, "Fetched 1 row from job application table");
             } while (cursor.moveToNext());
         }
 
         cursor.close();
         db.close();
-
-        Log.d(TAG, "Fetching job applications from Sqlite: ");
-
         return jobApplicationList;
     }
 
