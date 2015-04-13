@@ -14,6 +14,7 @@ import android.app.Activity;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -21,10 +22,12 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.Request.Method;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 
 
@@ -144,6 +147,12 @@ public class LoginScreenActivity extends Activity {
                                 Intent intent = new Intent(LoginScreenActivity.this, UserProfileInterviewScreenActivity.class);
                                 intent.putExtra("userDetailsClass",userDetailsObject.toString());
 
+                                try {
+                                    getInterviews(userDetailsObject.getString("email"));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
                                 startActivity(intent);
                                 finish();
                             } else {
@@ -179,6 +188,67 @@ public class LoginScreenActivity extends Activity {
         // Adding request to request queue
         VolleyApplication.getInstance().addToRequestQueue(jsonObjReq, tag_string_req);
     }
+
+
+
+    /**
+     * function to retrieve all job applications for user
+     * */
+    private void getInterviews(final String email) {
+
+        pDialog.setMessage("Retrieving Account Info ...");
+        showDialog();
+
+        Map<String, String> postParams = new HashMap<String, String>();
+        postParams.put("email", email);
+
+        JsonArrayRequest jsonObjReq = new JsonArrayRequest(Request.Method.POST, AppConfig.URL_GET_INTERVIEWS, new JSONObject(postParams),
+                new Response.Listener<JSONArray>() {
+
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Log.d(TAG, response.toString());
+                        pDialog.setMessage(response.toString());
+                        hideDialog();
+
+                        try {
+                            // Check for error node in json
+                            if (response != null) {
+
+                                for (int i = 0; i < response.length(); i++) {
+                                    JSONObject jsonObject = response.getJSONObject(i);
+                                    db.addJobApplciation(jsonObject.getLong("app_id"), jsonObject.getLong("job_id"), jsonObject.getString("job_title"), jsonObject.getString("job_description"), jsonObject.getString("job_location"));
+                                }
+                            }
+                        } catch (Exception e) {
+                            // JSON error
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(TAG, "Error: " + error.getMessage());
+                hideDialog();
+            }
+        }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json");
+                headers.put( "charset", "utf-8");
+                return headers;
+            }
+
+        };
+
+        // Adding request to request queue
+        VolleyApplication.getInstance().addToRequestQueue(jsonObjReq);
+    }
+
+
 
     private void showDialog() {
         if (!pDialog.isShowing())
