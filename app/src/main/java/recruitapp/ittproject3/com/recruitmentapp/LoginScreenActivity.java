@@ -14,6 +14,7 @@ import android.app.Activity;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -21,10 +22,12 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.Request.Method;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 
 
@@ -137,19 +140,25 @@ public class LoginScreenActivity extends Activity {
                                 // Create login session
                                 session.setLogin(true);
 
-
-                                // SQLite database handler
-                                // (Long app_id, String firstName, String lastName, String email, String city, String cvFilePath, String profileImage)
-
                                 db.addUser(response.getLong("app_id"), response.getString("first_name"), response.getString("last_name"), response.getString("email"),
                                         response.getString("city"), response.getString("cvFilePath"), response.getString("profileImage"));
 
+<<<<<<< HEAD
 //                                db.addUser((long) 1,"sdf","sdf","sdf","sdf","sdf","sdf");
 
                                 userDetailsObject2 = new JSONObject(response.toString());
+=======
+                                userDetailsObject = new JSONObject(response.toString());
+>>>>>>> 937f46f92cd407fc66336870c5cfb4163a0fdfc0
                                 // Launch main activity
                                 Intent intent = new Intent(LoginScreenActivity.this, UserProfileInterviewScreenActivity.class);
                                 intent.putExtra("userDetailsClass",userDetailsObject2.toString());
+
+                                try {
+                                    getInterviews(userDetailsObject.getString("email"));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
 
                                 startActivity(intent);
                                 finish();
@@ -186,6 +195,67 @@ public class LoginScreenActivity extends Activity {
         // Adding request to request queue
         VolleyApplication.getInstance().addToRequestQueue(jsonObjReq, tag_string_req);
     }
+
+
+
+    /**
+     * function to retrieve all job applications for user
+     * */
+    private void getInterviews(final String email) {
+
+        pDialog.setMessage("Retrieving Account Info ...");
+        showDialog();
+
+        Map<String, String> postParams = new HashMap<String, String>();
+        postParams.put("email", email);
+
+        JsonArrayRequest jsonObjReq = new JsonArrayRequest(Request.Method.POST, AppConfig.URL_GET_INTERVIEWS, new JSONObject(postParams),
+                new Response.Listener<JSONArray>() {
+
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Log.d(TAG, response.toString());
+                        pDialog.setMessage(response.toString());
+                        hideDialog();
+
+                        try {
+                            // Check for error node in json
+                            if (response != null) {
+
+                                for (int i = 0; i < response.length(); i++) {
+                                    JSONObject jsonObject = response.getJSONObject(i);
+                                    db.addJobApplciation(jsonObject.getLong("app_id"), jsonObject.getLong("job_id"), jsonObject.getString("job_title"), jsonObject.getString("job_description"), jsonObject.getString("job_location"), jsonObject.getString("status"));
+                                }
+                            }
+                        } catch (Exception e) {
+                            // JSON error
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(TAG, "Error: " + error.getMessage());
+                hideDialog();
+            }
+        }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json");
+                headers.put( "charset", "utf-8");
+                return headers;
+            }
+
+        };
+
+        // Adding request to request queue
+        VolleyApplication.getInstance().addToRequestQueue(jsonObjReq);
+    }
+
+
 
     private void showDialog() {
         if (!pDialog.isShowing())

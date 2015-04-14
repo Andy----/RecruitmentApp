@@ -1,17 +1,19 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:id="@+id/interviewLinearLayout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:background="@color/dark_background_color"
+    android:gravity="center"
     tools:context=".MainActivity"
-    android:padding="10dp"
-    android:gravity="center">
+    android:orientation="vertical"
+    android:padding="10dp" >
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Your Interviews"
+        android:text="@string/interview_fragment_title"
         android:textColor="@color/white"
         android:background="@color/light_blue"
         android:padding="10dp"
@@ -20,4 +22,4 @@
 
 
 
-</RelativeLayout>
+</LinearLayout>

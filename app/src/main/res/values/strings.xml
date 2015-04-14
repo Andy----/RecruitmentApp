@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">RecruitmentApp</string>
+    <string name="app_name">JobSwift</string>
     <string name="action_settings">Settings</string>
     <string name="profile_location">City</string>
     <string name="profile_name">John Doe</string>
@@ -28,4 +28,7 @@
     <string name="hint_email">Email</string>
     <string name="hint_password">Password</string>
     <string name="hint_password_confirm">Confirm Password</string>
+
+    <!-- Register Screen Strings -->
+    <string name="interview_fragment_title">Your Job Applications</string>
 </resources>

@@ -4,7 +4,9 @@ package recruitapp.ittproject3.com.recruitmentapp.helper;
  * Created by Andrew on 07/04/2015.
  */
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -12,6 +14,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
+import recruitapp.ittproject3.com.recruitmentapp.JobApplication;
 
 public class SQLiteHandler extends SQLiteOpenHelper {
 
@@ -33,7 +37,10 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_LOGIN_TABLE = "CREATE TABLE user(app_id LONG PRIMARY KEY, first_name VARCHAR, last_name VARCHAR, email VARCHAR, city VARCHAR, cv_filePath VARCHAR, profile_image_path VARCHAR);";
+        String CREATE_JOB_APPLICATION_TABLE = "CREATE TABLE jobapplication (app_id LONG PRIMARY KEY, job_id LONG, job_title VARCHAR, job_description TEXT, job_location VARCHAR, status VARCHAR);";
+        String CREATE_QUESTION_TABLE = "CREATE TABLE questiontable (question_id LONG PRIMARY KEY, question VARCHAR, job_id LONG, FOREIGN KEY(job_id) REFERENCES joblisting(job_id));";
         db.execSQL(CREATE_LOGIN_TABLE);
+        db.execSQL(CREATE_JOB_APPLICATION_TABLE);
 
         Log.d(TAG, "Database tables created");
     }
@@ -70,6 +77,24 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         Log.d(TAG, "New user inserted into sqlite: " + email );
     }
 
+    public void addJobApplciation (Long app_id, Long job_id, String job_title, String job_description, String job_location, String status) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("app_id", app_id);
+        values.put("job_id", job_id);
+        values.put("job_title", job_title);
+        values.put("job_description", job_description);
+        values.put("job_location", job_location);
+        values.put("status", status);
+
+        // Inserting Row
+        db.insert("jobapplication", null, values);
+        db.close(); // Closing database connection
+
+        Log.d(TAG, "New job application inserted into sqlite: " + app_id );
+    }
+
     /**
      * Getting user data from database
      * */
@@ -97,10 +122,33 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         return user;
     }
 
+    /*
+    * Retrieve all users job applications from SQLite database
+     */
+    public List<JobApplication> getJobApplicationDetails() {
+        String selectQuery = "SELECT  * FROM jobapplication";
+        List<JobApplication> jobApplicationList = new ArrayList<JobApplication>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        cursor.moveToFirst();
+        if (cursor.getCount() > 0) {
+            do {
+                JobApplication ja = new JobApplication(cursor.getLong(0), cursor.getLong(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5));
+                jobApplicationList.add(ja);
+                Log.d(TAG, "Fetched 1 row from job application table");
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return jobApplicationList;
+    }
+
     /**
      * Getting user login status return true if rows are there in table
      * */
-    public int getRowCount() {
+    public int getUserRowCount() {
         String countQuery = "SELECT  * FROM user";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(countQuery, null);
@@ -113,12 +161,28 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     }
 
     /**
-     * Re crate database Delete all tables and create them again
+     * Getting user login status return true if rows are there in table
+     * */
+    public int getJobApplicationRowCount() {
+        String countQuery = "SELECT  * FROM jobapplication";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+        int rowCount = cursor.getCount();
+        db.close();
+        cursor.close();
+
+        // return row count
+        return rowCount;
+    }
+
+    /**
+     * Delete all tables
      * */
     public void deleteUsers() {
         SQLiteDatabase db = this.getWritableDatabase();
         // Delete All Rows
         db.delete("user", null, null);
+        db.delete("jobapplication", null, null);
         db.close();
 
         Log.d(TAG, "Deleted all user info from sqlite");
