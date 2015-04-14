@@ -14,10 +14,13 @@ import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.NetworkImageView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,7 +30,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import recruitapp.ittproject3.com.recruitmentapp.helper.AppConfig;
+import recruitapp.ittproject3.com.recruitmentapp.helper.MultipartRequest;
 import recruitapp.ittproject3.com.recruitmentapp.helper.UserDetails;
+import recruitapp.ittproject3.com.recruitmentapp.helper.VolleyApplication;
+import recruitapp.ittproject3.com.recruitmentapp.helper.VolleySingleton;
 
 /**
  * USER PROFILE FRAGMENT.
@@ -46,7 +52,10 @@ public class EditProfileFragment extends Fragment {
     private JSONObject jsonObject;
     private TextView mEditText;
     private View rootView;
-    private File myFile;
+    private File myVideoFile;
+    private File myImageFile;
+    private RequestQueue mRequestQueue;
+    private ImageLoader mImageLoader;
 
     /**
      * Returns a new instance of this fragment for the given section
@@ -68,7 +77,10 @@ public class EditProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_edit_profile, container, false);
-        myFile  = new File(getActivity().getExternalCacheDir() + "/RecruitSwift/myvideo.mp4");
+        myVideoFile  = new File(getActivity().getExternalCacheDir() + "/RecruitSwift/intro.mp4");
+        myImageFile  = new File(getActivity().getExternalCacheDir() + "/RecruitSwift/profile.jpg");
+        mRequestQueue = VolleySingleton.getInstance().getRequestQueue();
+        mImageLoader = VolleySingleton.getInstance().getImageLoader();
         myMap = new HashMap<>();
 
         try {
@@ -112,7 +124,7 @@ public class EditProfileFragment extends Fragment {
 
     public void saveDetails(){
         updateUser();
-        MultipartRequest request = new MultipartRequest(AppConfig.URL_UPDATE, myFile, myMap,
+        MultipartRequest requestVideo = new MultipartRequest(AppConfig.URL_UPDATE, myVideoFile, myMap,
                 new Response.Listener<String>() {
 
                     @Override
@@ -133,7 +145,30 @@ public class EditProfileFragment extends Fragment {
                     }
                 }
         );
-        VolleyApplication.getInstance().getRequestQueue().add(request);
+        VolleyApplication.getInstance().getRequestQueue().add(requestVideo);
+
+        MultipartRequest requestImage = new MultipartRequest(AppConfig.URL_UPDATE_IMAGE, myImageFile, myMap,
+                new Response.Listener<String>() {
+
+                    @Override
+                    public void onResponse(String response) {
+
+                        Toast.makeText(getActivity().getApplicationContext(),
+                                response, Toast.LENGTH_LONG).show();
+                    }
+                },
+
+                new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        Toast.makeText(getActivity().getApplicationContext(),
+                                error.toString(), Toast.LENGTH_LONG).show();
+                    }
+                }
+        );
+        VolleyApplication.getInstance().getRequestQueue().add(requestImage);
     }
 
 
@@ -146,6 +181,8 @@ public class EditProfileFragment extends Fragment {
         mEditText.setText(setDetails.getEmail());
         mEditText = (EditText) rootView.findViewById(R.id.nameText);
         mEditText.setText(setDetails.getFirstName() + " " + setDetails.getSurname());
+        NetworkImageView avatar = (NetworkImageView)getActivity().findViewById(R.id.profileImage);
+        avatar.setImageUrl("http://192.168.1.2:9000/assets/globalUploadFolder/k@gmail.com/profile.jpg",mImageLoader);
     }
 
     public void updateUser() {

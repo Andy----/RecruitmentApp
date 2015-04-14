@@ -19,12 +19,24 @@
             tools:ignore="HardcodedText"
             android:background="@drawable/profile_background">
 
-            <ImageView
+            <com.android.volley.toolbox.NetworkImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/profileImage"
                 android:layout_centerHorizontal="true"
-                android:src="@drawable/profile_photo"/>
+
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text=""
+                android:id="@+id/profileImageBtn"
+                android:layout_gravity="center"
+                android:background="@android:color/transparent"
+                android:onClick="selectImage" />
+
 
         </RelativeLayout>
 

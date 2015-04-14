@@ -1,4 +1,4 @@
-package recruitapp.ittproject3.com.recruitmentapp;
+package recruitapp.ittproject3.com.recruitmentapp.helper;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

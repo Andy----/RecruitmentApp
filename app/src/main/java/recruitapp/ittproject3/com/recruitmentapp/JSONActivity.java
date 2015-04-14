@@ -7,7 +7,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -15,10 +14,11 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.Map;
+
+import recruitapp.ittproject3.com.recruitmentapp.helper.MultipartRequest;
+import recruitapp.ittproject3.com.recruitmentapp.helper.VolleyApplication;
 
 
 public class JSONActivity extends ActionBarActivity {

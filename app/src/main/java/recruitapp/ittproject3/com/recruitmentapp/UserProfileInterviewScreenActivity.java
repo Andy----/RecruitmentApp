@@ -1,6 +1,13 @@
 package recruitapp.ittproject3.com.recruitmentapp;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
@@ -8,17 +15,23 @@ import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
 import recruitapp.ittproject3.com.recruitmentapp.helper.SQLiteHandler;
 import recruitapp.ittproject3.com.recruitmentapp.helper.SessionManager;
@@ -36,19 +49,27 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
-    File mediaFile;
+    private File imageFile;
+    private File videoFile;
     private SessionManager session;
     private SQLiteHandler db;
     private Button btnLogout;
     private Bundle bundle = new Bundle();
-    String JsonString = "";
-    JSONObject JsonObj = null;
+    private String JsonString = "";
+    private JSONObject JsonObj = null;
+    private ImageView profileImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile_interview_screen);
 
+//        b.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                selectImage();
+//            }
+//        });
         mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
 
@@ -78,6 +99,7 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
         JsonString = JsonObj.toString();
         bundle.putString("JsonString", JsonString);
     }
+
 
 
     @Override
@@ -162,7 +184,51 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
     }
 
     // Image chooser for profile image
-    public void profileImageClick() {
+//    public void profileImageClick() {
+//    }
+
+    public void selectImage(View v) {
+
+        File newDir = new File(getExternalCacheDir(), "RecruitSwift");
+        if(!newDir.isDirectory())
+            newDir.mkdirs();
+        else
+            Toast.makeText(this, "Dir already exist", Toast.LENGTH_LONG).show();
+
+        if(newDir.canWrite())
+            imageFile = new File(newDir, "profile.jpg");
+        else
+            Toast.makeText(this, "Dir not writable", Toast.LENGTH_LONG).show();
+
+        final CharSequence[] options = { "Take Photo", "Choose from Gallery","Cancel" };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(UserProfileInterviewScreenActivity.this);
+        builder.setTitle("Add Photo!");
+        builder.setItems(options, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                if (options[item].equals("Take Photo"))
+                {
+                    Intent takeProfileImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    if (takeProfileImage.resolveActivity(getPackageManager()) != null) {
+
+                        Uri imageUri = Uri.fromFile(imageFile);
+                        takeProfileImage.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                        startActivityForResult(takeProfileImage, 1);
+                    }
+                }
+                else if (options[item].equals("Choose from Gallery"))
+                {
+                    Intent takeProfileImage = new   Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(takeProfileImage, 2);
+
+                }
+                else if (options[item].equals("Cancel")) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.show();
     }
 
     // Creates a directory in the app cache to store the videos if one does not exist
@@ -175,7 +241,7 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
             Toast.makeText(this, "Dir already exist", Toast.LENGTH_LONG).show();
 
         if(newDir.canWrite())
-            mediaFile = new File(newDir, "myvideo.mp4");
+            videoFile = new File(newDir, "intro.mp4");
         else
             Toast.makeText(this, "Dir not writable", Toast.LENGTH_LONG).show();
 
@@ -183,7 +249,7 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
         Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         if (takeVideoIntent.resolveActivity(getPackageManager()) != null) {
 
-            Uri videoUri = Uri.fromFile(mediaFile);
+            Uri videoUri = Uri.fromFile(videoFile);
             takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri);
             startActivityForResult(takeVideoIntent, REQUEST_VIDEO_CAPTURE);
         }
@@ -197,27 +263,128 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
         this.startActivity(intent);
         }
 
-    public void buttonOnClickUpload(View v){
-
-        Intent intent = new Intent(this, JSONActivity.class);
-        this.startActivity(intent);
-    }
+//    public void buttonOnClickUpload(View v){
+//
+//        Intent intent = new Intent(this, JSONActivity.class);
+//        this.startActivity(intent);
+//    }
 
     // This Method gives you information about the buttonOnClickRecord method
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
+//
+//            Toast.makeText(this, "Video saved to:\n" +
+//                    data.getData(), Toast.LENGTH_LONG).show();
+//        } else if (resultCode == RESULT_CANCELED) {
+//            Toast.makeText(this, "Video recording cancelled.",
+//                    Toast.LENGTH_LONG).show();
+//        } else {
+//            Toast.makeText(this, "Failed to record video",
+//                    Toast.LENGTH_LONG).show();
+//        }
+//     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
+        super.onActivityResult(requestCode, resultCode, data);
+        profileImage = (ImageView)findViewById(R.id.profileImage);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == 1) {
+                String imageDir = getExternalCacheDir() + "/RecruitSwift/profile.jpg";
 
-            Toast.makeText(this, "Video saved to:\n" +
-                    data.getData(), Toast.LENGTH_LONG).show();
-        } else if (resultCode == RESULT_CANCELED) {
-            Toast.makeText(this, "Video recording cancelled.",
-                    Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(this, "Failed to record video",
-                    Toast.LENGTH_LONG).show();
+                Bitmap thumbnail = ShrinkBitmap(imageDir, 400, 400);
+                try {
+                    ExifInterface exif = new ExifInterface(imageDir);
+                    int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
+                    Log.d("EXIF", "Exif: " + orientation);
+                    Matrix matrix = new Matrix();
+                    if (orientation == 6) {
+                        matrix.postRotate(90);
+                    }
+                    else if (orientation == 3) {
+                        matrix.postRotate(180);
+                    }
+                    else if (orientation == 8) {
+                        matrix.postRotate(270);
+                    }
+                    thumbnail = Bitmap.createBitmap(thumbnail, 0, 0, thumbnail.getWidth(), thumbnail.getHeight(), matrix, true); // rotating bitmap
+                }
+                catch (Exception e) {
+
+                }
+                profileImage.setImageBitmap(thumbnail);
+
+//                try {
+//                    Bitmap bitmap;
+//                    BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
+//
+//                    bitmap = BitmapFactory.decodeFile(imageDir.getAbsolutePath(),
+//                            bitmapOptions);
+//
+//
+//                    profileImage = (ImageView)findViewById(R.id.profileImage);
+//                    profileImage.setImageBitmap(bitmap);
+//
+//                    String path = android.os.Environment
+//                            .getExternalStorageDirectory()
+//                            + File.separator
+//                            + "Phoenix" + File.separator + "default";
+//                    imageDir.delete();
+//                    OutputStream outFile = null;
+//                    File file = new File(path, String.valueOf(System.currentTimeMillis()) + ".jpg");
+//                    try {
+//                        outFile = new FileOutputStream(file);
+//                        bitmap.compress(Bitmap.CompressFormat.JPEG, 85, outFile);
+//                        outFile.flush();
+//                        outFile.close();
+//                    } catch (FileNotFoundException e) {
+//                        e.printStackTrace();
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+            } else if (requestCode == 2) {
+
+                Uri selectedImage = data.getData();
+                String[] filePath = { MediaStore.Images.Media.DATA };
+                Cursor c = getContentResolver().query(selectedImage,filePath, null, null, null);
+                c.moveToFirst();
+                int columnIndex = c.getColumnIndex(filePath[0]);
+                String picturePath = c.getString(columnIndex);
+                c.close();
+//                Bitmap thumbnail = (BitmapFactory.decodeFile(picturePath));
+                Bitmap thumbnail = ShrinkBitmap(picturePath, 400, 400);
+                Log.w("path of image", picturePath + "");
+                try {
+                    ExifInterface exif = new ExifInterface(picturePath);
+                    int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
+                    Log.d("EXIF", "Exif: " + orientation);
+                    Matrix matrix = new Matrix();
+                    if (orientation == 6) {
+                        matrix.postRotate(90);
+                    }
+                    else if (orientation == 3) {
+                        matrix.postRotate(180);
+                    }
+                    else if (orientation == 8) {
+                        matrix.postRotate(270);
+                    }
+                    thumbnail = Bitmap.createBitmap(thumbnail, 0, 0, thumbnail.getWidth(), thumbnail.getHeight(), matrix, true); // rotating bitmap
+                }
+                catch (Exception e) {
+
+                }
+                profileImage.setImageBitmap(thumbnail);
+            }
         }
-        }
+    }
+
+
 
     /**
      * Logging out the user. Will set isLoggedIn flag to false in shared
@@ -232,5 +399,28 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
         Intent intent = new Intent(UserProfileInterviewScreenActivity.this, LoginScreenActivity.class);
         startActivity(intent);
         finish();
+    }
+    Bitmap ShrinkBitmap(String file, int width, int height){
+
+        BitmapFactory.Options bmpFactoryOptions = new BitmapFactory.Options();
+        bmpFactoryOptions.inJustDecodeBounds = true;
+        Bitmap bitmap = BitmapFactory.decodeFile(file, bmpFactoryOptions);
+
+        int heightRatio = (int)Math.ceil(bmpFactoryOptions.outHeight/(float)height);
+        int widthRatio = (int)Math.ceil(bmpFactoryOptions.outWidth/(float)width);
+
+        if (heightRatio > 1 || widthRatio > 1)
+        {
+            if (heightRatio > widthRatio)
+            {
+                bmpFactoryOptions.inSampleSize = heightRatio;
+            } else {
+                bmpFactoryOptions.inSampleSize = widthRatio;
+            }
+        }
+
+        bmpFactoryOptions.inJustDecodeBounds = false;
+        bitmap = BitmapFactory.decodeFile(file, bmpFactoryOptions);
+        return bitmap;
     }
 }

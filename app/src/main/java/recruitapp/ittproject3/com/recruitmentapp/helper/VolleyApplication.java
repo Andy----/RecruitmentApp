@@ -1,6 +1,7 @@
-package recruitapp.ittproject3.com.recruitmentapp;
+package recruitapp.ittproject3.com.recruitmentapp.helper;
 
 import android.app.Application;
+import android.content.Context;
 import android.text.TextUtils;
 
 import com.android.volley.Request;
@@ -17,6 +18,7 @@ public class VolleyApplication extends Application {
     private static VolleyApplication sInstance;
 
     private RequestQueue mRequestQueue;
+    private static Context mAppContext;
 
     @Override
     public void onCreate() {
@@ -25,6 +27,7 @@ public class VolleyApplication extends Application {
         mRequestQueue = Volley.newRequestQueue(this);
 
         sInstance = this;
+        this.setAppContext(getApplicationContext());
     }
 
     public synchronized static VolleyApplication getInstance() {
@@ -54,5 +57,12 @@ public class VolleyApplication extends Application {
         if (mRequestQueue != null) {
             mRequestQueue.cancelAll(tag);
         }
+    }
+
+    public static Context getAppContext() {
+        return mAppContext;
+    }
+    public void setAppContext(Context mAppContext) {
+        this.mAppContext = mAppContext;
     }
 }
