@@ -143,13 +143,13 @@ public class LoginScreenActivity extends Activity {
                                 db.addUser(response.getLong("app_id"), response.getString("first_name"), response.getString("last_name"), response.getString("email"),
                                         response.getString("city"), response.getString("cvFilePath"), response.getString("profileImage"));
 
-<<<<<<< HEAD
+
 //                                db.addUser((long) 1,"sdf","sdf","sdf","sdf","sdf","sdf");
 
                                 userDetailsObject2 = new JSONObject(response.toString());
-=======
+
                                 userDetailsObject = new JSONObject(response.toString());
->>>>>>> 937f46f92cd407fc66336870c5cfb4163a0fdfc0
+
                                 // Launch main activity
                                 Intent intent = new Intent(LoginScreenActivity.this, UserProfileInterviewScreenActivity.class);
                                 intent.putExtra("userDetailsClass",userDetailsObject2.toString());
