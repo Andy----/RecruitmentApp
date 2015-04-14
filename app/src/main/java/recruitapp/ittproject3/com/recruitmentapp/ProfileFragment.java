@@ -1,7 +1,6 @@
 package recruitapp.ittproject3.com.recruitmentapp;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -13,10 +12,13 @@ import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.NetworkImageView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,6 +28,8 @@ import java.util.Map;
 
 import recruitapp.ittproject3.com.recruitmentapp.helper.AppConfig;
 import recruitapp.ittproject3.com.recruitmentapp.helper.UserDetails;
+import recruitapp.ittproject3.com.recruitmentapp.helper.VolleyApplication;
+import recruitapp.ittproject3.com.recruitmentapp.helper.VolleySingleton;
 
 /**
  * USER PROFILE FRAGMENT.
@@ -44,6 +48,9 @@ public class ProfileFragment extends Fragment {
     private TextView mTextView;
     private View rootView;
     private UserDetails setDetails;
+    private RequestQueue mRequestQueue;
+    private ImageLoader mImageLoader;
+
     /**
      * Returns a new instance of this fragment for the given section
      * number.
@@ -63,7 +70,8 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_profile_screen, container, false);
-
+        mRequestQueue = VolleySingleton.getInstance().getRequestQueue();
+        mImageLoader = VolleySingleton.getInstance().getImageLoader();
         try {
             jsonObject = new JSONObject(userProfileString);
         } catch (JSONException e) {
@@ -97,6 +105,9 @@ public class ProfileFragment extends Fragment {
         mTextView.setText(setDetails.getEmail());
         mTextView = (TextView) rootView.findViewById(R.id.nameView);
         mTextView.setText(setDetails.getFirstName() + " " + setDetails.getSurname());
+        NetworkImageView avatar = (NetworkImageView)getActivity().findViewById(R.id.profileImage);
+        avatar.setImageUrl("http://192.168.1.2:9000/assets/globalUploadFolder/k@gmail.com/profile.jpg",mImageLoader);
+
     }
 
     private void updateUser(final String email) {
