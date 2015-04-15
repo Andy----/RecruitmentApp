@@ -13,8 +13,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 
-import org.json.JSONException;
-
 import java.util.Map;
 
 import recruitapp.ittproject3.com.recruitmentapp.helper.SQLiteHandler;
@@ -59,22 +57,8 @@ public class ProfileFragment extends Fragment {
         mRequestQueue = VolleySingleton.getInstance().getRequestQueue();
         mImageLoader = VolleySingleton.getInstance().getImageLoader();
         db = new SQLiteHandler(getActivity().getApplicationContext());
+        setUserDetails();
 
-        try {
-            setUserDetails();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-//        try {
-//            jsonObject = new JSONObject(userProfileString);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//        try {
-//            updateUser(jsonObject.getString("email"));
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
         return rootView;
     }
 
@@ -88,7 +72,7 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-    public void setUserDetails() throws JSONException {
+    public void setUserDetails() {
 
         String first_name ="";
         String last_name ="";
@@ -111,75 +95,7 @@ public class ProfileFragment extends Fragment {
         }
         mTextView = (TextView) rootView.findViewById(R.id.nameView);
         mTextView.setText(first_name + " " + last_name);
-
-//        setDetails = new UserDetails(userDetailsObject);
-//        mTextView = (TextView) rootView.findViewById(R.id.cityView);
-//        mTextView.setText(setDetails.getCity());
-//        mTextView = (TextView) rootView.findViewById(R.id.emailView);
-//        mTextView.setText(setDetails.getEmail());
-//        mTextView = (TextView) rootView.findViewById(R.id.nameView);
-//        mTextView.setText(setDetails.getFirstName() + " " + setDetails.getSurname());
-//        avatar = (NetworkImageView)getActivity().findViewById(R.id.profileImage);
-//        avatar.setImageUrl("http://192.168.1.2:9000/assets/globalUploadFolder/k@gmail.com/profile.jpg", mImageLoader);
     }
-
-//    private void updateUser(final String email) {
-//        String tag_string_req = "req_login";
-//        Map<String, String> postParams = new HashMap<String, String>();
-//        postParams.put("email", email);
-//
-//        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, AppConfig.URL_REFRESH, new JSONObject(postParams),
-//                new Response.Listener<JSONObject>() {
-//
-//                    @Override
-//                    public void onResponse(JSONObject response) {
-//                        Log.d(TAG, response.toString());
-////                        Toast.makeText(getActivity().getApplicationContext(),
-////                                response.toString(), Toast.LENGTH_LONG).show();
-//
-//                        try {
-//                            boolean error = response.getBoolean("error");
-//
-//                            // Check for error node in json
-//                            if (!error) {
-//                                jsonObject = new JSONObject(response.toString());
-////                                try {
-//////                                    setUserDetails(jsonObject);
-////                                } catch (JSONException e) {
-////                                    e.printStackTrace();
-////                                }
-//                            } else {
-//                                // Error in login. Get the error message
-//                                String errorMsg = response.getString("error_msg");
-//                                Toast.makeText(getActivity().getApplicationContext(),
-//                                        errorMsg, Toast.LENGTH_LONG).show();
-//                            }
-//                        } catch (JSONException e) {
-//                            // JSON error
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }, new Response.ErrorListener() {
-//
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                VolleyLog.d(TAG, "Error: " + error.getMessage());
-//
-//            }
-//        }) {
-//
-//            @Override
-//            public Map<String, String> getHeaders() throws AuthFailureError {
-//                HashMap<String, String> headers = new HashMap<>();
-//                headers.put("Content-Type", "application/json");
-//                headers.put( "charset", "utf-8");
-//                return headers;
-//            }
-//        };
-//
-//        // Adding request to request queue
-//        VolleyApplication.getInstance().addToRequestQueue(jsonObjReq, tag_string_req);
-//    }
 
     @Override
     public void onResume(){

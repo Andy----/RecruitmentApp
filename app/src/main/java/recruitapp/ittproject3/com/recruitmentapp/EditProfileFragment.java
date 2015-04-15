@@ -17,10 +17,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 
-import org.json.JSONException;
-
 import java.io.File;
-import java.util.HashMap;
 import java.util.Map;
 
 import recruitapp.ittproject3.com.recruitmentapp.helper.AppConfig;
@@ -38,7 +35,6 @@ public class EditProfileFragment extends Fragment {
      * fragment.
      */
     private static final String ARG_SECTION_NUMBER = "section_number";
-    private Map<String, String> myMap;
     private TextView mEditText;
     private View rootView;
     private File myVideoFile;
@@ -47,7 +43,6 @@ public class EditProfileFragment extends Fragment {
     private ImageLoader mImageLoader;
     private Map<String, String> userDeatilsMap;
     private SQLiteHandler db;
-    private String globalEmail;
     /**
      * Returns a new instance of this fragment for the given section
      * number.
@@ -73,17 +68,13 @@ public class EditProfileFragment extends Fragment {
         mRequestQueue = VolleySingleton.getInstance().getRequestQueue();
         mImageLoader = VolleySingleton.getInstance().getImageLoader();
         db = new SQLiteHandler(getActivity().getApplicationContext());
-        myMap = new HashMap<>();
-        try {
-            setUserDetails();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        setUserDetails();
         Button mButton = (Button) rootView.findViewById(R.id.saveBtn);
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveDetails();
+
+                updateUser();
             }
         });
         return rootView;
@@ -100,8 +91,8 @@ public class EditProfileFragment extends Fragment {
 
 
     public void saveDetails(){
-        updateUser();
-        MultipartRequest requestVideo = new MultipartRequest(AppConfig.URL_UPDATE, myVideoFile, myMap,
+
+        MultipartRequest requestVideo = new MultipartRequest(AppConfig.URL_UPDATE, myVideoFile, userDeatilsMap,
                 new Response.Listener<String>() {
 
                     @Override
@@ -124,7 +115,7 @@ public class EditProfileFragment extends Fragment {
         );
         VolleyApplication.getInstance().getRequestQueue().add(requestVideo);
 
-        MultipartRequest requestImage = new MultipartRequest(AppConfig.URL_UPDATE_IMAGE, myImageFile, myMap,
+        MultipartRequest requestImage = new MultipartRequest(AppConfig.URL_UPDATE_IMAGE, myImageFile, userDeatilsMap,
                 new Response.Listener<String>() {
 
                     @Override
@@ -149,7 +140,7 @@ public class EditProfileFragment extends Fragment {
     }
 
 
-    public void setUserDetails() throws JSONException {
+    public void setUserDetails()  {
 
         String first_name ="";
         String last_name ="";
@@ -162,7 +153,6 @@ public class EditProfileFragment extends Fragment {
             if(entry.getKey().equals("email")){
                 mEditText = (TextView) rootView.findViewById(R.id.emailText);
                 mEditText.setText(entry.getValue());
-                globalEmail = entry.getValue();
             }
             if(entry.getKey().equals("first_name")){
                 first_name = entry.getValue();
@@ -173,7 +163,8 @@ public class EditProfileFragment extends Fragment {
         }
         mEditText = (EditText) rootView.findViewById(R.id.nameText);
         mEditText.setText(first_name + " " + last_name);
-
+        NetworkImageView avatar = (NetworkImageView)getActivity().findViewById(R.id.profileImage);
+        avatar.setImageUrl("http://192.168.1.2:9000/assets/globalUploadFolder/k@gmail.com/profile.jpg",mImageLoader);
     }
 
     public void updateUser() {
@@ -183,13 +174,14 @@ public class EditProfileFragment extends Fragment {
         String[] names = name.split(" ");
         String firstName = names[0];
         String sureName = names[1];
-        myMap.put("first_name",firstName);
-        myMap.put("last_name", sureName);
+        userDeatilsMap.put("first_name",firstName);
+        userDeatilsMap.put("last_name", sureName);
         mEditText = (TextView) rootView.findViewById(R.id.emailText);
-        myMap.put("email", mEditText.getText().toString());
+        userDeatilsMap.put("email", mEditText.getText().toString());
         mEditText = (TextView) rootView.findViewById(R.id.cityText);
-        myMap.put("city", mEditText.getText().toString());
-        db.updateUserDetails(myMap);
+        userDeatilsMap.put("city", mEditText.getText().toString());
+        db.updateUserDetails(userDeatilsMap);
+        saveDetails();
     }
 
     @Override
