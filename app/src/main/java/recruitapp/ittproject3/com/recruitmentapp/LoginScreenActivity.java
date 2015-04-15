@@ -40,7 +40,6 @@ public class LoginScreenActivity extends Activity {
     private SessionManager session;
     private SQLiteHandler db;
     private JSONObject userDetailsObject;
-    private JSONObject userDetailsObject2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,13 +142,15 @@ public class LoginScreenActivity extends Activity {
                                 db.addUser(response.getLong("app_id"), response.getString("first_name"), response.getString("last_name"), response.getString("email"),
                                         response.getString("city"), response.getString("cvFilePath"), response.getString("profileImage"));
 
-                                userDetailsObject2 = new JSONObject(response.toString());
+
+
+//                                db.addUser((long) 1,"sdf","sdf","sdf","sdf","sdf","sdf");
+
 
                                 userDetailsObject = new JSONObject(response.toString());
 
                                 // Launch main activity
                                 Intent intent = new Intent(LoginScreenActivity.this, UserProfileInterviewScreenActivity.class);
-                                intent.putExtra("userDetailsClass",userDetailsObject2.toString());
 
                                 try {
                                     getInterviews(userDetailsObject.getString("email"));

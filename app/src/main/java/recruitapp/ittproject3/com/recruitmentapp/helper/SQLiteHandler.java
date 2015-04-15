@@ -7,6 +7,7 @@ package recruitapp.ittproject3.com.recruitmentapp.helper;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -27,6 +28,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 
     // Database Name
     private static final String DATABASE_NAME = "jobswift_db";
+
 
 
     public SQLiteHandler(Context context) {
@@ -77,6 +79,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         Log.d(TAG, "New user inserted into sqlite: " + email );
     }
 
+
     public void addJobApplciation (Long app_id, Long job_id, String job_title, String job_description, String job_location, String status) {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -120,6 +123,31 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         Log.d(TAG, "Fetching user from Sqlite: " + user.toString());
 
         return user;
+    }
+
+    public void updateUserDetails(Map<String, String> user) {
+
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues values = new ContentValues();
+
+        String email="";
+        for (Map.Entry<String, String> entry : user.entrySet()){
+            if(entry.getKey().equals("city")){
+                values.put("city", entry.getValue());
+            }
+            if(entry.getKey().equals("email")){
+                values.put("email", entry.getValue());
+                email =entry.getValue();
+            }
+            if(entry.getKey().equals("first_name")){
+                values.put("first_name", entry.getValue());
+            }
+            if(entry.getKey().equals("last_name")){
+                values.put("last_name", entry.getValue());
+            }
+        }
+
+        db.update("user",values,"email" + "='" + email + "'", null);
     }
 
     /*

@@ -59,12 +59,6 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile_interview_screen);
 
-//        b.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                selectImage();
-//            }
-//        });
         mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
 
@@ -131,9 +125,12 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
                 break;
             case 1:
               mTitle = getString(R.string.title_section1);
+
+
                 break;
             case 2:
                 mTitle = getString(R.string.title_section2);
+
                 break;
 
         }
@@ -175,9 +172,6 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
         return super.onOptionsItemSelected(item);
     }
 
-    // Image chooser for profile image
-//    public void profileImageClick() {
-//    }
 
     public void selectImage(View v) {
 
@@ -199,8 +193,7 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
         builder.setItems(options, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
-                if (options[item].equals("Take Photo"))
-                {
+                if (options[item].equals("Take Photo")){
                     Intent takeProfileImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     if (takeProfileImage.resolveActivity(getPackageManager()) != null) {
 
@@ -209,9 +202,11 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
                         startActivityForResult(takeProfileImage, 1);
                     }
                 }
-                else if (options[item].equals("Choose from Gallery"))
-                {
+                else if (options[item].equals("Choose from Gallery")){
                     Intent takeProfileImage = new   Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+//                    Uri selectedImage = takeProfileImage.getData();
+////                  imageFile = selectedImage;
                     startActivityForResult(takeProfileImage, 2);
 
                 }
@@ -247,7 +242,6 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
         }
     }
 
-
     // Call the VideoPlayerActivity and start it
     public void buttonOnClickView(View v){
 
@@ -255,11 +249,6 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
         this.startActivity(intent);
         }
 
-//    public void buttonOnClickUpload(View v){
-//
-//        Intent intent = new Intent(this, JSONActivity.class);
-//        this.startActivity(intent);
-//    }
 
     // This Method gives you information about the buttonOnClickRecord method
 //    @Override
