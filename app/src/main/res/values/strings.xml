@@ -6,9 +6,9 @@
     <string name="profile_location">City</string>
     <string name="profile_name">John Doe</string>
     <string name="profile_age">29</string>
-    <string name="title_section1">Profile</string>
-    <string name="title_section2">Interview</string>
-    <string name="title_section0">Edit Profile</string>
+    <string name="title_section0">Profile</string>
+    <string name="title_section1">Job Applications</string>
+    <string name="title_section2">Edit Profile</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_logout">Logout</string>
@@ -31,4 +31,7 @@
 
     <!-- Register Screen Strings -->
     <string name="interview_fragment_title">Your Job Applications</string>
+    <string name="title_activity_interview">InterviewActivity</string>
+
+    <string name="hello_world">Hello world!</string>
 </resources>

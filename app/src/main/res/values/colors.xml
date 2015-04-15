@@ -6,6 +6,7 @@
     <item name="menu_highlight_color" type="color">#333439</item>
     <item name="recruit_blue_color" type="color">#226bb3</item>
     <item name="light_blue" type="color">#D9226bb3</item>
+    <item name="dark_background_highlight" type="color">#40444A</item>
 
     <color name="bg_login">#26ae90</color>
     <color name="bg_main">#428bca</color>
@@ -19,5 +20,10 @@
     <color name="btn_login_bg">#eceef1</color>
     <color name="lbl_name">#333333</color>
     <color name="btn_logut_bg">#ff6861</color>
+
+    <color name="danger">#C23B22</color>
+    <color name="warning">#FFB347</color>
+    <color name="success">#77DD77</color>
+
 
 </resources>
