@@ -112,13 +112,13 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
         switch (number) {
             default:
             case 0:
-                mTitle = getString(R.string.title_section0);
+                mTitle = getString(R.string.title_section2);
                 break;
             case 1:
-              mTitle = getString(R.string.title_section1);
+              mTitle = getString(R.string.title_section0);
                 break;
             case 2:
-                mTitle = getString(R.string.title_section2);
+                mTitle = getString(R.string.title_section1);
                 break;
 
         }
