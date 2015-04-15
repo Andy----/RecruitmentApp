@@ -1,12 +1,10 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/interviewLinearLayout"
+    android:id="@+id/jobApplicationRelativeLayout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@color/dark_background_color"
-    android:gravity="center"
     tools:context=".MainActivity"
-    android:orientation="vertical"
     android:padding="10dp" >
 
     <TextView
@@ -18,8 +16,17 @@
         android:background="@color/light_blue"
         android:padding="10dp"
         android:id="@+id/interviewHeading"
-        android:gravity="center" />
+        android:gravity="center"
+        android:layout_alignParentTop="true" />
 
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:id="@+id/jobApplicationLinearLayout"
+        android:layout_below="@+id/interviewHeading"
+        android:padding="10dp">
 
+        </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

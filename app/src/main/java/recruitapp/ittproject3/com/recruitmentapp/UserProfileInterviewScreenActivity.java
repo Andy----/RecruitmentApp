@@ -28,14 +28,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 
 import recruitapp.ittproject3.com.recruitmentapp.helper.SQLiteHandler;
 import recruitapp.ittproject3.com.recruitmentapp.helper.SessionManager;
-import recruitapp.ittproject3.com.recruitmentapp.helper.UserDetails;
 
 
 public class UserProfileInterviewScreenActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks
@@ -115,7 +110,7 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
                 fragment.setArguments(bundle);
                 break;
             case 1:
-                fragment = new InterviewFragment().newInstance(position + 1);
+                fragment = new JobApplicationFragment().newInstance(position + 1);
                 break;
             case 2:
                 fragment = new EditProfileFragment().newInstance(position + 1);
@@ -133,15 +128,12 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
             default:
             case 0:
                 mTitle = getString(R.string.title_section0);
-//                mTitle = "Edit Profile";
                 break;
             case 1:
               mTitle = getString(R.string.title_section1);
-//                mTitle = "Profile";
                 break;
             case 2:
                 mTitle = getString(R.string.title_section2);
-//                mTitle = "Interview";
                 break;
 
         }
