@@ -26,7 +26,10 @@ public class AppConfig {
     public static String URL_UPDATE_IMAGE= URL + "/updateProfileImage";
 
     // Server Interview request URL
-    public static String URL_GET_INTERVIEWS = URL + "/androidgetinterviews";
+    public static String URL_GET_INTERVIEWS = URL + "/androidgetjobapplications";
+
+    // Get Json array of interview questions
+    public static String URL_GET_QUESTIONS = URL + "/androidgetinterviewquestions";
 
     // Refresh URL
     public static String URL_REFRESH = URL + "/refresh";

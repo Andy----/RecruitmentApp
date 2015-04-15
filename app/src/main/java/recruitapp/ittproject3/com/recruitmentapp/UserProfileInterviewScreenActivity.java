@@ -370,13 +370,16 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
     public void logoutUser() {
         session.setLogin(false);
 
-        db.deleteUsers();
+        db.deleteTable("user");
+        db.deleteTable("jobapplication");
+        db.deleteTable("questiontable");
 
         // Launching the login activity
         Intent intent = new Intent(UserProfileInterviewScreenActivity.this, LoginScreenActivity.class);
         startActivity(intent);
         finish();
     }
+
     Bitmap ShrinkBitmap(String file, int width, int height){
 
         BitmapFactory.Options bmpFactoryOptions = new BitmapFactory.Options();

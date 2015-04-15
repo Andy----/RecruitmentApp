@@ -222,7 +222,7 @@ public class LoginScreenActivity extends Activity {
 
                                 for (int i = 0; i < response.length(); i++) {
                                     JSONObject jsonObject = response.getJSONObject(i);
-                                    db.addJobApplciation(jsonObject.getLong("app_id"), jsonObject.getLong("job_id"), jsonObject.getString("job_title"), jsonObject.getString("job_description"), jsonObject.getString("job_location"), jsonObject.getString("status"));
+                                    db.addJobApplication(jsonObject.getLong("app_id"), jsonObject.getLong("job_id"), jsonObject.getString("job_title"), jsonObject.getString("job_description"), jsonObject.getString("job_location"), jsonObject.getString("status"));
                                 }
                             }
                         } catch (Exception e) {
