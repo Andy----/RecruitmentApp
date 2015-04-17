@@ -8,30 +8,30 @@ import android.content.Context;
 
 public class AppConfig {
 
-    private static String URLA = "http://192.168.0.27:9000";
-    private static String URL = "http://192.168.1.2:9000";
-    private static String URLB = "http://recruit.x64.me";
+    public static final String URL = "http://192.168.0.27:9000";
+    public static final String URLA = "http://192.168.1.2:9000";
+    public static final String URLB = "http://recruit.x64.me";
 
 
     // Server user login url
-    public static String URL_LOGIN = URL + "/androidlogin";
+    public static final String URL_LOGIN = URL + "/androidlogin";
 
     // Server register URL
-    public static String URL_REGISTER = URL + "/androidregister";
+    public static final String URL_REGISTER = URL + "/androidregister";
 
     // Server Update URL
-    public static String URL_UPDATE = URL + "/update";
+    public static final String URL_UPDATE = URL + "/update";
 
     // Server Update CV URL
-    public static String URL_UPDATE_IMAGE= URL + "/updateProfileImage";
+    public static final String URL_UPDATE_IMAGE= URL + "/updateProfileImage";
 
     // Server Interview request URL
-    public static String URL_GET_INTERVIEWS = URL + "/androidgetjobapplications";
+    public static final String URL_GET_INTERVIEWS = URL + "/androidgetjobapplications";
 
     // Get Json array of interview questions
-    public static String URL_GET_QUESTIONS = URL + "/androidgetinterviewquestions";
+    public static final String URL_GET_QUESTIONS = URL + "/androidgetinterviewquestions";
 
     // Refresh URL
-    public static String URL_REFRESH = URL + "/refresh";
+    public static final String URL_REFRESH = URL + "/refresh";
 
 }

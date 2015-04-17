@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
@@ -15,6 +16,7 @@ import com.android.volley.toolbox.NetworkImageView;
 
 import java.util.Map;
 
+import recruitapp.ittproject3.com.recruitmentapp.helper.AppConfig;
 import recruitapp.ittproject3.com.recruitmentapp.helper.SQLiteHandler;
 import recruitapp.ittproject3.com.recruitmentapp.helper.VolleySingleton;
 
@@ -33,7 +35,7 @@ public class ProfileFragment extends Fragment {
     private ImageLoader mImageLoader;
     private  NetworkImageView avatar;
     private SQLiteHandler db;
-    private Map<String, String> userDeatilsMap;
+    private Map<String, String> userDetailsMap;
 
     /**
      * Returns a new instance of this fragment for the given section
@@ -76,8 +78,8 @@ public class ProfileFragment extends Fragment {
 
         String first_name ="";
         String last_name ="";
-        userDeatilsMap = db.getUserDetails();
-        for (Map.Entry<String, String> entry : userDeatilsMap.entrySet()){
+        userDetailsMap = db.getUserDetails();
+        for (Map.Entry<String, String> entry : userDetailsMap.entrySet()){
             if(entry.getKey().equals("city")){
                 mTextView = (TextView) rootView.findViewById(R.id.cityView);
                 mTextView.setText(entry.getValue());
@@ -101,6 +103,6 @@ public class ProfileFragment extends Fragment {
     public void onResume(){
         super.onResume();
         avatar = (NetworkImageView)getActivity().findViewById(R.id.profileImage);
-        avatar.setImageUrl("http://192.168.1.2:9000/assets/globalUploadFolder/k@gmail.com/profile.jpg", mImageLoader);
+        avatar.setImageUrl(AppConfig.URL + "/assets/" + userDetailsMap.get("profile_image_path"), mImageLoader);
     }
 }

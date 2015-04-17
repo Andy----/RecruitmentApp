@@ -16,7 +16,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import recruitapp.ittproject3.com.recruitmentapp.JobApplication;
+import recruitapp.ittproject3.com.recruitmentapp.Models.*;
 
 public class SQLiteHandler extends SQLiteOpenHelper {
 
@@ -177,7 +177,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     * Retrieve all users job applications from SQLite database
      */
     public List<JobApplication> getJobApplicationDetails() {
-        String selectQuery = "SELECT  * FROM jobapplication";
+        String selectQuery = "SELECT * FROM jobapplication";
         List<JobApplication> jobApplicationList = new ArrayList<JobApplication>();
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -200,24 +200,24 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     * Retrieve all interview questions for a given job
     * from the SQLite database
      */
-    public List<JobApplication> getInterviewQuestions() {
-        String selectQuery = "SELECT  * FROM jobapplication";
-        List<JobApplication> jobApplicationList = new ArrayList<JobApplication>();
+    public List<InterviewQuestion> getInterviewQuestionList() {
+        String selectQuery = "SELECT * FROM questiontable";
+        List<InterviewQuestion> interviewQuestionList = new ArrayList<InterviewQuestion>();
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.rawQuery(selectQuery, null);
         cursor.moveToFirst();
         if (cursor.getCount() > 0) {
             do {
-                JobApplication ja = new JobApplication(cursor.getLong(0), cursor.getLong(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5));
-                jobApplicationList.add(ja);
-                Log.d(TAG, "Fetched 1 row from job application table");
+                InterviewQuestion iq = new InterviewQuestion(cursor.getLong(0), cursor.getString(1), cursor.getLong(2));
+                interviewQuestionList.add(iq);
+                Log.d(TAG, "Fetched 1 row from question table");
             } while (cursor.moveToNext());
         }
 
         cursor.close();
         db.close();
-        return jobApplicationList;
+        return interviewQuestionList;
     }
 
     /**
