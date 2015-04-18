@@ -2,6 +2,7 @@ package recruitapp.ittproject3.com.recruitmentapp;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.Html;
@@ -21,6 +22,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,34 +38,36 @@ public class InterviewActivity extends Activity {
     private static final String TAG = InterviewActivity.class.getSimpleName();
     private ProgressDialog pDialog;
     private SQLiteHandler db;
+    private List<InterviewQuestion> interviewQuestions;
+    private Long jobId;
+    private TextView interviewInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_interview);
+        interviewQuestions = new ArrayList<InterviewQuestion>();
 
         // Progress dialog
         pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);
 
-        Long jobId = getIntent().getExtras().getLong("jobId");
+        jobId = getIntent().getExtras().getLong("jobId");
         db = new SQLiteHandler(getApplicationContext());
         db.deleteTable("questiontable");
 
         if(jobId != null) {
             getInterviewQuestions(jobId);
-
-            List<InterviewQuestion> interviewQuestionList = db.getInterviewQuestionList();
-            TextView interviewInfo = (TextView) findViewById(R.id.intContent);
-            interviewInfo.setText("Your interview consists of " + interviewQuestionList.size() + " questions.");
         }
     }
-
 
     /**
      * function to retrieve all interview questions for job interview
      * */
     private void getInterviewQuestions(final Long id) {
+
+        pDialog.setMessage("Preparing Your Interview...");
+        showDialog();
 
         Map<String, Long> postParams = new HashMap<String, Long>();
         postParams.put("job_id", id);
@@ -85,6 +89,8 @@ public class InterviewActivity extends Activity {
                                     JSONObject jsonObject = response.getJSONObject(i);
                                     db.addInterviewQuestions(jsonObject.getLong("question_id"), jsonObject.getString("question"), jsonObject.getLong("job_id"));
                                 }
+                                interviewQuestions = db.getInterviewQuestionList();
+                                setInterviewDetails();
                             }
                         } catch (Exception e) {
                             // JSON error
@@ -112,6 +118,15 @@ public class InterviewActivity extends Activity {
 
         // Adding request to request queue
         VolleyApplication.getInstance().addToRequestQueue(jsonObjReq);
+    }
+
+    public void setInterviewDetails() {
+
+        interviewInfo = (TextView) findViewById(R.id.intNumQuestions);
+        interviewInfo.setText("Your interview will consist of " + interviewQuestions.size() + " questions.");
+
+        interviewInfo = (TextView) findViewById(R.id.approxTime);
+        interviewInfo.setText("It will last for approximately " + (interviewQuestions.size()*3) + " minutes");
     }
 
 
