@@ -41,7 +41,7 @@ public class EditProfileFragment extends Fragment {
     private File myImageFile;
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
-    private Map<String, String> userDeatilsMap;
+    private Map<String, String> userDetailsMap;
     private SQLiteHandler db;
     /**
      * Returns a new instance of this fragment for the given section
@@ -92,7 +92,7 @@ public class EditProfileFragment extends Fragment {
 
     public void saveDetails(){
 
-        MultipartRequest requestVideo = new MultipartRequest(AppConfig.URL_UPDATE, myVideoFile, userDeatilsMap,
+        MultipartRequest requestVideo = new MultipartRequest(AppConfig.URL_UPDATE, myVideoFile, userDetailsMap,
                 new Response.Listener<String>() {
 
                     @Override
@@ -115,7 +115,7 @@ public class EditProfileFragment extends Fragment {
         );
         VolleyApplication.getInstance().getRequestQueue().add(requestVideo);
 
-        MultipartRequest requestImage = new MultipartRequest(AppConfig.URL_UPDATE_IMAGE, myImageFile, userDeatilsMap,
+        MultipartRequest requestImage = new MultipartRequest(AppConfig.URL_UPDATE_IMAGE, myImageFile, userDetailsMap,
                 new Response.Listener<String>() {
 
                     @Override
@@ -144,8 +144,8 @@ public class EditProfileFragment extends Fragment {
 
         String first_name ="";
         String last_name ="";
-        userDeatilsMap = db.getUserDetails();
-        for (Map.Entry<String, String> entry : userDeatilsMap.entrySet()){
+        userDetailsMap = db.getUserDetails();
+        for (Map.Entry<String, String> entry : userDetailsMap.entrySet()){
             if(entry.getKey().equals("city")){
                 mEditText = (EditText) rootView.findViewById(R.id.cityText);
                 mEditText.setText(entry.getValue());
@@ -164,7 +164,13 @@ public class EditProfileFragment extends Fragment {
         mEditText = (EditText) rootView.findViewById(R.id.nameText);
         mEditText.setText(first_name + " " + last_name);
         NetworkImageView avatar = (NetworkImageView)getActivity().findViewById(R.id.profileImage);
-        avatar.setImageUrl("http://192.168.1.2:9000/assets/globalUploadFolder/k@gmail.com/profile.jpg",mImageLoader);
+//        avatar.setImageUrl("http://192.168.1.2:9000/assets/globalUploadFolder/k@gmail.com/profile.jpg",mImageLoader);
+
+        try {
+            avatar.setImageUrl(AppConfig.URL + "/assets/" + userDetailsMap.get("profile_image_path") , mImageLoader);
+        }catch(Exception e) {
+            Toast.makeText(getActivity().getApplicationContext(),"Error Retrieving Profile Photo", Toast.LENGTH_LONG).show();
+        }
     }
 
     public void updateUser() {
@@ -174,13 +180,13 @@ public class EditProfileFragment extends Fragment {
         String[] names = name.split(" ");
         String firstName = names[0];
         String sureName = names[1];
-        userDeatilsMap.put("first_name",firstName);
-        userDeatilsMap.put("last_name", sureName);
+        userDetailsMap.put("first_name",firstName);
+        userDetailsMap.put("last_name", sureName);
         mEditText = (TextView) rootView.findViewById(R.id.emailText);
-        userDeatilsMap.put("email", mEditText.getText().toString());
+        userDetailsMap.put("email", mEditText.getText().toString());
         mEditText = (TextView) rootView.findViewById(R.id.cityText);
-        userDeatilsMap.put("city", mEditText.getText().toString());
-        db.updateUserDetails(userDeatilsMap);
+        userDetailsMap.put("city", mEditText.getText().toString());
+        db.updateUserDetails(userDetailsMap);
         saveDetails();
     }
 
@@ -188,6 +194,12 @@ public class EditProfileFragment extends Fragment {
     public void onResume(){
         super.onResume();
         NetworkImageView avatar = (NetworkImageView)getActivity().findViewById(R.id.profileImage);
-        avatar.setImageUrl("http://192.168.1.2:9000/assets/globalUploadFolder/k@gmail.com/profile.jpg",mImageLoader);
+//        avatar.setImageUrl("http://192.168.1.2:9000/assets/globalUploadFolder/k@gmail.com/profile.jpg",mImageLoader);
+
+        try {
+            avatar.setImageUrl(AppConfig.URL + "/assets/" + userDetailsMap.get("profile_image_path") , mImageLoader);
+        }catch(Exception e) {
+            Toast.makeText(getActivity().getApplicationContext(),"Error Retrieving Profile Photo", Toast.LENGTH_LONG).show();
+        }
     }
 }

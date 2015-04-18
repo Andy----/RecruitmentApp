@@ -1,4 +1,4 @@
-package recruitapp.ittproject3.com.recruitmentapp;
+package recruitapp.ittproject3.com.recruitmentapp.Models;
 
 /**
  * Created by Andrew on 13/04/2015.

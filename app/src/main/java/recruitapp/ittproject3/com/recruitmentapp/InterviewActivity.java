@@ -1,11 +1,15 @@
 package recruitapp.ittproject3.com.recruitmentapp;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -18,14 +22,16 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import recruitapp.ittproject3.com.recruitmentapp.Models.InterviewQuestion;
 import recruitapp.ittproject3.com.recruitmentapp.helper.AppConfig;
 import recruitapp.ittproject3.com.recruitmentapp.helper.SQLiteHandler;
 import recruitapp.ittproject3.com.recruitmentapp.helper.VolleyApplication;
 
 
-public class InterviewActivity extends ActionBarActivity {
+public class InterviewActivity extends Activity {
 
     private static final String TAG = InterviewActivity.class.getSimpleName();
     private ProgressDialog pDialog;
@@ -46,30 +52,11 @@ public class InterviewActivity extends ActionBarActivity {
 
         if(jobId != null) {
             getInterviewQuestions(jobId);
+
+            List<InterviewQuestion> interviewQuestionList = db.getInterviewQuestionList();
+            TextView interviewInfo = (TextView) findViewById(R.id.intContent);
+            interviewInfo.setText("Your interview consists of " + interviewQuestionList.size() + " questions.");
         }
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_interview, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
 
