@@ -168,6 +168,9 @@ public class SQLiteHandler extends SQLiteOpenHelper {
             if(entry.getKey().equals("last_name")){
                 values.put("last_name", entry.getValue());
             }
+            if(entry.getKey().equals("profile_image_path")){
+                values.put("profile_image_path", entry.getValue());
+            }
         }
 
         db.update("user",values,"email" + "='" + email + "'", null);

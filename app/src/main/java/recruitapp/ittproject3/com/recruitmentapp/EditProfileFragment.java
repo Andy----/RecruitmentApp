@@ -42,7 +42,9 @@ public class EditProfileFragment extends Fragment {
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
     private Map<String, String> userDetailsMap;
+    private Map<String, String> userDeatilsMap2;
     private SQLiteHandler db;
+    private String profileImageDir;
     /**
      * Returns a new instance of this fragment for the given section
      * number.
@@ -160,21 +162,18 @@ public class EditProfileFragment extends Fragment {
             if(entry.getKey().equals("last_name")){
                 last_name =  entry.getValue();
             }
+            if(entry.getKey().equals("profile_image_path")){
+                profileImageDir =  entry.getValue();
+                System.out.println(profileImageDir);
+            }
         }
         mEditText = (EditText) rootView.findViewById(R.id.nameText);
         mEditText.setText(first_name + " " + last_name);
-        NetworkImageView avatar = (NetworkImageView)getActivity().findViewById(R.id.profileImage);
-//        avatar.setImageUrl("http://192.168.1.2:9000/assets/globalUploadFolder/k@gmail.com/profile.jpg",mImageLoader);
-
-        try {
-            avatar.setImageUrl(AppConfig.URL + "/assets/" + userDetailsMap.get("profile_image_path") , mImageLoader);
-        }catch(Exception e) {
-            Toast.makeText(getActivity().getApplicationContext(),"Error Retrieving Profile Photo", Toast.LENGTH_LONG).show();
-        }
     }
 
     public void updateUser() {
 
+        userDeatilsMap2 = db.getUserDetails();
         mEditText = (EditText) rootView.findViewById(R.id.nameText);
         String name = mEditText.getText().toString();
         String[] names = name.split(" ");
@@ -185,8 +184,15 @@ public class EditProfileFragment extends Fragment {
         mEditText = (TextView) rootView.findViewById(R.id.emailText);
         userDetailsMap.put("email", mEditText.getText().toString());
         mEditText = (TextView) rootView.findViewById(R.id.cityText);
+
         userDetailsMap.put("city", mEditText.getText().toString());
+        for (Map.Entry<String, String> entry : userDeatilsMap2.entrySet()){
+            if(entry.getKey().equals("profile_image_path")){
+                userDetailsMap.put("profile_image_path", entry.getValue());
+            }
+        }
         db.updateUserDetails(userDetailsMap);
+
         saveDetails();
     }
 
@@ -194,12 +200,11 @@ public class EditProfileFragment extends Fragment {
     public void onResume(){
         super.onResume();
         NetworkImageView avatar = (NetworkImageView)getActivity().findViewById(R.id.profileImage);
-//        avatar.setImageUrl("http://192.168.1.2:9000/assets/globalUploadFolder/k@gmail.com/profile.jpg",mImageLoader);
-
         try {
-            avatar.setImageUrl(AppConfig.URL + "/assets/" + userDetailsMap.get("profile_image_path") , mImageLoader);
+            avatar.setImageUrl(AppConfig.IMAGE_URL + profileImageDir ,mImageLoader);
         }catch(Exception e) {
             Toast.makeText(getActivity().getApplicationContext(),"Error Retrieving Profile Photo", Toast.LENGTH_LONG).show();
         }
+
     }
 }

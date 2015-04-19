@@ -8,9 +8,11 @@ import android.content.Context;
 
 public class AppConfig {
 
-    public static final String URL = "http://192.168.0.27:9000";
-    public static final String URLA = "http://192.168.1.2:9000";
+    private static final String URLA = "http://192.168.0.27:9000";
+    private static final String URL = "http://192.168.1.2:9000";
     public static final String URLB = "http://recruit.x64.me";
+    private static final String URLa = "http://johnkiernan.ie";
+
 
 
     // Server user login url
@@ -33,5 +35,8 @@ public class AppConfig {
 
     // Refresh URL
     public static final String URL_REFRESH = URL + "/refresh";
+
+    // Profile Image URL
+    public static String IMAGE_URL = URL + "/assets/";
 
 }

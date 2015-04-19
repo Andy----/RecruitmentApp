@@ -35,7 +35,9 @@ public class ProfileFragment extends Fragment {
     private ImageLoader mImageLoader;
     private  NetworkImageView avatar;
     private SQLiteHandler db;
+    private String profileImageDir;
     private Map<String, String> userDetailsMap;
+
 
     /**
      * Returns a new instance of this fragment for the given section
@@ -94,6 +96,10 @@ public class ProfileFragment extends Fragment {
             if(entry.getKey().equals("last_name")){
                 last_name =  entry.getValue();
             }
+            if(entry.getKey().equals("profile_image_path")){
+                profileImageDir =  entry.getValue();
+                System.out.println(profileImageDir);
+            }
         }
         mTextView = (TextView) rootView.findViewById(R.id.nameView);
         mTextView.setText(first_name + " " + last_name);
@@ -103,6 +109,7 @@ public class ProfileFragment extends Fragment {
     public void onResume(){
         super.onResume();
         avatar = (NetworkImageView)getActivity().findViewById(R.id.profileImage);
-        avatar.setImageUrl(AppConfig.URL + "/assets/" + userDetailsMap.get("profile_image_path"), mImageLoader);
+        avatar.setImageUrl(AppConfig.IMAGE_URL  + profileImageDir ,mImageLoader);
+
     }
 }
