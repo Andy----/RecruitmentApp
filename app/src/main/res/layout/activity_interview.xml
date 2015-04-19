@@ -39,6 +39,15 @@
             android:textSize="22dp"
             android:gravity="center"/>
 
+        <Button
+            android:id="@+id/nextQuestionButton"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Ready"
+            android:textColor="@color/white"
+            android:background="@color/light_blue"
+            android:layout_marginTop="40dp" />
+
     </LinearLayout>
 
 </RelativeLayout>

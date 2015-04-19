@@ -159,7 +159,7 @@
             android:id="@+id/startInterviewButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Begin"
+            android:text="NEXT"
             android:textColor="@color/white"
             android:background="@color/light_blue"
             android:textSize="18dp"
