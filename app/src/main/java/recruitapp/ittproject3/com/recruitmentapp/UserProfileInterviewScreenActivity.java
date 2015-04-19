@@ -15,6 +15,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,6 +42,9 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mDrawerToggle;
+
     static final int REQUEST_VIDEO_CAPTURE = 1;
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -65,6 +70,7 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
 //                selectImage();
 //            }
 //        });
+
         mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
 
@@ -72,6 +78,9 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
+
+
 
         btnLogout = (Button) findViewById(R.id.action_logout);
 
@@ -264,7 +273,7 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
                     Toast.LENGTH_LONG).show();
         }
      }
-
+//
 //    @Override
 //    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 //        super.onActivityResult(requestCode, resultCode, data);
@@ -384,13 +393,16 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
     public void logoutUser() {
         session.setLogin(false);
 
-        db.deleteUsers();
+        db.deleteTable("user");
+        db.deleteTable("jobapplication");
+        db.deleteTable("questiontable");
 
         // Launching the login activity
         Intent intent = new Intent(UserProfileInterviewScreenActivity.this, LoginScreenActivity.class);
         startActivity(intent);
         finish();
     }
+
     Bitmap ShrinkBitmap(String file, int width, int height){
 
         BitmapFactory.Options bmpFactoryOptions = new BitmapFactory.Options();

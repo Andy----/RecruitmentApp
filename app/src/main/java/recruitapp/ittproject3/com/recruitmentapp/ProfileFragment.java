@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
@@ -34,8 +35,9 @@ public class ProfileFragment extends Fragment {
     private ImageLoader mImageLoader;
     private  NetworkImageView avatar;
     private SQLiteHandler db;
-    private Map<String, String> userDeatilsMap;
     private String profileImageDir;
+    private Map<String, String> userDetailsMap;
+
 
     /**
      * Returns a new instance of this fragment for the given section
@@ -78,8 +80,8 @@ public class ProfileFragment extends Fragment {
 
         String first_name ="";
         String last_name ="";
-        userDeatilsMap = db.getUserDetails();
-        for (Map.Entry<String, String> entry : userDeatilsMap.entrySet()){
+        userDetailsMap = db.getUserDetails();
+        for (Map.Entry<String, String> entry : userDetailsMap.entrySet()){
             if(entry.getKey().equals("city")){
                 mTextView = (TextView) rootView.findViewById(R.id.cityView);
                 mTextView.setText(entry.getValue());
@@ -108,5 +110,6 @@ public class ProfileFragment extends Fragment {
         super.onResume();
         avatar = (NetworkImageView)getActivity().findViewById(R.id.profileImage);
         avatar.setImageUrl(AppConfig.IMAGE_URL  + profileImageDir ,mImageLoader);
+
     }
 }

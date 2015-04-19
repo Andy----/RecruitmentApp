@@ -16,7 +16,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import recruitapp.ittproject3.com.recruitmentapp.JobApplication;
+import recruitapp.ittproject3.com.recruitmentapp.Models.*;
 
 public class SQLiteHandler extends SQLiteOpenHelper {
 
@@ -43,6 +43,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         String CREATE_QUESTION_TABLE = "CREATE TABLE questiontable (question_id LONG PRIMARY KEY, question VARCHAR, job_id LONG, FOREIGN KEY(job_id) REFERENCES joblisting(job_id));";
         db.execSQL(CREATE_LOGIN_TABLE);
         db.execSQL(CREATE_JOB_APPLICATION_TABLE);
+        db.execSQL(CREATE_QUESTION_TABLE);
 
         Log.d(TAG, "Database tables created");
     }
@@ -51,7 +52,9 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop older table if existed
-        db.execSQL("DROP TABLE IF EXISTS login");
+        db.execSQL("DROP TABLE IF EXISTS user");
+        db.execSQL("DROP TABLE IF EXISTS jobapplication");
+        db.execSQL("DROP TABLE IF EXISTS questiontable");
 
         // Create tables again
         onCreate(db);
@@ -79,8 +82,10 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         Log.d(TAG, "New user inserted into sqlite: " + email );
     }
 
-
-    public void addJobApplciation (Long app_id, Long job_id, String job_title, String job_description, String job_location, String status) {
+    /**
+     * Storing user's job applications in database
+     * */
+    public void addJobApplication (Long app_id, Long job_id, String job_title, String job_description, String job_location, String status) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -96,6 +101,24 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         db.close(); // Closing database connection
 
         Log.d(TAG, "New job application inserted into sqlite: " + app_id );
+    }
+
+    /**
+     * Storing interview questions in database
+     * */
+    public void addInterviewQuestions (Long question_id, String question, Long job_id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("question_id", question_id);
+        values.put("question", question);
+        values.put("job_id", job_id);
+
+        // Inserting Row
+        db.insert("questiontable", null, values);
+        db.close(); // Closing database connection
+
+        Log.d(TAG, "New interview question inserted into sqlite: " + question_id );
     }
 
     /**
@@ -157,7 +180,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     * Retrieve all users job applications from SQLite database
      */
     public List<JobApplication> getJobApplicationDetails() {
-        String selectQuery = "SELECT  * FROM jobapplication";
+        String selectQuery = "SELECT * FROM jobapplication";
         List<JobApplication> jobApplicationList = new ArrayList<JobApplication>();
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -176,11 +199,50 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         return jobApplicationList;
     }
 
+    /*
+    * Retrieve all interview questions for a given job
+    * from the SQLite database
+     */
+    public List<InterviewQuestion> getInterviewQuestionList() {
+        String selectQuery = "SELECT * FROM questiontable";
+        List<InterviewQuestion> interviewQuestionList = new ArrayList<InterviewQuestion>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        cursor.moveToFirst();
+        if (cursor.getCount() > 0) {
+            do {
+                InterviewQuestion iq = new InterviewQuestion(cursor.getLong(0), cursor.getString(1), cursor.getLong(2));
+                interviewQuestionList.add(iq);
+                Log.d(TAG, "Fetched 1 row from question table");
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return interviewQuestionList;
+    }
+
     /**
      * Getting user login status return true if rows are there in table
      * */
     public int getUserRowCount() {
         String countQuery = "SELECT  * FROM user";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+        int rowCount = cursor.getCount();
+        db.close();
+        cursor.close();
+
+        // return row count
+        return rowCount;
+    }
+
+    /**
+     * Getting user login status return true if rows are there in table
+     * */
+    public int getInterviewQuestionCount() {
+        String countQuery = "SELECT  * FROM questiontable";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(countQuery, null);
         int rowCount = cursor.getCount();
@@ -209,14 +271,13 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     /**
      * Delete all tables
      * */
-    public void deleteUsers() {
+    public void deleteTable(String tableName) {
         SQLiteDatabase db = this.getWritableDatabase();
         // Delete All Rows
-        db.delete("user", null, null);
-        db.delete("jobapplication", null, null);
+        db.delete(tableName, null, null);
         db.close();
 
-        Log.d(TAG, "Deleted all user info from sqlite");
+        Log.d(TAG, "Deleted table from sqlite");
     }
 
 }

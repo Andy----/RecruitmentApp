@@ -33,5 +33,9 @@
     <string name="interview_fragment_title">Your Job Applications</string>
     <string name="title_activity_interview">InterviewActivity</string>
 
-    <string name="hello_world">Hello world!</string>
+    <string name="interview_tip1">Conduct your interview in a quiet area that is free from any distractions.</string>
+    <string name="interview_tip2">Make sure you are sitting in an area with adequate lighting.</string>
+    <string name="interview_tip3">Dress appropriately and make sure to keep your head and shoulders centered in the camera\'s view</string>
+    <string name="interview_tip4">Connect to WiFi if possible as you will be required to upload a potentially large amount of data when finished.</string>
+
 </resources>

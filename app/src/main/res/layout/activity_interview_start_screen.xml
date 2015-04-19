@@ -1,0 +1,170 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dark_background_color"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="recruitapp.ittproject3.com.recruitmentapp.InterviewStartScreenActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Interview Tips"
+        android:textColor="@color/white"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:id="@+id/intHeading1"
+        android:layout_marginBottom="20dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+
+    <TableLayout
+        android:layout_height="wrap_content"
+        android:id="@+id/TableLayout01"
+        android:layout_width="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:layout_below="@+id/intHeading1"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true">
+
+        <TableRow android:layout_marginBottom ="5dp">
+            <TextView android:id="@+id/bulletPoint1"
+                android:layout_height="wrap_content"
+                android:text="◉"
+                android:textColor="@color/white"
+                android:layout_marginRight="5dp"
+                android:textSize="15dp"
+                android:singleLine="false" />
+
+            <TextView android:id="@+id/interviewTip1"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="@string/interview_tip1"
+                android:textColor="@color/white"
+                android:textSize="16dp"
+                android:layout_span="2"
+                android:singleLine="false"
+                android:layout_weight="1" />
+        </TableRow>
+
+        <TableRow android:layout_marginBottom ="5dp">
+            <TextView android:id="@+id/bulletPoint2"
+                android:layout_height="wrap_content"
+                android:text="◉"
+                android:textSize="15dp"
+                android:textColor="@color/white"
+                android:singleLine="false" />
+
+            <TextView android:id="@+id/interviewTip2"
+                android:layout_height="wrap_content"
+                android:text="@string/interview_tip2"
+                android:textColor="@color/white"
+                android:textSize="16dp"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:singleLine="false"
+                />
+        </TableRow>
+
+        <TableRow android:layout_marginBottom ="5dp">
+            <TextView android:id="@+id/bulletPoint3"
+                android:layout_height="wrap_content"
+                android:text="◉"
+                android:textSize="15dp"
+                android:textColor="@color/white"
+                android:singleLine="false"
+                />
+            <TextView android:id="@+id/interviewTip3"
+                android:layout_height="wrap_content"
+                android:text="@string/interview_tip3"
+                android:textColor="@color/white"
+                android:textSize="16dp"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:singleLine="false" />
+        </TableRow>
+
+        <TableRow android:layout_marginBottom ="5dp">
+            <TextView android:id="@+id/bulletPoint4"
+                android:layout_height="wrap_content"
+                android:text="◉"
+                android:textSize="15dp"
+                android:textColor="@color/white"
+                android:singleLine="false"
+                />
+            <TextView android:id="@+id/interviewTip4"
+                android:layout_height="wrap_content"
+                android:text="@string/interview_tip4"
+                android:textColor="@color/white"
+                android:textSize="16dp"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:singleLine="false" />
+        </TableRow>
+
+    </TableLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:id="@+id/interviewLinearLayout"
+        android:padding="10dp"
+        android:layout_below="@+id/TableLayout01">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Your Interview"
+            android:textColor="@color/white"
+            android:textSize="24dp"
+            android:textStyle="bold"
+            android:id="@+id/intHeading2"
+            android:layout_marginBottom="20dp"
+            android:layout_gravity="center" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="18dp"
+            android:padding="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@color/input_bg"
+            android:id="@+id/intNumQuestions"
+            />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="18dp"
+            android:padding="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@color/input_bg"
+            android:id="@+id/approxTime"
+            />
+
+        <Button
+            android:id="@+id/startInterviewButton"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Begin"
+            android:textColor="@color/white"
+            android:background="@color/light_blue"
+            android:textSize="18dp"
+            android:layout_marginTop="40dp"/>
+    </LinearLayout>
+</RelativeLayout>
+
+</ScrollView>
