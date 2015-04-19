@@ -42,7 +42,9 @@ public class EditProfileFragment extends Fragment {
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
     private Map<String, String> userDeatilsMap;
+    private Map<String, String> userDeatilsMap2;
     private SQLiteHandler db;
+    private String profileImageDir;
     /**
      * Returns a new instance of this fragment for the given section
      * number.
@@ -160,15 +162,19 @@ public class EditProfileFragment extends Fragment {
             if(entry.getKey().equals("last_name")){
                 last_name =  entry.getValue();
             }
+            if(entry.getKey().equals("profile_image_path")){
+                profileImageDir =  entry.getValue();
+                System.out.println(profileImageDir);
+            }
         }
         mEditText = (EditText) rootView.findViewById(R.id.nameText);
         mEditText.setText(first_name + " " + last_name);
-        NetworkImageView avatar = (NetworkImageView)getActivity().findViewById(R.id.profileImage);
-        avatar.setImageUrl("http://192.168.1.2:9000/assets/globalUploadFolder/k@gmail.com/profile.jpg",mImageLoader);
+
     }
 
     public void updateUser() {
 
+        userDeatilsMap2 = db.getUserDetails();
         mEditText = (EditText) rootView.findViewById(R.id.nameText);
         String name = mEditText.getText().toString();
         String[] names = name.split(" ");
@@ -180,6 +186,11 @@ public class EditProfileFragment extends Fragment {
         userDeatilsMap.put("email", mEditText.getText().toString());
         mEditText = (TextView) rootView.findViewById(R.id.cityText);
         userDeatilsMap.put("city", mEditText.getText().toString());
+        for (Map.Entry<String, String> entry : userDeatilsMap2.entrySet()){
+            if(entry.getKey().equals("profile_image_path")){
+                userDeatilsMap.put("profile_image_path", entry.getValue());
+            }
+        }
         db.updateUserDetails(userDeatilsMap);
         saveDetails();
     }
@@ -188,6 +199,7 @@ public class EditProfileFragment extends Fragment {
     public void onResume(){
         super.onResume();
         NetworkImageView avatar = (NetworkImageView)getActivity().findViewById(R.id.profileImage);
-        avatar.setImageUrl("http://192.168.1.2:9000/assets/globalUploadFolder/k@gmail.com/profile.jpg",mImageLoader);
+//        String path =AppConfig.IMAGE_URL.replaceAll("\", "/");
+        avatar.setImageUrl(AppConfig.IMAGE_URL + profileImageDir ,mImageLoader);
     }
 }

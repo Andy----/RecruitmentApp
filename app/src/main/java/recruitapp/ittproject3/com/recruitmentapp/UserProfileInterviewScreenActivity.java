@@ -28,6 +28,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.util.Map;
 
 import recruitapp.ittproject3.com.recruitmentapp.helper.SQLiteHandler;
 import recruitapp.ittproject3.com.recruitmentapp.helper.SessionManager;
@@ -50,6 +51,8 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
     private SQLiteHandler db;
     private Button btnLogout;
     private ImageView profileImage;
+    private Map<String, String> userDeatilsMap;
+    private String profileImageDir;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -246,7 +249,7 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
 //        this.startActivity(intent);
 //    }
 
-    // This Method gives you information about the buttonOnClickRecord method
+//    // This Method gives you information about the buttonOnClickRecord method
 //    @Override
 //    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 //        if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
@@ -291,6 +294,7 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
 
                 }
                 profileImage.setImageBitmap(thumbnail);
+
 
 //                try {
 //                    Bitmap bitmap;
@@ -358,6 +362,16 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
                 }
                 profileImage.setImageBitmap(thumbnail);
             }
+            String user ="";
+            userDeatilsMap = db.getUserDetails();
+            for (Map.Entry<String, String> entry : userDeatilsMap.entrySet()){
+                if(entry.getKey().equals("email")){
+                    user =  entry.getValue();
+                }
+            }
+            userDeatilsMap.put("profile_image_path", "globalUploadFolder" + File.separator  + user + File.separator + "profile.jpg");
+            System.out.println(imageFile.toString());
+            db.updateUserDetails(userDeatilsMap);
         }
     }
 
@@ -399,5 +413,21 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
         bmpFactoryOptions.inJustDecodeBounds = false;
         bitmap = BitmapFactory.decodeFile(file, bmpFactoryOptions);
         return bitmap;
+    }
+    public String getImagePath(Uri uri){
+        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+        cursor.moveToFirst();
+        String document_id = cursor.getString(0);
+        document_id = document_id.substring(document_id.lastIndexOf(":")+1);
+        cursor.close();
+
+        cursor = getContentResolver().query(
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                null, MediaStore.Images.Media._ID + " = ? ", new String[]{document_id}, null);
+        cursor.moveToFirst();
+        String path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+        cursor.close();
+
+        return path;
     }
 }

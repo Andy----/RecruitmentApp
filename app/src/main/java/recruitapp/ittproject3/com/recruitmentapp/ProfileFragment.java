@@ -15,6 +15,7 @@ import com.android.volley.toolbox.NetworkImageView;
 
 import java.util.Map;
 
+import recruitapp.ittproject3.com.recruitmentapp.helper.AppConfig;
 import recruitapp.ittproject3.com.recruitmentapp.helper.SQLiteHandler;
 import recruitapp.ittproject3.com.recruitmentapp.helper.VolleySingleton;
 
@@ -34,6 +35,7 @@ public class ProfileFragment extends Fragment {
     private  NetworkImageView avatar;
     private SQLiteHandler db;
     private Map<String, String> userDeatilsMap;
+    private String profileImageDir;
 
     /**
      * Returns a new instance of this fragment for the given section
@@ -92,6 +94,10 @@ public class ProfileFragment extends Fragment {
             if(entry.getKey().equals("last_name")){
                 last_name =  entry.getValue();
             }
+            if(entry.getKey().equals("profile_image_path")){
+                profileImageDir =  entry.getValue();
+                System.out.println(profileImageDir);
+            }
         }
         mTextView = (TextView) rootView.findViewById(R.id.nameView);
         mTextView.setText(first_name + " " + last_name);
@@ -101,6 +107,6 @@ public class ProfileFragment extends Fragment {
     public void onResume(){
         super.onResume();
         avatar = (NetworkImageView)getActivity().findViewById(R.id.profileImage);
-        avatar.setImageUrl("http://192.168.1.2:9000/assets/globalUploadFolder/k@gmail.com/profile.jpg", mImageLoader);
+        avatar.setImageUrl(AppConfig.IMAGE_URL  + profileImageDir ,mImageLoader);
     }
 }

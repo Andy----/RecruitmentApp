@@ -10,7 +10,7 @@ public class AppConfig {
 
     private static String URLA = "http://192.168.0.27:9000";
     private static String URL = "http://192.168.1.2:9000";
-    private static String URLB = "http://recruit.x64.me";
+    private static String URLa = "http://johnkiernan.ie";
 
 
     // Server user login url
@@ -30,5 +30,8 @@ public class AppConfig {
 
     // Refresh URL
     public static String URL_REFRESH = URL + "/refresh";
+
+    // Profile Image URL
+    public static String IMAGE_URL = URL + "/assets/";
 
 }

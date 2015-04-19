@@ -142,7 +142,7 @@ public class LoginScreenActivity extends Activity {
                                 db.addUser(response.getLong("app_id"), response.getString("first_name"), response.getString("last_name"), response.getString("email"),
                                         response.getString("city"), response.getString("cvFilePath"), response.getString("profileImage"));
 
-
+                                    System.out.println(response.getString("profileImage"));
 
 //                                db.addUser((long) 1,"sdf","sdf","sdf","sdf","sdf","sdf");
 
