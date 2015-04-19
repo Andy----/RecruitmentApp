@@ -1,11 +1,16 @@
 package recruitapp.ittproject3.com.recruitmentapp;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.provider.MediaStore;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +20,7 @@ import recruitapp.ittproject3.com.recruitmentapp.helper.SQLiteHandler;
 
 public class Interview extends Activity {
 
+    static final int REQUEST_VIDEO_CAPTURE = 1;
     private List<InterviewQuestion> interviewQuestions;
     private SQLiteHandler db;
 
@@ -30,10 +36,12 @@ public class Interview extends Activity {
 
         // Starts the videoInterview Task
 
-        InterviewTaskParams itParams = new InterviewTaskParams(interviewQuestions);
 
-        InterviewQuestionSyncTask iqTask = new InterviewQuestionSyncTask();
-        iqTask.execute(itParams);
+        for(int i=0; i<interviewQuestions.size(); i++) {
+            InterviewTaskParams itParams = new InterviewTaskParams((i+1), interviewQuestions.get(i).getQuestion());
+            InterviewQuestionSyncTask iqTask = new InterviewQuestionSyncTask();
+            iqTask.execute(itParams);
+        }
     }
 
 
@@ -52,19 +60,13 @@ public class Interview extends Activity {
         @Override
         protected Void doInBackground(InterviewTaskParams... params) {
 
-            for(int i=0; i< params[0].iqList.size(); i++) {
-
-                for (int j = 5; j >= 0; j--) {
-                    try {
-                        Thread.sleep(1000);
-                        publishProgress(Integer.toString(i+1), params[0].iqList.get(i).getQuestion(), Integer.toString(j)); // Invokes onProgressUpdate()
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+            for (int j = 5; j >= 0; j--) {
+                try {
+                    Thread.sleep(1000);
+                    publishProgress(Integer.toString(params[0].questionNumber), params[0].question, Integer.toString(j)); // Invokes onProgressUpdate()
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-
-
-
             }
             return null;
         }
@@ -89,16 +91,43 @@ public class Interview extends Activity {
 //            TextView previewCounter = (TextView) findViewById(R.id.previewCounter);
 //            previewCounter.setText("BEGIN");
 
+            new CountDownTimer(2000, 2000) {
+                Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
 
+                public void onTick(long millisUntilFinished) {
+//                    mTextField.setText("seconds remaining: " + millisUntilFinished / 1000);
 
+                    if (takeVideoIntent.resolveActivity(getPackageManager()) != null) {
+                        startActivityForResult(takeVideoIntent, REQUEST_VIDEO_CAPTURE);
+                    }
+                }
+
+                public void onFinish() {
+//                    mTextField.setText("done!");
+
+                }
+            }.start();
+
+//            dispatchTakeVideoIntent();
         }
     }
 
     private static class InterviewTaskParams {
-        List<InterviewQuestion> iqList = new ArrayList<>();
-        InterviewTaskParams(List<InterviewQuestion> iqList) {
-            this.iqList = iqList;
+//        List<InterviewQuestion> iqList = new ArrayList<>();
+//        InterviewTaskParams(List<InterviewQuestion> iqList) {
+//            this.iqList = iqList;
+//        }
+
+        int questionNumber;
+        String question;
+        InterviewTaskParams(int questionNumber, String question){
+            this.questionNumber = questionNumber;
+            this.question = question;
         }
+    }
+
+    private void dispatchTakeVideoIntent() {
+
     }
 
 }
