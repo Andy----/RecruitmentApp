@@ -199,7 +199,6 @@ public class EditProfileFragment extends Fragment {
     public void onResume(){
         super.onResume();
         NetworkImageView avatar = (NetworkImageView)getActivity().findViewById(R.id.profileImage);
-//        String path =AppConfig.IMAGE_URL.replaceAll("\", "/");
         avatar.setImageUrl(AppConfig.IMAGE_URL + profileImageDir ,mImageLoader);
     }
 }
