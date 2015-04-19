@@ -60,16 +60,6 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile_interview_screen);
 
-<<<<<<< HEAD
-//        b.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                selectImage();
-//            }
-//        });
-
-=======
->>>>>>> jtkDev1
         mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
 
@@ -246,30 +236,8 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
         this.startActivity(intent);
         }
 
-<<<<<<< HEAD
-//    public void buttonOnClickUpload(View v){
-//
-//        Intent intent = new Intent(this, JSONActivity.class);
-//        this.startActivity(intent);
-//    }
 
-    // This Method gives you information about the buttonOnClickRecord method
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
-//
-//            Toast.makeText(this, "Video saved to:\n" +
-//                    data.getData(), Toast.LENGTH_LONG).show();
-//        } else if (resultCode == RESULT_CANCELED) {
-//            Toast.makeText(this, "Video recording cancelled.",
-//                    Toast.LENGTH_LONG).show();
-//        } else {
-//            Toast.makeText(this, "Failed to record video",
-//                    Toast.LENGTH_LONG).show();
-//        }
-//     }
-=======
->>>>>>> jtkDev1
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -406,47 +374,5 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
         startActivity(intent);
         finish();
     }
-<<<<<<< HEAD
 
-    Bitmap ShrinkBitmap(String file, int width, int height){
-
-        BitmapFactory.Options bmpFactoryOptions = new BitmapFactory.Options();
-        bmpFactoryOptions.inJustDecodeBounds = true;
-        Bitmap bitmap = BitmapFactory.decodeFile(file, bmpFactoryOptions);
-
-        int heightRatio = (int)Math.ceil(bmpFactoryOptions.outHeight/(float)height);
-        int widthRatio = (int)Math.ceil(bmpFactoryOptions.outWidth/(float)width);
-
-        if (heightRatio > 1 || widthRatio > 1)
-        {
-            if (heightRatio > widthRatio)
-            {
-                bmpFactoryOptions.inSampleSize = heightRatio;
-            } else {
-                bmpFactoryOptions.inSampleSize = widthRatio;
-            }
-        }
-
-        bmpFactoryOptions.inJustDecodeBounds = false;
-        bitmap = BitmapFactory.decodeFile(file, bmpFactoryOptions);
-        return bitmap;
-    }
-    public String getImagePath(Uri uri){
-        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-        cursor.moveToFirst();
-        String document_id = cursor.getString(0);
-        document_id = document_id.substring(document_id.lastIndexOf(":")+1);
-        cursor.close();
-
-        cursor = getContentResolver().query(
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                null, MediaStore.Images.Media._ID + " = ? ", new String[]{document_id}, null);
-        cursor.moveToFirst();
-        String path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
-        cursor.close();
-
-        return path;
-    }
-=======
->>>>>>> jtkDev1
 }

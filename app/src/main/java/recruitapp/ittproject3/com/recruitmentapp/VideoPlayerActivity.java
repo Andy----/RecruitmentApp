@@ -1,65 +1,35 @@
 package recruitapp.ittproject3.com.recruitmentapp;
 
+import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.MediaController;
-import android.widget.Toast;
 import android.widget.VideoView;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonObjectRequest;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import recruitapp.ittproject3.com.recruitmentapp.helper.AppConfig;
 
 public class VideoPlayerActivity extends ActionBarActivity {
 
-    private static final String TAG = RegisterActivity.class.getSimpleName();
-    private JSONObject jsonObject;
-    private String userProfileString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_player);
-//        try {
-//            jsonObject = new JSONObject(userProfileString);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//        try {
-//            getVideoPath(jsonObject.getString("email"));
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
 
         // Set the videoView according to the id
         final VideoView videoView =
                 (VideoView) findViewById(R.id.videoView1);
 
         // Set the path to the stored video
-        videoView.setVideoPath(getExternalCacheDir() + "/RecruitSwift/intro.mp4");
+        videoView.setVideoURI(
+                Uri.parse(getExternalCacheDir() + "/RecruitSwift/intro.mp4"));
         MediaController mediaController = new
-                MediaController(this);
+        MediaController(this);
         mediaController.setAnchorView(videoView);
         videoView.setMediaController(mediaController);
-
         videoView.start();
     }
-
 
 //    private void getVideoPath(final String email) {
 //        String tag_string_req = "req_login";
@@ -113,6 +83,7 @@ public class VideoPlayerActivity extends ActionBarActivity {
 //        // Adding request to request queue
 //        VolleyApplication.getInstance().addToRequestQueue(jsonObjReq, tag_string_req);
 //    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

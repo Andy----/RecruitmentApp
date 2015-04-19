@@ -17,7 +17,7 @@
     <!-- Activity Titles -->
     <string name="title_activity_profile_interview_screen">Home</string>
     <string name="title_activity_register_screen">Register</string>
-    <string name="title_activity_video_player">VideoPlayerActivity</string>
+    <string name="title_activity_video_player">Introduction Video</string>
     <string name="title_activity_upload">UploadActivity</string>
     <string name="title_activity_json">JSONActivity</string>
 

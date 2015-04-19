@@ -8,18 +8,12 @@ import android.content.Context;
 
 public class AppConfig {
 
-<<<<<<< HEAD
     private static final String URLA = "http://192.168.0.27:9000";
     private static final String URL = "http://192.168.1.2:9000";
     public static final String URLB = "http://recruit.x64.me";
     private static final String URLa = "http://johnkiernan.ie";
 
-=======
-    private static String URLA = "http://192.168.0.27:9000";
-    private static String URL = "http://192.168.1.2:9000";
-    private static String URLB = "http://recruit.x64.me";
-    private static String URLC = "http://johnkiernan.ie";
->>>>>>> jtkDev1
+
 
 
     // Server user login url
