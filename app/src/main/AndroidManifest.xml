@@ -59,7 +59,11 @@
             android:label="@string/title_activity_json" >
         </activity>
         <activity
-            android:name=".InterviewActivity"
+            android:name=".InterviewStartScreenActivity"
+            android:label="@string/title_activity_interview" >
+        </activity>
+        <activity
+            android:name=".Interview"
             android:label="@string/title_activity_interview" >
         </activity>
     </application>

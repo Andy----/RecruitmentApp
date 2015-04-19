@@ -238,6 +238,21 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     /**
      * Getting user login status return true if rows are there in table
      * */
+    public int getInterviewQuestionCount() {
+        String countQuery = "SELECT  * FROM questiontable";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+        int rowCount = cursor.getCount();
+        db.close();
+        cursor.close();
+
+        // return row count
+        return rowCount;
+    }
+
+    /**
+     * Getting user login status return true if rows are there in table
+     * */
     public int getJobApplicationRowCount() {
         String countQuery = "SELECT  * FROM jobapplication";
         SQLiteDatabase db = this.getReadableDatabase();
