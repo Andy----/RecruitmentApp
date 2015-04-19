@@ -2,13 +2,11 @@ package recruitapp.ittproject3.com.recruitmentapp;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.text.Html;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,24 +31,25 @@ import recruitapp.ittproject3.com.recruitmentapp.helper.SQLiteHandler;
 import recruitapp.ittproject3.com.recruitmentapp.helper.VolleyApplication;
 
 
-public class InterviewActivity extends Activity {
+public class InterviewStartScreenActivity extends Activity {
 
-    private static final String TAG = InterviewActivity.class.getSimpleName();
+    private static final String TAG = InterviewStartScreenActivity.class.getSimpleName();
     private ProgressDialog pDialog;
     private SQLiteHandler db;
-    private List<InterviewQuestion> interviewQuestions;
     private Long jobId;
     private TextView interviewInfo;
+    private Button begin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_interview);
-        interviewQuestions = new ArrayList<InterviewQuestion>();
+        setContentView(R.layout.activity_interview_start_screen);
 
         // Progress dialog
         pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);
+
+        begin = (Button) findViewById(R.id.startInterviewButton);
 
         jobId = getIntent().getExtras().getLong("jobId");
         db = new SQLiteHandler(getApplicationContext());
@@ -59,6 +58,17 @@ public class InterviewActivity extends Activity {
         if(jobId != null) {
             getInterviewQuestions(jobId);
         }
+
+        begin.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View view) {
+                Intent intent = new Intent(InterviewStartScreenActivity.this, Interview.class);
+                startActivity(intent);
+                finish();
+            }
+
+        });
+        begin.setEnabled(false);
     }
 
     /**
@@ -89,7 +99,6 @@ public class InterviewActivity extends Activity {
                                     JSONObject jsonObject = response.getJSONObject(i);
                                     db.addInterviewQuestions(jsonObject.getLong("question_id"), jsonObject.getString("question"), jsonObject.getLong("job_id"));
                                 }
-                                interviewQuestions = db.getInterviewQuestionList();
                                 setInterviewDetails();
                             }
                         } catch (Exception e) {
@@ -123,10 +132,14 @@ public class InterviewActivity extends Activity {
     public void setInterviewDetails() {
 
         interviewInfo = (TextView) findViewById(R.id.intNumQuestions);
-        interviewInfo.setText("Your interview will consist of " + interviewQuestions.size() + " questions.");
+        interviewInfo.setText("Your interview will consist of " + db.getInterviewQuestionCount() + " questions.");
 
         interviewInfo = (TextView) findViewById(R.id.approxTime);
-        interviewInfo.setText("It will last for approximately " + (interviewQuestions.size()*3) + " minutes");
+        interviewInfo.setText("It will last for approximately " + (db.getInterviewQuestionCount()*3) + " minutes");
+
+        if(db.getInterviewQuestionCount() > 0) {
+            begin.setEnabled(true);
+        }
     }
 
 
