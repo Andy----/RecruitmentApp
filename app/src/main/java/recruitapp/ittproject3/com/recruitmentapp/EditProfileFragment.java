@@ -200,11 +200,15 @@ public class EditProfileFragment extends Fragment {
     public void onResume(){
         super.onResume();
         NetworkImageView avatar = (NetworkImageView)getActivity().findViewById(R.id.profileImage);
+<<<<<<< HEAD
         try {
             avatar.setImageUrl(AppConfig.IMAGE_URL + profileImageDir ,mImageLoader);
         }catch(Exception e) {
             Toast.makeText(getActivity().getApplicationContext(),"Error Retrieving Profile Photo", Toast.LENGTH_LONG).show();
         }
 
+=======
+        avatar.setImageUrl(AppConfig.IMAGE_URL + profileImageDir ,mImageLoader);
+>>>>>>> jtkDev1
     }
 }
