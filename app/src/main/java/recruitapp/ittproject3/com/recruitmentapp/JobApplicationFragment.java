@@ -161,6 +161,7 @@ public class JobApplicationFragment extends Fragment {
         if(jobApplicationList != null) {
             for (int i = 0; i < jobApplicationList.size(); i++) {
                 final Long jobId = jobApplicationList.get(i).getJobId();
+                final Long applicationId = jobApplicationList.get(i).getAppId();
 
                 LinearLayout newll = new LinearLayout(this.getActivity());
                 newll.setOrientation(LinearLayout.VERTICAL);
@@ -200,6 +201,7 @@ public class JobApplicationFragment extends Fragment {
                         public void onClick(View view) {
                             Intent intent = new Intent(getActivity(), InterviewStartScreenActivity.class);
                             intent.putExtra("jobId", jobId);
+                            intent.putExtra("applicationId", applicationId);
                             startActivity(intent);
                         }
                     });

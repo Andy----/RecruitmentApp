@@ -19,7 +19,7 @@
     <string name="title_activity_register_screen">Register</string>
     <string name="title_activity_video_player">Introduction Video</string>
     <string name="title_activity_upload">UploadActivity</string>
-    <string name="title_activity_json">JSONActivity</string>
+    <string name="title_activity_MediaRecorder">MediaRecorderActivity</string>
 
     <!-- Register Screen Strings -->
     <string name="hint_first_name">First Name</string>

@@ -36,7 +36,7 @@ public class InterviewStartScreenActivity extends Activity {
     private static final String TAG = InterviewStartScreenActivity.class.getSimpleName();
     private ProgressDialog pDialog;
     private SQLiteHandler db;
-    private Long jobId;
+    private Long jobId, applicationId;
     private TextView interviewInfo;
     private Button begin;
 
@@ -52,6 +52,7 @@ public class InterviewStartScreenActivity extends Activity {
         begin = (Button) findViewById(R.id.startInterviewButton);
 
         jobId = getIntent().getExtras().getLong("jobId");
+        applicationId = getIntent().getExtras().getLong("applicationId");
         db = new SQLiteHandler(getApplicationContext());
         db.deleteTable("questiontable");
 
@@ -63,6 +64,7 @@ public class InterviewStartScreenActivity extends Activity {
 
             public void onClick(View view) {
                 Intent intent = new Intent(InterviewStartScreenActivity.this, Interview.class);
+                intent.putExtra("applicationId", applicationId);
                 startActivity(intent);
                 finish();
             }
