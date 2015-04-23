@@ -11,6 +11,7 @@
     <color name="bg_login">#26ae90</color>
     <color name="bg_main">#428bca</color>
     <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
     <color name="input_login">#222222</color>
     <color name="input_login_hint">#999999</color>
     <color name="input_text">#888888</color>

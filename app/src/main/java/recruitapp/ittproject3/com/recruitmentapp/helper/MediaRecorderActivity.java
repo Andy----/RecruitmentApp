@@ -6,16 +6,21 @@ import java.io.IOException;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.provider.MediaStore;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import recruitapp.ittproject3.com.recruitmentapp.R;
 
@@ -23,11 +28,13 @@ public class MediaRecorderActivity extends Activity {
     private Camera mCamera;
     private CameraPreview mPreview;
     private MediaRecorder mediaRecorder;
-    private Button capture;
+    private Button action;
     private Context myContext;
     private LinearLayout cameraPreview;
-    private String fileName;
+    private String fileName, currentQuestion;
     private boolean cameraFront = false;
+    private boolean recording = false;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,8 +44,12 @@ public class MediaRecorderActivity extends Activity {
         myContext = this;
 
         fileName = getIntent().getExtras().getString("fileName");
+        currentQuestion = getIntent().getExtras().getString("currentQuestion");
         initialize();
         setCamera(findFrontFacingCamera());
+
+        VideoCaptureASyncTask videoTask = new VideoCaptureASyncTask();
+        videoTask.execute();
     }
 
     private int findFrontFacingCamera() {
@@ -98,8 +109,7 @@ public class MediaRecorderActivity extends Activity {
         mPreview = new CameraPreview(myContext, mCamera);
         cameraPreview.addView(mPreview);
 
-        capture = (Button) findViewById(R.id.button_capture);
-        capture.setOnClickListener(captureListener);
+        action = (Button) findViewById(R.id.button_capture);
     }
 
 
@@ -141,34 +151,26 @@ public class MediaRecorderActivity extends Activity {
         return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
     }
 
-    boolean recording = false;
-    OnClickListener captureListener = new OnClickListener() {
+    OnClickListener stopRecordingListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
             if (recording) {
                 // stop recording and release camera
                 mediaRecorder.stop(); // stop the recording
                 releaseMediaRecorder(); // release the MediaRecorder object
-                Toast.makeText(MediaRecorderActivity.this, "Video captured!", Toast.LENGTH_LONG).show();
                 recording = false;
-            } else {
-                if (!prepareMediaRecorder()) {
-                    Toast.makeText(MediaRecorderActivity.this, "Fail in prepareMediaRecorder()!\n - Ended -", Toast.LENGTH_LONG).show();
-                    finish();
-                }
-                // work on UiThread for better performance
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        try {
-                            mediaRecorder.start();
-                        } catch (final Exception ex) {
-                            // Log.i("---","Exception in thread");
-                        }
-                    }
-                });
-
-                recording = true;
+                Toast.makeText(MediaRecorderActivity.this, "Recording Saved", Toast.LENGTH_LONG).show();
+                action.setBackgroundColor(Color.parseColor("#D9226bb3"));
+                action.setText("Go Back");
+                action.setOnClickListener(exitQuestion);
             }
+        }
+    };
+
+    OnClickListener exitQuestion = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            finish();
         }
     };
 
@@ -191,11 +193,11 @@ public class MediaRecorderActivity extends Activity {
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
         mediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
 
-        mediaRecorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_720P));
+        mediaRecorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_LOW));
 
 
         mediaRecorder.setOutputFile(getExternalCacheDir() + "/RecruitSwift" + fileName);
-        mediaRecorder.setMaxDuration(600000); // Set max duration 60 sec.
+//        mediaRecorder.setMaxDuration(600000); // Set max duration 60 sec.
         mediaRecorder.setMaxFileSize(50000000); // Set max file size 50M
         mediaRecorder.setOrientationHint(270);
         try {
@@ -222,5 +224,125 @@ public class MediaRecorderActivity extends Activity {
             mCamera.release();
             mCamera = null;
         }
+    }
+
+    /*
+    * AsyncTask - Executes a three second timer before starting video capture
+    * Creates question timer thread on post execute
+     */
+    private class VideoCaptureASyncTask extends AsyncTask<Void, Integer, Void>
+    {
+        @Override
+        protected void onPreExecute() {
+            Button action = (Button) findViewById(R.id.button_capture);
+            action.setText("Waiting...");
+            action.setEnabled(false);
+        }
+
+        @Override
+        protected Void doInBackground(Void... params)
+        {
+            // Display a 3 second timer on screen before recording starts
+            for (int i = 5; i >=0; i--) {
+                try {
+                    publishProgress(i);
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            TextView recordCountDown = (TextView) findViewById(R.id.recordCountDown);
+            if(values[0] == 0) {
+                recordCountDown.setTextSize(100);
+                recordCountDown.setText("GO!");
+            } else {
+                recordCountDown.setText(Integer.toString(values[0]));
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Void param) {
+            // Start capturing video
+            if (!prepareMediaRecorder()) {
+                Toast.makeText(MediaRecorderActivity.this, "PrepareMediaRecorder() error\n - Ended -", Toast.LENGTH_LONG).show();
+                finish();
+            } else {
+                try {
+                    TextView recordCountDown = (TextView) findViewById(R.id.recordCountDown);
+                    recordCountDown.setText("");
+
+                    Button action = (Button) findViewById(R.id.button_capture);
+                    action.setBackgroundColor(Color.parseColor("#C23B22"));
+                    action.setText("Finish Recording");
+                    action.setOnClickListener(stopRecordingListener);
+                    action.setEnabled(true);
+                    recording = true;
+                    mediaRecorder.start();
+                    TextView currentQuestionTV = (TextView) findViewById(R.id.currentQuestionString);
+                    currentQuestionTV.setText(currentQuestion);
+
+                    RecordingTimer recTimer = new RecordingTimer();
+                    recTimer.execute();
+
+                } catch (final Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+    }
+
+    /**
+     * AsyncTask - Starts a new Thread for keeping time on each interview question.
+     * Stops the recording after 3 minutes
+     * */
+    private class RecordingTimer extends AsyncTask<Void, Integer, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            for(int i=180 ; i >=0; i--) {
+                if(recording) {
+                    try {
+                        publishProgress(i);
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                } else break;
+            }
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            int minutes;
+            int seconds;
+            TextView questionCountDown = (TextView) findViewById(R.id.questionCountDown);
+
+            minutes = (values[0] % 3600) / 60;
+            seconds = (values[0] % 60);
+            if(seconds >=0 && seconds < 10) {
+                questionCountDown.setText("Time Remaining\n" + Integer.toString(minutes) + ":0" + Integer.toString(seconds));
+            } else {
+                questionCountDown.setText("Time Remaining\n" + Integer.toString(minutes) + ":" + Integer.toString(seconds));
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Void param) {
+            if(recording) {
+                mediaRecorder.stop();
+                Button action = (Button) findViewById(R.id.button_capture);
+                action.setBackgroundColor(Color.parseColor("#D9226bb3"));
+                action.setOnClickListener(exitQuestion);
+                action.setText("Go Back");
+            }
+        }
+
     }
 }
