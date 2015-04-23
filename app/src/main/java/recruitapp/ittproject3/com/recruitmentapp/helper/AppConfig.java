@@ -9,9 +9,9 @@ import android.content.Context;
 public class AppConfig {
 
     private static final String URLA = "http://192.168.0.27:9000";
-    private static final String URLC = "http://192.168.1.2:9000";
+    private static final String URL = "http://192.168.1.2:9000";
     public static final String URLB = "http://recruit.x64.me";
-    private static final String URL = "http://johnkiernan.ie";
+    private static final String URLC = "http://johnkiernan.ie";
 
 
     // Server user login url
@@ -23,8 +23,11 @@ public class AppConfig {
     // Server Update URL
     public static final String URL_UPDATE = URL + "/update";
 
-    // Server Update CV URL
+    // Server Update profile image URL
     public static final String URL_UPDATE_IMAGE= URL + "/updateProfileImage";
+
+    // Server Update profile image URL
+    public static final String URL_UPDATE_CV= URL + "/updateCV";
 
     // Server Interview request URL
     public static final String URL_GET_INTERVIEWS = URL + "/androidgetjobapplications";

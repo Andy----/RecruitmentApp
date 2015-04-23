@@ -38,7 +38,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     // Creating Tables
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String CREATE_LOGIN_TABLE = "CREATE TABLE user(app_id LONG PRIMARY KEY, first_name VARCHAR, last_name VARCHAR, email VARCHAR, city VARCHAR, cv_filePath VARCHAR, profile_image_path VARCHAR);";
+        String CREATE_LOGIN_TABLE = "CREATE TABLE user(app_id LONG PRIMARY KEY, first_name VARCHAR, last_name VARCHAR, email VARCHAR, city VARCHAR, cv_filePath VARCHAR, profile_image_path VARCHAR, cv_fileName VARCHAR);";
         String CREATE_JOB_APPLICATION_TABLE = "CREATE TABLE jobapplication (app_id LONG PRIMARY KEY, job_id LONG, job_title VARCHAR, job_description TEXT, job_location VARCHAR, status VARCHAR);";
         String CREATE_QUESTION_TABLE = "CREATE TABLE questiontable (question_id LONG PRIMARY KEY, question VARCHAR, job_id LONG, FOREIGN KEY(job_id) REFERENCES joblisting(job_id));";
         db.execSQL(CREATE_LOGIN_TABLE);
@@ -63,7 +63,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     /**
      * Storing user details in database
      * */
-    public void addUser(Long app_id, String firstName, String lastName, String email, String city, String cvFilePath, String profileImage) {
+    public void addUser(Long app_id, String firstName, String lastName, String email, String city, String cvFilePath, String profileImage, String cvFileName) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -74,6 +74,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         values.put("city", city);
         values.put("cv_filePath", cvFilePath);
         values.put("profile_image_path", profileImage);
+        values.put("cv_fileName", cvFileName);
 
         // Inserting Row
         db.insert("user", null, values);
@@ -139,6 +140,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
             user.put("city" ,cursor.getString(4));
             user.put("cv_filePath" ,cursor.getString(5));
             user.put("profile_image_path" ,cursor.getString(6));
+            user.put("cv_fileName" ,cursor.getString(7));
         }
         cursor.close();
         db.close();
@@ -170,6 +172,9 @@ public class SQLiteHandler extends SQLiteOpenHelper {
             }
             if(entry.getKey().equals("profile_image_path")){
                 values.put("profile_image_path", entry.getValue());
+            }
+            if(entry.getKey().equals("cv_fileName")){
+                values.put("cv_fileName", entry.getValue());
             }
         }
 

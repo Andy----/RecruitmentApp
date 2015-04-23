@@ -1,6 +1,7 @@
 package recruitapp.ittproject3.com.recruitmentapp;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -26,8 +27,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URI;
 import java.util.Map;
 
 import recruitapp.ittproject3.com.recruitmentapp.helper.SQLiteHandler;
@@ -48,11 +54,13 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
     private CharSequence mTitle;
     private File imageFile;
     private File videoFile;
+    private File  cvFile;
     private SessionManager session;
     private SQLiteHandler db;
     private Button btnLogout;
     private ImageView profileImage;
     private Map<String, String> userDeatilsMap;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -163,8 +171,8 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
         File newDir = new File(getExternalCacheDir(), "RecruitSwift");
         if (!newDir.isDirectory())
             newDir.mkdirs();
-        else
-            Toast.makeText(this, "Dir already exist", Toast.LENGTH_LONG).show();
+//        else
+//            Toast.makeText(this, "Dir already exist", Toast.LENGTH_LONG).show();
 
         if (newDir.canWrite())
             imageFile = new File(newDir, "profile.jpg");
@@ -204,8 +212,8 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
         File newDir = new File(getExternalCacheDir(), "RecruitSwift");
         if (!newDir.isDirectory())
             newDir.mkdirs();
-        else
-            Toast.makeText(this, "Dir already exist", Toast.LENGTH_LONG).show();
+//        else
+//            Toast.makeText(this, "Dir already exist", Toast.LENGTH_LONG).show();
 
         if (newDir.canWrite())
             videoFile = new File(newDir, "intro.mp4");
@@ -218,7 +226,7 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
 
             Uri videoUri = Uri.fromFile(videoFile);
             takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri);
-            startActivityForResult(takeVideoIntent, REQUEST_VIDEO_CAPTURE);
+            startActivityForResult(takeVideoIntent, 3);
         }
     }
 
@@ -227,6 +235,19 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
 
         Intent intent = new Intent(this, VideoPlayerActivity.class);
         this.startActivity(intent);
+    }
+
+    public void selectCV(View v) {
+
+        File newDir = new File(getExternalCacheDir(), "RecruitSwift");
+        if (!newDir.isDirectory())
+            newDir.mkdirs();
+//        else
+//            Toast.makeText(this, "Dir already exist", Toast.LENGTH_LONG).show();
+
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("file/*");
+        startActivityForResult(intent, 4);
     }
 
 
@@ -272,6 +293,7 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                Toast.makeText(this, "Press Save to make changes permanent", Toast.LENGTH_LONG).show();
 
             } else if (requestCode == 2) {
 
@@ -317,8 +339,25 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                Toast.makeText(this, "Press Save to make changes permanent", Toast.LENGTH_LONG).show();
 
+            } else if (requestCode == 3) {
+                    Toast.makeText(this, "Press Save to make changes permanent", Toast.LENGTH_LONG).show();
 
+            } else if (requestCode == 4) {
+                    Uri selectedFile = data.getData();
+                    String filename = getFilename(selectedFile);
+                    savefile(selectedFile, filename);
+                    String user = "";
+                    userDeatilsMap = db.getUserDetails();
+                    for (Map.Entry<String, String> entry : userDeatilsMap.entrySet()) {
+                        if (entry.getKey().equals("email")) {
+                            user = entry.getValue();
+                        }
+                    }
+                    userDeatilsMap.put("cv_filePath", "globalUploadFolder" + File.separator + user + File.separator + filename);
+                    userDeatilsMap.put("cv_fileName", filename);
+                    db.updateUserDetails(userDeatilsMap);
             }
             if (requestCode == 1 || requestCode == 2) {
                 String user = "";
@@ -329,20 +368,20 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
                     }
                 }
                 userDeatilsMap.put("profile_image_path", "globalUploadFolder" + File.separator + user + File.separator + "profile.jpg");
-                System.out.println(imageFile.toString());
                 db.updateUserDetails(userDeatilsMap);
             }
-        }
-        if (requestCode == REQUEST_VIDEO_CAPTURE) {
-            if (resultCode == RESULT_OK) {
-//                Toast.makeText(this, "Saved", Toast.LENGTH_LONG).show();
-            } else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(this, "Video recording cancelled.",
-                        Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(this, "Failed to record video",
-                        Toast.LENGTH_LONG).show();
-            }
+        }else if (resultCode == RESULT_CANCELED && requestCode == 3) {
+            Toast.makeText(this, "Video recording cancelled.",
+                    Toast.LENGTH_LONG).show();
+        } else if(requestCode == 3) {
+            Toast.makeText(this, "Failed to record video",
+                    Toast.LENGTH_LONG).show();
+        }else if (resultCode == RESULT_CANCELED && requestCode == 1 || requestCode == 2) {
+            Toast.makeText(this, "Photo Selection cancelled.",
+                    Toast.LENGTH_LONG).show();
+        } else if(requestCode == 1 || requestCode ==2) {
+            Toast.makeText(this, "Failed to set profile picture",
+                    Toast.LENGTH_LONG).show();
         }
     }
 
@@ -366,6 +405,59 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
         bitmap = BitmapFactory.decodeFile(file, bmpFactoryOptions);
 
         return bitmap;
+    }
+    void savefile(Uri sourceUri, String name)
+    {
+        String sourceFilename= sourceUri.getPath();
+
+        String filePath = getExternalCacheDir().getPath() + File.separator  + "RecruitSwift" + File.separator;
+        String destinationFilename = filePath + name;
+
+        BufferedInputStream bis = null;
+        BufferedOutputStream bos = null;
+
+        try {
+            bis = new BufferedInputStream(new FileInputStream(sourceFilename));
+            bos = new BufferedOutputStream(new FileOutputStream(destinationFilename, false));
+            byte[] buf = new byte[1024];
+            bis.read(buf);
+            do {
+                bos.write(buf);
+            } while(bis.read(buf) != -1);
+        } catch (IOException e) {
+
+        } finally {
+            try {
+                if (bis != null) bis.close();
+                if (bos != null) bos.close();
+            } catch (IOException e) {
+
+            }
+        }
+    }
+    public String getFilename(Uri uri)
+    {
+/*  Intent intent = getIntent();
+    String name = intent.getData().getLastPathSegment();
+    return name;*/
+
+        String fileName = null;
+        Context context=getApplicationContext();
+        String scheme = uri.getScheme();
+        if (scheme.equals("file")) {
+            fileName = uri.getLastPathSegment();
+        }
+        else if (scheme.equals("content")) {
+            String[] proj = { MediaStore.Video.Media.TITLE };
+            Uri contentUri = null;
+            Cursor cursor = context.getContentResolver().query(uri, proj, null, null, null);
+            if (cursor != null && cursor.getCount() != 0) {
+                int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.TITLE);
+                cursor.moveToFirst();
+                fileName = cursor.getString(columnIndex);
+            }
+        }
+        return fileName;
     }
 
     /**

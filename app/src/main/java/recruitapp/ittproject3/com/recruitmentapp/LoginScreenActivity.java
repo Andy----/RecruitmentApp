@@ -34,7 +34,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 public class LoginScreenActivity extends Activity {
 
     // LogCat tag
-    private static final String TAG = RegisterActivity.class.getSimpleName();
+    private static final String TAG = LoginScreenActivity.class.getSimpleName();
     private EditText emailIn, passwordIn;
     private ProgressDialog pDialog;
     private SessionManager session;
@@ -140,7 +140,7 @@ public class LoginScreenActivity extends Activity {
                                 session.setLogin(true);
 
                                 db.addUser(response.getLong("app_id"), response.getString("first_name"), response.getString("last_name"), response.getString("email"),
-                                        response.getString("city"), response.getString("cvFilePath"), response.getString("profileImage"));
+                                        response.getString("city"), response.getString("cvFilePath"), response.getString("profileImage"), response.getString("cvFileName"));
 
                                     System.out.println(response.getString("profileImage"));
 
