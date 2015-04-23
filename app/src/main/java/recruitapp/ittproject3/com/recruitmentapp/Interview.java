@@ -26,6 +26,7 @@ public class Interview extends Activity {
     private SQLiteHandler db;
     MediaRecorderActivity mRecorder;
     private Button nextQuestion;
+    private String currentQuestion;
     private int questionCount = 0, pos = 0;
     private Long applicationId;
 
@@ -59,11 +60,10 @@ public class Interview extends Activity {
                     if (questionCount > 0) {
                         InterviewQuestionSyncTask iqTask = new InterviewQuestionSyncTask();
                         iqTask.execute(interviewTaskParamsList.get(pos));
+                        currentQuestion = interviewTaskParamsList.get(pos).question;
                         pos++;
                         questionCount--;
                         nextQuestion.setText("Next Question");
-                    } else {
-
                     }
                 }
             });
@@ -87,7 +87,7 @@ public class Interview extends Activity {
         @Override
         protected InterviewTaskParams doInBackground(InterviewTaskParams... params) {
 
-            for (int j = 3; j >= 0; j--) {
+            for (int j = 10; j >= 0; j--) {
                 try {
                     Thread.sleep(1000);
                     publishProgress(Integer.toString(params[0].questionNumber), params[0].question, Integer.toString(j));
@@ -107,7 +107,6 @@ public class Interview extends Activity {
             questionNumber.setText("Question Number: " + values[0]);
             currentQuestion.setText("\""+values[1]+"\"");
             previewCounter.setText("You have\n" + values[2] + "\nseconds to prepare your answer.");
-
         }
 
         @Override
@@ -152,6 +151,7 @@ public class Interview extends Activity {
         String fileName = "/InterviewVideos/JobApplication" + Long.toString(applicationId) + "/interviewVideo" + questionId + ".mp4";
         Intent intent = new Intent(Interview.this, mRecorder.getClass());
         intent.putExtra("fileName", fileName);
+        intent.putExtra("currentQuestion", currentQuestion);
         startActivity(intent);
     }
 }
