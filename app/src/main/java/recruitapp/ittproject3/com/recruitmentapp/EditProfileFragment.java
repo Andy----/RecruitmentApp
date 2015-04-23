@@ -206,5 +206,6 @@ public class EditProfileFragment extends Fragment {
             Toast.makeText(getActivity().getApplicationContext(),"Error Retrieving Profile Photo", Toast.LENGTH_LONG).show();
         }
 
+
     }
 }

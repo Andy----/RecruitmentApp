@@ -53,7 +53,8 @@
             android:name=".VideoPlayerActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_video_player"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            >
 >
         </activity>
         <activity
