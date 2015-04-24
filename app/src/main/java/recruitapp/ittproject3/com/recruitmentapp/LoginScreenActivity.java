@@ -34,7 +34,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 public class LoginScreenActivity extends Activity {
 
     // LogCat tag
-    private static final String TAG = RegisterActivity.class.getSimpleName();
+    private static final String TAG = LoginScreenActivity.class.getSimpleName();
     private EditText emailIn, passwordIn;
     private ProgressDialog pDialog;
     private SessionManager session;

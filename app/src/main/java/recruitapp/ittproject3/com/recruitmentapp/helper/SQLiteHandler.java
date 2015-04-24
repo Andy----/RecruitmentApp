@@ -122,6 +122,20 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     }
 
     /**
+     * Retrieve email of current user
+     * */
+    public String getCurrentUserEmail() {
+        String selectQuery = "SELECT email FROM user";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        cursor.moveToFirst();
+        if (cursor.getCount() > 0) {
+            return cursor.getString(0);
+        }
+        else return null;
+    }
+
+    /**
      * Getting user data from database
      * */
     public HashMap<String, String> getUserDetails() {
