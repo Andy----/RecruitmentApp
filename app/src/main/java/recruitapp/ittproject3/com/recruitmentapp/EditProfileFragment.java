@@ -72,7 +72,6 @@ public class EditProfileFragment extends Fragment {
         myImageFile  = new File(getActivity().getExternalCacheDir() + "/RecruitSwift/profile.jpg");
         db = new SQLiteHandler(getActivity().getApplicationContext());
         setUserDetails();
-        System.out.println(cvFileName);
         mRequestQueue = VolleySingleton.getInstance().getRequestQueue();
         mImageLoader = VolleySingleton.getInstance().getImageLoader();
         Button mButton = (Button) rootView.findViewById(R.id.saveBtn);
@@ -225,7 +224,6 @@ public class EditProfileFragment extends Fragment {
             }
         }
         db.updateUserDetails(userDetailsMap);
-
         myCVFile  = new File(getActivity().getExternalCacheDir() + "/RecruitSwift" + File.separator + cvFileName);
         saveDetails();
     }
