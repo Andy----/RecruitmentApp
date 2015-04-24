@@ -1,6 +1,7 @@
 package recruitapp.ittproject3.com.recruitmentapp;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -42,6 +43,7 @@ public class Interview extends Activity {
     private int questionCount = 0, pos = 0;
     private Long applicationId;
     private HashMap<String, String> requestMap;
+    private ProgressDialog progress;
 
     private List<String> interviewVideoFileList;
 
@@ -55,6 +57,9 @@ public class Interview extends Activity {
 
         requestMap = new HashMap<>();
         interviewVideoFileList = new ArrayList<>();
+
+        // Progress bar for the the interview video upload
+        progress = new ProgressDialog(this);
 
         applicationId = getIntent().getExtras().getLong("applicationId");
         interviewQuestions = db.getInterviewQuestionList();
@@ -144,7 +149,8 @@ public class Interview extends Activity {
                 nextQuestion.setText("Submit Interview");
                 nextQuestion.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View view) {
-                        uploadInterviewVideos();
+                        UploadInterviewVideos uploadIntVids = new UploadInterviewVideos();
+                        uploadIntVids.execute();
                     }
                 });
             }
@@ -187,36 +193,52 @@ public class Interview extends Activity {
      * Loop retrieves each interview question's filepath and creates a
      * multipart entity and adds each one to the volley request queue
      */
-    private void uploadInterviewVideos() {
+    private class UploadInterviewVideos extends AsyncTask<Void, Void, Void> {
 
-        String email = db.getCurrentUserEmail();
-        requestMap.put("email", email);
-        requestMap.put("applicationId", Long.toString(applicationId));
+        @Override
+        protected void onPreExecute() {
+            progress = ProgressDialog.show(Interview.this, "Wait", "Uploading Interview...");
+        }
 
-        for(int i=0; i < interviewVideoFileList.size(); i++) {
+        @Override
+        protected Void doInBackground(Void... params) {
+            String email = db.getCurrentUserEmail();
+            requestMap.put("email", email);
+            requestMap.put("applicationId", Long.toString(applicationId));
 
-            File interviewVideoFile = new File(interviewVideoFileList.get(i));
+            for(int i=0; i < interviewVideoFileList.size(); i++) {
 
-            MultipartRequest requestVideo = new MultipartRequest(AppConfig.INT_VIDEOS_URL, interviewVideoFile, requestMap,
-                    new Response.Listener<String>() {
+                File interviewVideoFile = new File(interviewVideoFileList.get(i));
 
-                        @Override
-                        public void onResponse(String response) {
+                MultipartRequest requestVideo = new MultipartRequest(AppConfig.INT_VIDEOS_URL, interviewVideoFile, requestMap,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
+                            }
+                        },
+                        new Response.ErrorListener() {
 
-                            Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
-                        }
-                    },
-
-                    new Response.ErrorListener() {
-
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
 
                             Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
+                            }
                         }
-                    }
-            );
-            VolleyApplication.getInstance().getRequestQueue().add(requestVideo);
+                );
+                VolleyApplication.getInstance().getRequestQueue().add(requestVideo);
+            }
+            return null;
+        }
+
+//        @Override
+//        protected void onProgressUpdate(String... values) {
+//
+//        }
+
+        @Override
+        protected void onPostExecute(Void param) {
+            progress.dismiss();
         }
     }
 }
