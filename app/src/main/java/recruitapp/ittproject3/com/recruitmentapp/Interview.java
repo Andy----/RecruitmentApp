@@ -4,21 +4,33 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import recruitapp.ittproject3.com.recruitmentapp.Models.*;
+import recruitapp.ittproject3.com.recruitmentapp.helper.AppConfig;
 import recruitapp.ittproject3.com.recruitmentapp.helper.MediaRecorderActivity;
+import recruitapp.ittproject3.com.recruitmentapp.helper.MultipartRequest;
 import recruitapp.ittproject3.com.recruitmentapp.helper.SQLiteHandler;
+import recruitapp.ittproject3.com.recruitmentapp.helper.VolleyApplication;
 
 
 public class Interview extends Activity {
+
+    // LogCat tag
+    private static final String TAG = Interview.class.getSimpleName();
 
     static final int REQUEST_VIDEO_CAPTURE = 1;
     private List<InterviewQuestion> interviewQuestions;
@@ -29,6 +41,9 @@ public class Interview extends Activity {
     private String currentQuestion;
     private int questionCount = 0, pos = 0;
     private Long applicationId;
+    private HashMap<String, String> requestMap;
+
+    private List<String> interviewVideoFileList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +52,9 @@ public class Interview extends Activity {
 
         db = new SQLiteHandler(getApplicationContext());
         mRecorder = new MediaRecorderActivity();
+
+        requestMap = new HashMap<>();
+        interviewVideoFileList = new ArrayList<>();
 
         applicationId = getIntent().getExtras().getLong("applicationId");
         interviewQuestions = db.getInterviewQuestionList();
@@ -124,6 +142,11 @@ public class Interview extends Activity {
             nextQuestion.setVisibility(View.VISIBLE);
             if(questionCount == 0) {
                 nextQuestion.setText("Submit Interview");
+                nextQuestion.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View view) {
+                        uploadInterviewVideos();
+                    }
+                });
             }
         }
     }
@@ -149,9 +172,51 @@ public class Interview extends Activity {
             newDir.mkdirs();
 
         String fileName = "/InterviewVideos/JobApplication" + Long.toString(applicationId) + "/interviewVideo" + questionId + ".mp4";
+
+        // Add video path to List for retrieving video and uploading to server once interview is complete
+        interviewVideoFileList.add(getExternalCacheDir() + "/RecruitSwift" + fileName);
+
         Intent intent = new Intent(Interview.this, mRecorder.getClass());
         intent.putExtra("fileName", fileName);
         intent.putExtra("currentQuestion", currentQuestion);
         startActivity(intent);
+    }
+
+    /**
+     * Method is called when interview is finished with "submit interview" button
+     * Loop retrieves each interview question's filepath and creates a
+     * multipart entity and adds each one to the volley request queue
+     */
+    private void uploadInterviewVideos() {
+
+        String email = db.getCurrentUserEmail();
+        requestMap.put("email", email);
+        requestMap.put("applicationId", Long.toString(applicationId));
+
+        for(int i=0; i < interviewVideoFileList.size(); i++) {
+
+            File interviewVideoFile = new File(interviewVideoFileList.get(i));
+
+            MultipartRequest requestVideo = new MultipartRequest(AppConfig.INT_VIDEOS_URL, interviewVideoFile, requestMap,
+                    new Response.Listener<String>() {
+
+                        @Override
+                        public void onResponse(String response) {
+
+                            Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
+                        }
+                    },
+
+                    new Response.ErrorListener() {
+
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+
+                            Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+            );
+            VolleyApplication.getInstance().getRequestQueue().add(requestVideo);
+        }
     }
 }

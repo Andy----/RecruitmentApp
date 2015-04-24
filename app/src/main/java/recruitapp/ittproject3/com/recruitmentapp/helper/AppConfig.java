@@ -8,8 +8,8 @@ import android.content.Context;
 
 public class AppConfig {
 
-    private static final String URLA = "http://192.168.0.27:9000";
-    private static final String URL = "http://192.168.1.2:9000";
+    private static final String URL = "http://192.168.0.27:9000";
+    private static final String URLC = "http://192.168.1.2:9000";
     public static final String URLB = "http://recruit.x64.me";
     private static final String URLC = "http://johnkiernan.ie";
 
@@ -40,5 +40,8 @@ public class AppConfig {
 
     // Profile Image URL
     public static String IMAGE_URL = URL + "/assets/";
+
+    // Upload Interview Videos URL
+    public static String INT_VIDEOS_URL = URL + "/uploadinterviewvideos";
 
 }
