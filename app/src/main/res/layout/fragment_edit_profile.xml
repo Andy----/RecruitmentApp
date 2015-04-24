@@ -153,7 +153,9 @@
                     android:padding="10dp"
                     android:layout_gravity="left"
                     android:layout_row="5"
-                    android:layout_column="0" />
+                    android:layout_column="0"
+                    android:nestedScrollingEnabled="false"
+                    android:onClick="selectCV" />
 
                 <Button
                     android:layout_width="match_parent"

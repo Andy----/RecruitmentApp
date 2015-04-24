@@ -14,8 +14,6 @@ public class AppConfig {
     private static final String URL = "http://johnkiernan.ie";
 
 
-
-
     // Server user login url
     public static final String URL_LOGIN = URL + "/androidlogin";
 
@@ -25,8 +23,11 @@ public class AppConfig {
     // Server Update URL
     public static final String URL_UPDATE = URL + "/update";
 
-    // Server Update CV URL
+    // Server Update profile image URL
     public static final String URL_UPDATE_IMAGE= URL + "/updateProfileImage";
+
+    // Server Update profile image URL
+    public static final String URL_UPDATE_CV= URL + "/updateCV";
 
     // Server Interview request URL
     public static final String URL_GET_INTERVIEWS = URL + "/androidgetjobapplications";

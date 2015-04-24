@@ -1,6 +1,7 @@
 package recruitapp.ittproject3.com.recruitmentapp;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -26,15 +27,19 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URI;
 import java.util.Map;
 
 import recruitapp.ittproject3.com.recruitmentapp.helper.SQLiteHandler;
 import recruitapp.ittproject3.com.recruitmentapp.helper.SessionManager;
 
-public class UserProfileInterviewScreenActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks
-{
+public class UserProfileInterviewScreenActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -49,11 +54,13 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
     private CharSequence mTitle;
     private File imageFile;
     private File videoFile;
+    private File  cvFile;
     private SessionManager session;
     private SQLiteHandler db;
     private Button btnLogout;
     private ImageView profileImage;
     private Map<String, String> userDeatilsMap;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,8 +74,6 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
-
-
 
 
         btnLogout = (Button) findViewById(R.id.action_logout);
@@ -89,7 +94,7 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
         Fragment fragment = null;
         FragmentManager fragmentManager = getSupportFragmentManager();
 
-        switch(position) {
+        switch (position) {
             default:
             case 0:
                 fragment = new ProfileFragment().newInstance(position + 1);
@@ -116,7 +121,7 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
                 mTitle = getString(R.string.title_section2);
                 break;
             case 1:
-              mTitle = getString(R.string.title_section0);
+                mTitle = getString(R.string.title_section0);
                 break;
             case 2:
                 mTitle = getString(R.string.title_section1);
@@ -164,25 +169,24 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
     public void selectImage(View v) {
 
         File newDir = new File(getExternalCacheDir(), "RecruitSwift");
-        if(!newDir.isDirectory())
+        if (!newDir.isDirectory())
             newDir.mkdirs();
-        else
-            Toast.makeText(this, "Dir already exist", Toast.LENGTH_LONG).show();
+//        else
+//            Toast.makeText(this, "Dir already exist", Toast.LENGTH_LONG).show();
 
-        if(newDir.canWrite())
+        if (newDir.canWrite())
             imageFile = new File(newDir, "profile.jpg");
         else
             Toast.makeText(this, "Dir not writable", Toast.LENGTH_LONG).show();
 
-        final CharSequence[] options = { "Take Photo", "Choose from Gallery","Cancel" };
+        final CharSequence[] options = {"Take Photo", "Choose from Gallery", "Cancel"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(UserProfileInterviewScreenActivity.this);
         builder.setTitle("Add Photo!");
         builder.setItems(options, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
-                if (options[item].equals("Take Photo"))
-                {
+                if (options[item].equals("Take Photo")) {
                     Intent takeProfileImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     if (takeProfileImage.resolveActivity(getPackageManager()) != null) {
 
@@ -190,14 +194,11 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
                         takeProfileImage.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
                         startActivityForResult(takeProfileImage, 1);
                     }
-                }
-                else if (options[item].equals("Choose from Gallery"))
-                {
-                    Intent takeProfileImage = new   Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                } else if (options[item].equals("Choose from Gallery")) {
+                    Intent takeProfileImage = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     startActivityForResult(takeProfileImage, 2);
 
-                }
-                else if (options[item].equals("Cancel")) {
+                } else if (options[item].equals("Cancel")) {
                     dialog.dismiss();
                 }
             }
@@ -207,14 +208,14 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
 
     // Creates a directory in the app cache to store the videos if one does not exist
     // Creates the file to store the video and passes control to the android camera
-    public void buttonOnClickRecord(View v){
+    public void buttonOnClickRecord(View v) {
         File newDir = new File(getExternalCacheDir(), "RecruitSwift");
-        if(!newDir.isDirectory())
+        if (!newDir.isDirectory())
             newDir.mkdirs();
-        else
-            Toast.makeText(this, "Dir already exist", Toast.LENGTH_LONG).show();
+//        else
+//            Toast.makeText(this, "Dir already exist", Toast.LENGTH_LONG).show();
 
-        if(newDir.canWrite())
+        if (newDir.canWrite())
             videoFile = new File(newDir, "intro.mp4");
         else
             Toast.makeText(this, "Dir not writable", Toast.LENGTH_LONG).show();
@@ -225,113 +226,140 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
 
             Uri videoUri = Uri.fromFile(videoFile);
             takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri);
-            startActivityForResult(takeVideoIntent, REQUEST_VIDEO_CAPTURE);
+            startActivityForResult(takeVideoIntent, 3);
         }
     }
 
     // Call the VideoPlayerActivity and start it
-    public void buttonOnClickView(View v){
+    public void buttonOnClickView(View v) {
 
         Intent intent = new Intent(this, VideoPlayerActivity.class);
         this.startActivity(intent);
-        }
+    }
 
+    public void selectCV(View v) {
 
+        File newDir = new File(getExternalCacheDir(), "RecruitSwift");
+        if (!newDir.isDirectory())
+            newDir.mkdirs();
+//        else
+//            Toast.makeText(this, "Dir already exist", Toast.LENGTH_LONG).show();
+
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("file/*");
+        startActivityForResult(intent, 4);
+    }
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        profileImage = (ImageView)findViewById(R.id.profileImage);
+        profileImage = (ImageView) findViewById(R.id.profileImage);
         if (resultCode == RESULT_OK) {
 
             if (requestCode == 1) {
                 String imageDir = getExternalCacheDir() + "/RecruitSwift/profile.jpg";
                 Bitmap thumbnail = BitmapFactory.decodeFile(imageDir);
+
                 try {
+                    thumbnail = ShrinkBitmap(imageDir, 400, 400);
                     ExifInterface exif = new ExifInterface(imageDir);
                     int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
                     Log.d("EXIF", "Exif: " + orientation);
                     Matrix matrix = new Matrix();
                     if (orientation == 6) {
                         matrix.postRotate(90);
-                    }
-                    else if (orientation == 3) {
+                    } else if (orientation == 3) {
                         matrix.postRotate(180);
-                    }
-                    else if (orientation == 8) {
+                    } else if (orientation == 8) {
                         matrix.postRotate(270);
                     }
                     thumbnail = Bitmap.createBitmap(thumbnail, 0, 0, thumbnail.getWidth(), thumbnail.getHeight(), matrix, true); // rotating bitmap
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
 
                 }
+
                 profileImage.setImageBitmap(thumbnail);
-                try{
+                try {
                     String file_path = getExternalCacheDir() + "/RecruitSwift";
                     File dir = new File(file_path);
-                    if(!dir.exists())
+                    if (!dir.exists())
                         dir.mkdirs();
                     File file = new File(dir, "profile.jpg");
                     FileOutputStream fOut = new FileOutputStream(file);
                     thumbnail.compress(Bitmap.CompressFormat.PNG, 85, fOut);
                     fOut.flush();
                     fOut.close();
-                    }
-                catch (Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
+                Toast.makeText(this, "Press Save to make changes permanent", Toast.LENGTH_LONG).show();
 
             } else if (requestCode == 2) {
 
                 Uri selectedImage = data.getData();
-                String[] filePath = { MediaStore.Images.Media.DATA };
-                Cursor c = getContentResolver().query(selectedImage,filePath, null, null, null);
+                String[] filePath = {MediaStore.Images.Media.DATA};
+                Cursor c = getContentResolver().query(selectedImage, filePath, null, null, null);
                 c.moveToFirst();
                 int columnIndex = c.getColumnIndex(filePath[0]);
                 String picturePath = c.getString(columnIndex);
                 c.close();
                 Bitmap thumbnail = (BitmapFactory.decodeFile(picturePath));
+
                 Log.w("path of image", picturePath + "");
                 try {
+                    thumbnail = ShrinkBitmap(picturePath, 400, 400);
                     ExifInterface exif = new ExifInterface(picturePath);
                     int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
                     Log.d("EXIF", "Exif: " + orientation);
                     Matrix matrix = new Matrix();
                     if (orientation == 6) {
                         matrix.postRotate(90);
-                    }
-                    else if (orientation == 3) {
+                    } else if (orientation == 3) {
                         matrix.postRotate(180);
-                    }
-                    else if (orientation == 8) {
+                    } else if (orientation == 8) {
                         matrix.postRotate(270);
                     }
                     thumbnail = Bitmap.createBitmap(thumbnail, 0, 0, thumbnail.getWidth(), thumbnail.getHeight(), matrix, true); // rotating bitmap
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
 
                 }
+
                 profileImage.setImageBitmap(thumbnail);
-                try{
+                try {
                     String file_path = getExternalCacheDir() + "/RecruitSwift";
                     File dir = new File(file_path);
-                    if(!dir.exists())
+                    if (!dir.exists())
                         dir.mkdirs();
                     File file = new File(dir, "profile.jpg");
                     FileOutputStream fOut = new FileOutputStream(file);
                     thumbnail.compress(Bitmap.CompressFormat.PNG, 85, fOut);
                     fOut.flush();
                     fOut.close();
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
+                Toast.makeText(this, "Press Save to make changes permanent", Toast.LENGTH_LONG).show();
 
+            } else if (requestCode == 3) {
+                    Toast.makeText(this, "Press Save to make changes permanent", Toast.LENGTH_LONG).show();
 
+            } else if (requestCode == 4) {
+                    Uri selectedFile = data.getData();
+                    String filename = getFilename(selectedFile);
+                    savefile(selectedFile, filename);
+                    String user = "";
+                    userDeatilsMap = db.getUserDetails();
+                    for (Map.Entry<String, String> entry : userDeatilsMap.entrySet()) {
+                        if (entry.getKey().equals("email")) {
+                            user = entry.getValue();
+                        }
+                    }
+                    userDeatilsMap.put("cv_filePath", "globalUploadFolder" + File.separator + user + File.separator + filename);
+                    userDeatilsMap.put("cv_fileName", filename);
+                    db.updateUserDetails(userDeatilsMap);
             }
-            if(requestCode != REQUEST_VIDEO_CAPTURE) {
+            if (requestCode == 1 || requestCode == 2) {
                 String user = "";
                 userDeatilsMap = db.getUserDetails();
                 for (Map.Entry<String, String> entry : userDeatilsMap.entrySet()) {
@@ -340,28 +368,102 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
                     }
                 }
                 userDeatilsMap.put("profile_image_path", "globalUploadFolder" + File.separator + user + File.separator + "profile.jpg");
-                System.out.println(imageFile.toString());
                 db.updateUserDetails(userDeatilsMap);
             }
+        }else if (resultCode == RESULT_CANCELED && requestCode == 3) {
+            Toast.makeText(this, "Video recording cancelled.",
+                    Toast.LENGTH_LONG).show();
+        } else if(requestCode == 3) {
+            Toast.makeText(this, "Failed to record video",
+                    Toast.LENGTH_LONG).show();
+        }else if (resultCode == RESULT_CANCELED && requestCode == 1 || requestCode == 2) {
+            Toast.makeText(this, "Photo Selection cancelled.",
+                    Toast.LENGTH_LONG).show();
+        } else if(requestCode == 1 || requestCode ==2) {
+            Toast.makeText(this, "Failed to set profile picture",
+                    Toast.LENGTH_LONG).show();
         }
-        if (requestCode == REQUEST_VIDEO_CAPTURE) {
-            if (resultCode == RESULT_OK) {
-//                Toast.makeText(this, "Saved", Toast.LENGTH_LONG).show();
-            }
-             else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(this, "Video recording cancelled.",
-                        Toast.LENGTH_LONG).show();
+    }
+
+    Bitmap ShrinkBitmap(String file, int width, int height) {
+        BitmapFactory.Options bmpFactoryOptions = new BitmapFactory.Options();
+        bmpFactoryOptions.inJustDecodeBounds = true;
+        Bitmap bitmap = BitmapFactory.decodeFile(file, bmpFactoryOptions);
+        int heightRatio = (int) Math.ceil(bmpFactoryOptions.outHeight / (float) height);
+        int widthRatio = (int) Math.ceil(bmpFactoryOptions.outWidth / (float) width);
+
+        if (heightRatio > 1 || widthRatio > 1) {
+
+            if (heightRatio > widthRatio) {
+                bmpFactoryOptions.inSampleSize = heightRatio;
             } else {
-                Toast.makeText(this, "Failed to record video",
-                        Toast.LENGTH_LONG).show();
+                bmpFactoryOptions.inSampleSize = widthRatio;
+
             }
         }
+        bmpFactoryOptions.inJustDecodeBounds = false;
+        bitmap = BitmapFactory.decodeFile(file, bmpFactoryOptions);
+
+        return bitmap;
+    }
+    void savefile(Uri sourceUri, String name)
+    {
+        String sourceFilename= sourceUri.getPath();
+
+        String filePath = getExternalCacheDir().getPath() + File.separator  + "RecruitSwift" + File.separator;
+        String destinationFilename = filePath + name;
+
+        BufferedInputStream bis = null;
+        BufferedOutputStream bos = null;
+
+        try {
+            bis = new BufferedInputStream(new FileInputStream(sourceFilename));
+            bos = new BufferedOutputStream(new FileOutputStream(destinationFilename, false));
+            byte[] buf = new byte[1024];
+            bis.read(buf);
+            do {
+                bos.write(buf);
+            } while(bis.read(buf) != -1);
+        } catch (IOException e) {
+
+        } finally {
+            try {
+                if (bis != null) bis.close();
+                if (bos != null) bos.close();
+            } catch (IOException e) {
+
+            }
+        }
+    }
+    public String getFilename(Uri uri)
+    {
+/*  Intent intent = getIntent();
+    String name = intent.getData().getLastPathSegment();
+    return name;*/
+
+        String fileName = null;
+        Context context=getApplicationContext();
+        String scheme = uri.getScheme();
+        if (scheme.equals("file")) {
+            fileName = uri.getLastPathSegment();
+        }
+        else if (scheme.equals("content")) {
+            String[] proj = { MediaStore.Video.Media.TITLE };
+            Uri contentUri = null;
+            Cursor cursor = context.getContentResolver().query(uri, proj, null, null, null);
+            if (cursor != null && cursor.getCount() != 0) {
+                int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.TITLE);
+                cursor.moveToFirst();
+                fileName = cursor.getString(columnIndex);
+            }
+        }
+        return fileName;
     }
 
     /**
      * Logging out the user. Will set isLoggedIn flag to false in shared
      * preferences Clears the user data from sqlite users table
-     * */
+     */
     public void logoutUser() {
         session.setLogin(false);
 
