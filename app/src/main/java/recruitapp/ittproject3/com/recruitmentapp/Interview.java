@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -18,7 +17,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import recruitapp.ittproject3.com.recruitmentapp.Models.*;
 import recruitapp.ittproject3.com.recruitmentapp.helper.AppConfig;
@@ -44,7 +42,6 @@ public class Interview extends Activity {
     private Long applicationId;
     private HashMap<String, String> requestMap;
     private ProgressDialog progress;
-
     private List<String> interviewVideoFileList;
 
     @Override
@@ -57,8 +54,6 @@ public class Interview extends Activity {
 
         requestMap = new HashMap<>();
         interviewVideoFileList = new ArrayList<>();
-
-        // Progress bar for the the interview video upload
         progress = new ProgressDialog(this);
 
         applicationId = getIntent().getExtras().getLong("applicationId");
@@ -193,11 +188,19 @@ public class Interview extends Activity {
      * Loop retrieves each interview question's filepath and creates a
      * multipart entity and adds each one to the volley request queue
      */
-    private class UploadInterviewVideos extends AsyncTask<Void, Void, Void> {
-
+    private class UploadInterviewVideos extends AsyncTask<Void, Integer, Void> {
+        Double progressUpdate = 0.0;
+        int progressCounter = 0;
         @Override
         protected void onPreExecute() {
-            progress = ProgressDialog.show(Interview.this, "Wait", "Uploading Interview...");
+            progress.setTitle("Wait");
+            progress.setMessage("Uploading Interviews...");
+//            progress.setIndeterminate(false);
+            progress.setProgressNumberFormat(null);
+            progress.setCancelable(false);
+            progress.setProgress(0);
+            progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            progress.show();
         }
 
         @Override
@@ -207,7 +210,6 @@ public class Interview extends Activity {
             requestMap.put("applicationId", Long.toString(applicationId));
 
             for(int i=0; i < interviewVideoFileList.size(); i++) {
-
                 File interviewVideoFile = new File(interviewVideoFileList.get(i));
 
                 MultipartRequest requestVideo = new MultipartRequest(AppConfig.INT_VIDEOS_URL, interviewVideoFile, requestMap,
@@ -227,18 +229,35 @@ public class Interview extends Activity {
                         }
                 );
                 VolleyApplication.getInstance().getRequestQueue().add(requestVideo);
+
+                if(requestVideo != null) {
+                    progressUpdate += (100/interviewVideoFileList.size());
+                    while (!requestVideo.hasHadResponseDelivered()) {
+                        if(progressCounter < progressUpdate) {
+                            try {
+                                Thread.sleep(50);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            publishProgress(progressCounter);
+                            progressCounter++;
+                        }
+                    }
+                }
             }
             return null;
         }
 
-//        @Override
-//        protected void onProgressUpdate(String... values) {
-//
-//        }
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            progress.setProgress(values[0]);
+        }
 
         @Override
         protected void onPostExecute(Void param) {
-            progress.dismiss();
+            if (progress.isShowing()) {
+                progress.dismiss();
+            }
         }
     }
 }
