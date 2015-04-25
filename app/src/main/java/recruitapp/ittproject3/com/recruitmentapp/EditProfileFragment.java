@@ -42,11 +42,14 @@ public class EditProfileFragment extends Fragment {
     private File myCVFile;
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
+    private ImageLoader mImageLoaderFlush;
     private Map<String, String> userDetailsMap;
     private Map<String, String> userDeatilsMap2;
     private SQLiteHandler db;
     private String profileImageDir;
     private String cvFileName;
+
+
     /**
      * Returns a new instance of this fragment for the given section
      * number.
@@ -67,7 +70,6 @@ public class EditProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_edit_profile, container, false);
-
         myVideoFile  = new File(getActivity().getExternalCacheDir() + "/RecruitSwift/intro.mp4");
         myImageFile  = new File(getActivity().getExternalCacheDir() + "/RecruitSwift/profile.jpg");
         db = new SQLiteHandler(getActivity().getApplicationContext());
@@ -97,74 +99,87 @@ public class EditProfileFragment extends Fragment {
 
     public void saveDetails(){
 
-        MultipartRequest requestVideo = new MultipartRequest(AppConfig.URL_UPDATE, myVideoFile, userDetailsMap,
-                new Response.Listener<String>() {
+        if(myVideoFile.isFile() == true) {
+            MultipartRequest requestVideo = new MultipartRequest(AppConfig.URL_UPDATE, myVideoFile, userDetailsMap,
+                    new Response.Listener<String>() {
 
-                    @Override
-                    public void onResponse(String response) {
+                        @Override
+                        public void onResponse(String response) {
 
-                        Toast.makeText(getActivity().getApplicationContext(),
-                                response, Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity().getApplicationContext(),
+                                    response, Toast.LENGTH_LONG).show();
+                        }
+                    },
+
+                    new Response.ErrorListener() {
+
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+
+                            Toast.makeText(getActivity().getApplicationContext(),
+                                    error.toString(), Toast.LENGTH_LONG).show();
+                        }
                     }
-                },
+            );
+            VolleyApplication.getInstance().getRequestQueue().add(requestVideo);
+        }
+        else{
+            Toast.makeText(getActivity(), "You need to record a video", Toast.LENGTH_LONG).show();
+        }
+        if(myImageFile.isFile() == true) {
+            MultipartRequest requestImage = new MultipartRequest(AppConfig.URL_UPDATE_IMAGE, myImageFile, userDetailsMap,
+                    new Response.Listener<String>() {
 
-                new Response.ErrorListener() {
+                        @Override
+                        public void onResponse(String response) {
 
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(getActivity().getApplicationContext(),
+                                    response, Toast.LENGTH_LONG).show();
+                        }
+                    },
 
-                        Toast.makeText(getActivity().getApplicationContext(),
-                                error.toString(), Toast.LENGTH_LONG).show();
+                    new Response.ErrorListener() {
+
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+
+                            Toast.makeText(getActivity().getApplicationContext(),
+                                    error.toString(), Toast.LENGTH_LONG).show();
+                        }
                     }
-                }
-        );
-        VolleyApplication.getInstance().getRequestQueue().add(requestVideo);
+            );
+            VolleyApplication.getInstance().getRequestQueue().add(requestImage);
+        }else{
+            Toast.makeText(getActivity(), "You need to choose a profile image", Toast.LENGTH_LONG).show();
+        }
 
-        MultipartRequest requestImage = new MultipartRequest(AppConfig.URL_UPDATE_IMAGE, myImageFile, userDetailsMap,
-                new Response.Listener<String>() {
+        if(myCVFile.isFile() == true) {
+            MultipartRequest requestCV = new MultipartRequest(AppConfig.URL_UPDATE_CV, myCVFile, userDetailsMap,
+                    new Response.Listener<String>() {
 
-                    @Override
-                    public void onResponse(String response) {
+                        @Override
+                        public void onResponse(String response) {
 
-                        Toast.makeText(getActivity().getApplicationContext(),
-                                response, Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity().getApplicationContext(),
+                                    response, Toast.LENGTH_LONG).show();
+                        }
+                    },
+
+                    new Response.ErrorListener() {
+
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+
+                            Toast.makeText(getActivity().getApplicationContext(),
+                                    error.toString(), Toast.LENGTH_LONG).show();
+                        }
                     }
-                },
-
-                new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                        Toast.makeText(getActivity().getApplicationContext(),
-                                error.toString(), Toast.LENGTH_LONG).show();
-                    }
-                }
-        );
-        VolleyApplication.getInstance().getRequestQueue().add(requestImage);
-
-        MultipartRequest requestCV = new MultipartRequest(AppConfig.URL_UPDATE_CV, myCVFile, userDetailsMap,
-                new Response.Listener<String>() {
-
-                    @Override
-                    public void onResponse(String response) {
-
-                        Toast.makeText(getActivity().getApplicationContext(),
-                                response, Toast.LENGTH_LONG).show();
-                    }
-                },
-
-                new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                        Toast.makeText(getActivity().getApplicationContext(),
-                                error.toString(), Toast.LENGTH_LONG).show();
-                    }
-                }
-        );
-        VolleyApplication.getInstance().getRequestQueue().add(requestCV);
+            );
+            VolleyApplication.getInstance().getRequestQueue().add(requestCV);
+        }else{
+            Toast.makeText(getActivity(), "You need to choose a CV", Toast.LENGTH_LONG).show();
+        }
+        mImageLoaderFlush = VolleySingleton.getInstance().evictAllImages();
     }
 
 

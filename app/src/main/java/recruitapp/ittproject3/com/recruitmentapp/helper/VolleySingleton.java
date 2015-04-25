@@ -42,10 +42,11 @@ public class VolleySingleton {
         return mInstance;
     }
 
-    public void evictAllImages() {
+    public ImageLoader evictAllImages() {
         if (mImageCache != null) {
             mImageCache.flushLruCache();
         }
+        return this.mImageLoader;
     }
 
     public RequestQueue getRequestQueue(){
@@ -54,7 +55,6 @@ public class VolleySingleton {
 
 
     public ImageLoader getImageLoader(){
-        evictAllImages();
         return this.mImageLoader;
     }
 
