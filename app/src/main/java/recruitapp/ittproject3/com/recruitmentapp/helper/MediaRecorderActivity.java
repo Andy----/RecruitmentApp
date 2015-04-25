@@ -22,6 +22,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import recruitapp.ittproject3.com.recruitmentapp.Interview;
 import recruitapp.ittproject3.com.recruitmentapp.R;
 
 public class MediaRecorderActivity extends Activity {
@@ -34,6 +36,9 @@ public class MediaRecorderActivity extends Activity {
     private String fileName, currentQuestion;
     private boolean cameraFront = false;
     private boolean recording = false;
+
+    private VideoCaptureASyncTask videoTask;
+    private RecordingTimer recTimer;
 
 
     @Override
@@ -48,7 +53,7 @@ public class MediaRecorderActivity extends Activity {
         initialize();
         setCamera(findFrontFacingCamera());
 
-        VideoCaptureASyncTask videoTask = new VideoCaptureASyncTask();
+        videoTask = new VideoCaptureASyncTask();
         videoTask.execute();
     }
 
@@ -98,7 +103,7 @@ public class MediaRecorderActivity extends Activity {
             if (findFrontFacingCamera() < 0) {
                 Toast.makeText(this, "No front facing camera found.", Toast.LENGTH_LONG).show();
             }
-            openCamera(findBackFacingCamera());
+            openCamera(findFrontFacingCamera());
             mPreview.refreshCamera(mCamera);
         }
     }
@@ -197,8 +202,6 @@ public class MediaRecorderActivity extends Activity {
 
 
         mediaRecorder.setOutputFile(getExternalCacheDir() + "/RecruitSwift" + fileName);
-//        mediaRecorder.setMaxDuration(600000); // Set max duration 60 sec.
-        mediaRecorder.setMaxFileSize(50000000); // Set max file size 50M
         mediaRecorder.setOrientationHint(270);
         try {
             mediaRecorder.prepare();
@@ -258,7 +261,7 @@ public class MediaRecorderActivity extends Activity {
         protected void onProgressUpdate(Integer... values) {
             TextView recordCountDown = (TextView) findViewById(R.id.recordCountDown);
             if(values[0] == 0) {
-                recordCountDown.setTextSize(100);
+                recordCountDown.setTextSize(150);
                 recordCountDown.setText("GO!");
             } else {
                 recordCountDown.setText(Integer.toString(values[0]));
@@ -286,7 +289,7 @@ public class MediaRecorderActivity extends Activity {
                     TextView currentQuestionTV = (TextView) findViewById(R.id.currentQuestionString);
                     currentQuestionTV.setText(currentQuestion);
 
-                    RecordingTimer recTimer = new RecordingTimer();
+                    recTimer = new RecordingTimer();
                     recTimer.execute();
 
                 } catch (final Exception e) {
@@ -343,6 +346,44 @@ public class MediaRecorderActivity extends Activity {
                 action.setText("Go Back");
             }
         }
+    }
 
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        if(videoTask != null) {
+            if (videoTask.getStatus() == AsyncTask.Status.RUNNING) {
+                videoTask.cancel(true);
+            }
+        }
+        if(recTimer != null) {
+            if (recTimer.getStatus() == AsyncTask.Status.RUNNING) {
+                recTimer.cancel(true);
+            }
+        }
+//        if(recording) {
+//            mediaRecorder.stop();
+//        }
+        finish();
+    }
+
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+        if(videoTask != null) {
+            if (videoTask.getStatus() == AsyncTask.Status.RUNNING) {
+                videoTask.cancel(true);
+            }
+        }
+        if(recTimer != null) {
+            if (recTimer.getStatus() == AsyncTask.Status.RUNNING) {
+                recTimer.cancel(true);
+            }
+        }
+//        if(recording) {
+//            mediaRecorder.stop();
+//        }
     }
 }
