@@ -2,6 +2,7 @@ package recruitapp.ittproject3.com.recruitmentapp;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -31,7 +32,7 @@ public class Interview extends Activity {
     // LogCat tag
     private static final String TAG = Interview.class.getSimpleName();
 
-    static final int REQUEST_VIDEO_CAPTURE = 1;
+    TextView questionNumber;
     private List<InterviewQuestion> interviewQuestions;
     private List<InterviewTaskParams> interviewTaskParamsList = new ArrayList<>();
     private SQLiteHandler db;
@@ -43,6 +44,8 @@ public class Interview extends Activity {
     private HashMap<String, String> requestMap;
     private ProgressDialog progress;
     private List<String> interviewVideoFileList;
+
+    private InterviewQuestionSyncTask iqTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +63,7 @@ public class Interview extends Activity {
         interviewQuestions = db.getInterviewQuestionList();
         nextQuestion = (Button) findViewById(R.id.nextQuestionButton);
 
-        TextView questionNumber = (TextView) findViewById(R.id.currentQuestionNumber);
+        questionNumber = (TextView) findViewById(R.id.currentQuestionNumber);
         questionNumber.setText("When you are ready, click on the button below to display the first question." +
                 "\n\nOnce the interview starts you will have 30 seconds to prepare your answer at which point the camera will start recording your response automatically." +
                 "\n\nEach recording can last up to a maximum of 3 minutes or you can finish the recording at any time by pressing the button on screen." +
@@ -76,9 +79,10 @@ public class Interview extends Activity {
             nextQuestion.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
                     if (questionCount > 0) {
-                        InterviewQuestionSyncTask iqTask = new InterviewQuestionSyncTask();
+                        iqTask = new InterviewQuestionSyncTask();
                         iqTask.execute(interviewTaskParamsList.get(pos));
                         currentQuestion = interviewTaskParamsList.get(pos).question;
+
                         pos++;
                         questionCount--;
                         nextQuestion.setText("Next Question");
@@ -86,7 +90,6 @@ public class Interview extends Activity {
                 }
             });
     }
-
 
     private class InterviewQuestionSyncTask extends AsyncTask<InterviewTaskParams, String, InterviewTaskParams> {
 
@@ -133,14 +136,41 @@ public class Interview extends Activity {
             TextView currentQuestion = (TextView) findViewById(R.id.currentQuestionView);
             TextView previewCounter = (TextView) findViewById(R.id.previewCounter);
 
+            dispatchVideo(params.questionId, params.jobAppId);
+
             questionNumber.setText("");
             currentQuestion.setText("");
             previewCounter.setText("");
 
-            dispatchVideo(params.questionId, params.jobAppId);
+            // Delays displaying the next set of buttons & text until the video recording has been opened
+            DelayTask delayTask = new DelayTask();
+            delayTask.execute();
+        }
+    }
 
-            nextQuestion.setVisibility(View.VISIBLE);
+    /*
+    * DelayTask delays displaying the "next question" or "submit interview" button and text by 5 seconds
+    * to give the video recording activity screen time to load
+     */
+    private class DelayTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void param) {
+            if(questionCount > 0) {
+                questionNumber.setText("When you are ready, click on the button below to proceed to the next question.");
+            }
+
             if(questionCount == 0) {
+                questionNumber.setText("Make sure to press the button below to upload your interview to our servers before exiting the app.");
                 nextQuestion.setText("Submit Interview");
                 nextQuestion.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View view) {
@@ -149,6 +179,8 @@ public class Interview extends Activity {
                     }
                 });
             }
+
+            nextQuestion.setVisibility(View.VISIBLE);
         }
     }
 
@@ -194,8 +226,7 @@ public class Interview extends Activity {
         @Override
         protected void onPreExecute() {
             progress.setTitle("Wait");
-            progress.setMessage("Uploading Interviews...");
-//            progress.setIndeterminate(false);
+            progress.setMessage("Uploading Interview...");
             progress.setProgressNumberFormat(null);
             progress.setCancelable(false);
             progress.setProgress(0);
@@ -235,7 +266,7 @@ public class Interview extends Activity {
                     while (!requestVideo.hasHadResponseDelivered()) {
                         if(progressCounter < progressUpdate) {
                             try {
-                                Thread.sleep(50);
+                                Thread.sleep(100);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
@@ -258,6 +289,45 @@ public class Interview extends Activity {
             if (progress.isShowing()) {
                 progress.dismiss();
             }
+
+            questionNumber.setText("Your interview is complete." +
+                    "\nClick done to return to your profile.");
+
+            nextQuestion.setText("Done");
+            nextQuestion.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View view) {
+                    finish();
+                }
+            });
+
         }
     }
+
+    /**
+     * Kills the background thread and close the activity if
+     * the back button is pressed
+     */
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        if(iqTask != null) {
+            if (iqTask.getStatus() == AsyncTask.Status.RUNNING) {
+                iqTask.cancel(true);
+            }
+        }
+        finish();
+    }
+
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+        if(iqTask != null) {
+            if (iqTask.getStatus() == AsyncTask.Status.RUNNING) {
+                iqTask.cancel(true);
+            }
+        }
+    }
+
 }
