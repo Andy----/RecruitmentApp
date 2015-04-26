@@ -44,4 +44,7 @@ public class AppConfig {
     // Upload Interview Videos URL
     public static String INT_VIDEOS_URL = URL + "/uploadinterviewvideos";
 
+    // Complete Interview URL
+    public static String CHECK_INTERVIEW_URL = URL + "/completeinterviewvideo";
+
 }
