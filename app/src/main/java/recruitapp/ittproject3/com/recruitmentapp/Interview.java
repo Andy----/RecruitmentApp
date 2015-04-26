@@ -6,18 +6,26 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import recruitapp.ittproject3.com.recruitmentapp.Models.*;
 import recruitapp.ittproject3.com.recruitmentapp.helper.AppConfig;
@@ -239,9 +247,10 @@ public class Interview extends Activity {
             String email = db.getCurrentUserEmail();
             requestMap.put("email", email);
             requestMap.put("applicationId", Long.toString(applicationId));
+            File interviewVideoFile;
 
             for(int i=0; i < interviewVideoFileList.size(); i++) {
-                File interviewVideoFile = new File(interviewVideoFileList.get(i));
+                interviewVideoFile = new File(interviewVideoFileList.get(i));
 
                 MultipartRequest requestVideo = new MultipartRequest(AppConfig.INT_VIDEOS_URL, interviewVideoFile, requestMap,
                         new Response.Listener<String>() {
@@ -255,16 +264,16 @@ public class Interview extends Activity {
                             @Override
                             public void onErrorResponse(VolleyError error) {
 
-                            Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
                             }
                         }
                 );
                 VolleyApplication.getInstance().getRequestQueue().add(requestVideo);
 
-                if(requestVideo != null) {
-                    progressUpdate += (100/interviewVideoFileList.size());
+                if (requestVideo != null) {
+                    progressUpdate += (100 / interviewVideoFileList.size());
                     while (!requestVideo.hasHadResponseDelivered()) {
-                        if(progressCounter < progressUpdate) {
+                        if (progressCounter < progressUpdate) {
                             try {
                                 Thread.sleep(100);
                             } catch (InterruptedException e) {
@@ -276,6 +285,11 @@ public class Interview extends Activity {
                     }
                 }
             }
+
+            // Once loop finishes uploading all videos, send a request to server
+            // to mark the interview as complete.
+            markInterviewVideosComplete();
+
             return null;
         }
 
@@ -302,6 +316,42 @@ public class Interview extends Activity {
 
         }
     }
+
+    /**
+     * Method is called once all interview videos have been uploaded
+     * Sends a json object containing the application ID
+     */
+    private void markInterviewVideosComplete() {
+        Map<String, Long> appId = new HashMap<String, Long>();
+        appId.put("applicationId", applicationId);
+
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST, AppConfig.CHECK_INTERVIEW_URL, new JSONObject(appId), new Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d(TAG, response.toString());
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, "Interview complete check: error" + error.getMessage());
+            }
+        }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json");
+                headers.put( "charset", "utf-8");
+                return headers;
+            }
+        };
+
+        // Adding request to request queue
+        VolleyApplication.getInstance().addToRequestQueue(jsonObjReq);
+    }
+
 
     /**
      * Kills the background thread and close the activity if
