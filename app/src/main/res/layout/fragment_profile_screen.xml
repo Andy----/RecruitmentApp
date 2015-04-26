@@ -113,7 +113,7 @@
                     android:textColor="@color/white"
                     android:background="@color/light_blue"
                     android:textSize="15sp"
-                    android:onClick="buttonOnClickView"
+                    android:onClick="viewIntroVideo"
                     android:drawableLeft="@drawable/add_video_icon"
                     android:padding="10dp"
                     android:layout_gravity="center_vertical"

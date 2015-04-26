@@ -16,7 +16,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
 import android.view.Menu;
@@ -33,7 +32,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URI;
 import java.util.Map;
 
 import recruitapp.ittproject3.com.recruitmentapp.helper.SQLiteHandler;
@@ -47,19 +45,23 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
 
-    static final int REQUEST_VIDEO_CAPTURE = 1;
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
     private File imageFile;
     private File videoFile;
-    private File  cvFile;
     private SessionManager session;
     private SQLiteHandler db;
     private Button btnLogout;
     private ImageView profileImage;
     private Map<String, String> userDeatilsMap;
+    private String user = "";
+    private String imageDir;
+    static final int CAMERA_PHOTO = 1;
+    static final int GALLERY_PHOTO = 2;
+    static final int RECORDED_VIDEO = 3;
+    static final int CV_FILE = 4;
 
 
     @Override
@@ -74,7 +76,6 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
-
 
         btnLogout = (Button) findViewById(R.id.action_logout);
 
@@ -162,11 +163,10 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
             logoutUser();
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
-    public void selectImage(View v) {
+    public void selectProfileImage(View v) {
 
         File newDir = new File(getExternalCacheDir(), "RecruitSwift");
         if (!newDir.isDirectory())
@@ -187,18 +187,21 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
             @Override
             public void onClick(DialogInterface dialog, int item) {
                 if (options[item].equals("Take Photo")) {
+
                     Intent takeProfileImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     if (takeProfileImage.resolveActivity(getPackageManager()) != null) {
 
                         Uri imageUri = Uri.fromFile(imageFile);
                         takeProfileImage.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                        startActivityForResult(takeProfileImage, 1);
+                        startActivityForResult(takeProfileImage, CAMERA_PHOTO);
                     }
                 } else if (options[item].equals("Choose from Gallery")) {
+
                     Intent takeProfileImage = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    startActivityForResult(takeProfileImage, 2);
+                    startActivityForResult(takeProfileImage, GALLERY_PHOTO);
 
                 } else if (options[item].equals("Cancel")) {
+
                     dialog.dismiss();
                 }
             }
@@ -208,7 +211,7 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
 
     // Creates a directory in the app cache to store the videos if one does not exist
     // Creates the file to store the video and passes control to the android camera
-    public void buttonOnClickRecord(View v) {
+    public void recordIntroVideo(View v) {
         File newDir = new File(getExternalCacheDir(), "RecruitSwift");
         if (!newDir.isDirectory())
             newDir.mkdirs();
@@ -220,18 +223,17 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
         else
             Toast.makeText(this, "Dir not writable", Toast.LENGTH_LONG).show();
 
-
         Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         if (takeVideoIntent.resolveActivity(getPackageManager()) != null) {
 
             Uri videoUri = Uri.fromFile(videoFile);
             takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri);
-            startActivityForResult(takeVideoIntent, 3);
+            startActivityForResult(takeVideoIntent, RECORDED_VIDEO);
         }
     }
 
     // Call the VideoPlayerActivity and start it
-    public void buttonOnClickView(View v) {
+    public void viewIntroVideo(View v) {
 
         Intent intent = new Intent(this, VideoPlayerActivity.class);
         this.startActivity(intent);
@@ -247,7 +249,7 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
 
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("file/*");
-        startActivityForResult(intent, 4);
+        startActivityForResult(intent, CV_FILE);
     }
 
 
@@ -255,47 +257,24 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         profileImage = (ImageView) findViewById(R.id.profileImage);
+        imageDir = getExternalCacheDir() + "/RecruitSwift/profile.jpg";
+        userDeatilsMap = db.getUserDetails();
+        for (Map.Entry<String, String> entry : userDeatilsMap.entrySet()) {
+            if (entry.getKey().equals("email")) {
+
+                user = entry.getValue();
+            }
+        }
         if (resultCode == RESULT_OK) {
+            if (requestCode == CAMERA_PHOTO) {
 
-            if (requestCode == 1) {
-                String imageDir = getExternalCacheDir() + "/RecruitSwift/profile.jpg";
                 Bitmap thumbnail = BitmapFactory.decodeFile(imageDir);
-
-                try {
-                    thumbnail = ShrinkBitmap(imageDir, 400, 400);
-                    ExifInterface exif = new ExifInterface(imageDir);
-                    int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
-                    Log.d("EXIF", "Exif: " + orientation);
-                    Matrix matrix = new Matrix();
-                    if (orientation == 6) {
-                        matrix.postRotate(90);
-                    } else if (orientation == 3) {
-                        matrix.postRotate(180);
-                    } else if (orientation == 8) {
-                        matrix.postRotate(270);
-                    }
-                    thumbnail = Bitmap.createBitmap(thumbnail, 0, 0, thumbnail.getWidth(), thumbnail.getHeight(), matrix, true); // rotating bitmap
-                } catch (Exception e) {
-
-                }
-
+                thumbnail = rotateImage(thumbnail, imageDir);
                 profileImage.setImageBitmap(thumbnail);
-                try {
-                    String file_path = getExternalCacheDir() + "/RecruitSwift";
-                    File dir = new File(file_path);
-                    if (!dir.exists())
-                        dir.mkdirs();
-                    File file = new File(dir, "profile.jpg");
-                    FileOutputStream fOut = new FileOutputStream(file);
-                    thumbnail.compress(Bitmap.CompressFormat.PNG, 85, fOut);
-                    fOut.flush();
-                    fOut.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                saveBitmap(thumbnail);
                 Toast.makeText(this, "Press Save to make changes permanent", Toast.LENGTH_LONG).show();
 
-            } else if (requestCode == 2) {
+            } else if (requestCode == GALLERY_PHOTO) {
 
                 Uri selectedImage = data.getData();
                 String[] filePath = {MediaStore.Images.Media.DATA};
@@ -305,90 +284,60 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
                 String picturePath = c.getString(columnIndex);
                 c.close();
                 Bitmap thumbnail = (BitmapFactory.decodeFile(picturePath));
-
-                Log.w("path of image", picturePath + "");
-                try {
-                    thumbnail = ShrinkBitmap(picturePath, 400, 400);
-                    ExifInterface exif = new ExifInterface(picturePath);
-                    int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
-                    Log.d("EXIF", "Exif: " + orientation);
-                    Matrix matrix = new Matrix();
-                    if (orientation == 6) {
-                        matrix.postRotate(90);
-                    } else if (orientation == 3) {
-                        matrix.postRotate(180);
-                    } else if (orientation == 8) {
-                        matrix.postRotate(270);
-                    }
-                    thumbnail = Bitmap.createBitmap(thumbnail, 0, 0, thumbnail.getWidth(), thumbnail.getHeight(), matrix, true); // rotating bitmap
-                } catch (Exception e) {
-
-                }
-
+                thumbnail = rotateImage(thumbnail, picturePath);
                 profileImage.setImageBitmap(thumbnail);
-                try {
-                    String file_path = getExternalCacheDir() + "/RecruitSwift";
-                    File dir = new File(file_path);
-                    if (!dir.exists())
-                        dir.mkdirs();
-                    File file = new File(dir, "profile.jpg");
-                    FileOutputStream fOut = new FileOutputStream(file);
-                    thumbnail.compress(Bitmap.CompressFormat.PNG, 85, fOut);
-                    fOut.flush();
-                    fOut.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                saveBitmap(thumbnail);
                 Toast.makeText(this, "Press Save to make changes permanent", Toast.LENGTH_LONG).show();
 
-            } else if (requestCode == 3) {
+            } else if (requestCode == RECORDED_VIDEO) {
+
                     Toast.makeText(this, "Press Save to make changes permanent", Toast.LENGTH_LONG).show();
 
-            } else if (requestCode == 4) {
+            } else if (requestCode == CV_FILE) {
+
                     Uri selectedFile = data.getData();
                     String filename = getFilename(selectedFile);
-                    savefile(selectedFile, filename);
-                    String user = "";
-                    userDeatilsMap = db.getUserDetails();
-                    for (Map.Entry<String, String> entry : userDeatilsMap.entrySet()) {
-                        if (entry.getKey().equals("email")) {
-                            user = entry.getValue();
-                        }
-                    }
+                    saveFile(selectedFile, filename);
                     userDeatilsMap.put("cv_filePath", "globalUploadFolder" + File.separator + user + File.separator + filename);
                     userDeatilsMap.put("cv_fileName", filename);
                     db.updateUserDetails(userDeatilsMap);
             }
-            if (requestCode == 1 || requestCode == 2) {
-                String user = "";
-                userDeatilsMap = db.getUserDetails();
-                for (Map.Entry<String, String> entry : userDeatilsMap.entrySet()) {
-                    if (entry.getKey().equals("email")) {
-                        user = entry.getValue();
-                    }
-                }
+            if (requestCode == CAMERA_PHOTO || requestCode == GALLERY_PHOTO) {
+
                 userDeatilsMap.put("profile_image_path", "globalUploadFolder" + File.separator + user + File.separator + "profile.jpg");
                 db.updateUserDetails(userDeatilsMap);
             }
-        }else if (resultCode == RESULT_CANCELED && requestCode == 3) {
+        }else if (resultCode == RESULT_CANCELED && requestCode == RECORDED_VIDEO) {
+
             Toast.makeText(this, "Video recording cancelled.",
                     Toast.LENGTH_LONG).show();
-        } else if(requestCode == 3) {
+        } else if(requestCode == RECORDED_VIDEO) {
+
             Toast.makeText(this, "Failed to record video",
                     Toast.LENGTH_LONG).show();
-        }else if (resultCode == RESULT_CANCELED && requestCode == 1 || requestCode == 2) {
+        }else if (resultCode == RESULT_CANCELED && requestCode == CAMERA_PHOTO || requestCode == GALLERY_PHOTO) {
+
             Toast.makeText(this, "Photo Selection cancelled.",
                     Toast.LENGTH_LONG).show();
-        } else if(requestCode == 1 || requestCode ==2) {
+        } else if(requestCode == CAMERA_PHOTO || requestCode == GALLERY_PHOTO) {
+
             Toast.makeText(this, "Failed to set profile picture",
+                    Toast.LENGTH_LONG).show();
+        }else if(requestCode == CV_FILE && resultCode == RESULT_CANCELED) {
+
+            Toast.makeText(this, "CV selection canceled",
+                    Toast.LENGTH_LONG).show();
+        }else if(requestCode == CV_FILE) {
+
+            Toast.makeText(this, "Failed to record video",
                     Toast.LENGTH_LONG).show();
         }
     }
 
-    Bitmap ShrinkBitmap(String file, int width, int height) {
+   public Bitmap ShrinkBitmap(String file, int width, int height) {
+
         BitmapFactory.Options bmpFactoryOptions = new BitmapFactory.Options();
         bmpFactoryOptions.inJustDecodeBounds = true;
-        Bitmap bitmap = BitmapFactory.decodeFile(file, bmpFactoryOptions);
         int heightRatio = (int) Math.ceil(bmpFactoryOptions.outHeight / (float) height);
         int widthRatio = (int) Math.ceil(bmpFactoryOptions.outWidth / (float) width);
 
@@ -398,15 +347,31 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
                 bmpFactoryOptions.inSampleSize = heightRatio;
             } else {
                 bmpFactoryOptions.inSampleSize = widthRatio;
-
             }
         }
         bmpFactoryOptions.inJustDecodeBounds = false;
-        bitmap = BitmapFactory.decodeFile(file, bmpFactoryOptions);
+        Bitmap bitmap = BitmapFactory.decodeFile(file, bmpFactoryOptions);
 
         return bitmap;
     }
-    void savefile(Uri sourceUri, String name)
+
+    public void saveBitmap(Bitmap thumbnail){
+
+        try {
+            String file_path = getExternalCacheDir() + "/RecruitSwift";
+            File dir = new File(file_path);
+            if (!dir.exists())
+                dir.mkdirs();
+            File file = new File(dir, "profile.jpg");
+            FileOutputStream fOut = new FileOutputStream(file);
+            thumbnail.compress(Bitmap.CompressFormat.PNG, 85, fOut);
+            fOut.flush();
+            fOut.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void saveFile(Uri sourceUri, String name)
     {
         String sourceFilename= sourceUri.getPath();
 
@@ -434,6 +399,29 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
 
             }
         }
+    }
+
+
+    public Bitmap rotateImage(Bitmap thumbnail, String imageDir){
+
+        try {
+            thumbnail = ShrinkBitmap(imageDir, 400, 400);
+            ExifInterface exif = new ExifInterface(imageDir);
+            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
+            Log.d("EXIF", "Exif: " + orientation);
+            Matrix matrix = new Matrix();
+            if (orientation == 6) {
+                matrix.postRotate(90);
+            } else if (orientation == 3) {
+                matrix.postRotate(180);
+            } else if (orientation == 8) {
+                matrix.postRotate(270);
+            }
+            thumbnail = Bitmap.createBitmap(thumbnail, 0, 0, thumbnail.getWidth(), thumbnail.getHeight(), matrix, true); // rotating bitmap
+        } catch (Exception e) {
+
+        }
+     return thumbnail;
     }
     public String getFilename(Uri uri)
     {
