@@ -84,6 +84,13 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
 
         db = new SQLiteHandler(getApplicationContext());
 
+        userDeatilsMap = db.getUserDetails();
+        for (Map.Entry<String, String> entry : userDeatilsMap.entrySet()) {
+            if (entry.getKey().equals("email")) {
+
+                user = entry.getValue();
+            }
+        }
         if (!session.isLoggedIn()) {
             logoutUser();
         }
@@ -168,7 +175,7 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
 
     public void selectProfileImage(View v) {
 
-        File newDir = new File(getExternalCacheDir(), "RecruitSwift");
+        File newDir = new File(getExternalCacheDir(), "RecruitSwift"+ File.separator + user+ File.separator);
         if (!newDir.isDirectory())
             newDir.mkdirs();
 //        else
@@ -212,7 +219,7 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
     // Creates a directory in the app cache to store the videos if one does not exist
     // Creates the file to store the video and passes control to the android camera
     public void recordIntroVideo(View v) {
-        File newDir = new File(getExternalCacheDir(), "RecruitSwift");
+        File newDir = new File(getExternalCacheDir(), "RecruitSwift"+ File.separator + user + File.separator);
         if (!newDir.isDirectory())
             newDir.mkdirs();
 //        else
@@ -241,7 +248,7 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
 
     public void selectCV(View v) {
 
-        File newDir = new File(getExternalCacheDir(), "RecruitSwift");
+        File newDir = new File(getExternalCacheDir(),  File.separator +"RecruitSwift"+ File.separator + user + File.separator);
         if (!newDir.isDirectory())
             newDir.mkdirs();
 //        else
@@ -257,14 +264,8 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         profileImage = (ImageView) findViewById(R.id.profileImage);
-        imageDir = getExternalCacheDir() + "/RecruitSwift/profile.jpg";
-        userDeatilsMap = db.getUserDetails();
-        for (Map.Entry<String, String> entry : userDeatilsMap.entrySet()) {
-            if (entry.getKey().equals("email")) {
+        imageDir = getExternalCacheDir() + File.separator + "RecruitSwift" + File.separator + user + File.separator + "profile.jpg" + File.separator;
 
-                user = entry.getValue();
-            }
-        }
         if (resultCode == RESULT_OK) {
             if (requestCode == CAMERA_PHOTO) {
 
@@ -358,7 +359,7 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
     public void saveBitmap(Bitmap thumbnail){
 
         try {
-            String file_path = getExternalCacheDir() + "/RecruitSwift";
+            String file_path = getExternalCacheDir() + File.separator + "RecruitSwift" + File.separator + user + File.separator;
             File dir = new File(file_path);
             if (!dir.exists())
                 dir.mkdirs();
@@ -374,8 +375,7 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
     public void saveFile(Uri sourceUri, String name)
     {
         String sourceFilename= sourceUri.getPath();
-
-        String filePath = getExternalCacheDir().getPath() + File.separator  + "RecruitSwift" + File.separator;
+        String filePath = getExternalCacheDir().getPath() + File.separator  + "RecruitSwift" + File.separator + user + File.separator;
         String destinationFilename = filePath + name;
 
         BufferedInputStream bis = null;

@@ -48,6 +48,7 @@ public class EditProfileFragment extends Fragment {
     private SQLiteHandler db;
     private String profileImageDir;
     private String cvFileName;
+    private String user ="";
 
 
     /**
@@ -70,10 +71,10 @@ public class EditProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_edit_profile, container, false);
-        myVideoFile  = new File(getActivity().getExternalCacheDir() + "/RecruitSwift/intro.mp4");
-        myImageFile  = new File(getActivity().getExternalCacheDir() + "/RecruitSwift/profile.jpg");
         db = new SQLiteHandler(getActivity().getApplicationContext());
         setUserDetails();
+        myVideoFile  = new File(getActivity().getExternalCacheDir() + File.separator +"RecruitSwift"+ File.separator + user + File.separator +"intro.mp4");
+        myImageFile  = new File(getActivity().getExternalCacheDir() + File.separator + "RecruitSwift" + File.separator + user + File.separator +"profile.jpg");
         mRequestQueue = VolleySingleton.getInstance().getRequestQueue();
         mImageLoader = VolleySingleton.getInstance().getImageLoader();
         Button mButton = (Button) rootView.findViewById(R.id.saveBtn);
@@ -99,7 +100,20 @@ public class EditProfileFragment extends Fragment {
 
     public void saveDetails(){
 
-        if(myVideoFile.isFile() == true) {
+        String cvExists ="";
+        String profileImageExists ="";
+        userDetailsMap = db.getUserDetails();
+        for (Map.Entry<String, String> entry : userDetailsMap.entrySet()) {
+            if (entry.getKey().equals("cv_filePath")) {
+                cvExists = entry.getValue();
+                System.out.println(entry.getValue());
+            }
+            if (entry.getKey().equals("profile_image_path")) {
+                profileImageExists = entry.getValue();
+                System.out.println(entry.getValue());
+            }
+        }
+        if(myVideoFile.isFile()) {
             MultipartRequest requestVideo = new MultipartRequest(AppConfig.URL_UPDATE, myVideoFile, userDetailsMap,
                     new Response.Listener<String>() {
 
@@ -126,15 +140,17 @@ public class EditProfileFragment extends Fragment {
         else{
             Toast.makeText(getActivity(), "You need to record a video", Toast.LENGTH_LONG).show();
         }
-        if(myImageFile != null) {
+
+        if(myImageFile.isFile()) {
+//            System.out.println(myImageFile.toString());
             MultipartRequest requestImage = new MultipartRequest(AppConfig.URL_UPDATE_IMAGE, myImageFile, userDetailsMap,
                     new Response.Listener<String>() {
 
                         @Override
                         public void onResponse(String response) {
 
-                            Toast.makeText(getActivity().getApplicationContext(),
-                                    response, Toast.LENGTH_LONG).show();
+//                            Toast.makeText(getActivity().getApplicationContext(),
+//                                    response, Toast.LENGTH_LONG).show();
                         }
                     },
 
@@ -149,19 +165,21 @@ public class EditProfileFragment extends Fragment {
                     }
             );
             VolleyApplication.getInstance().getRequestQueue().add(requestImage);
-        }else{
+        }else if(profileImageExists.equals("null")){
             Toast.makeText(getActivity(), "You need to choose a profile image", Toast.LENGTH_LONG).show();
+        }else{
+//            System.out.println(profileImageExists);
         }
 
-        if(myCVFile.isFile() == true) {
+        if(myCVFile.isFile()) {
             MultipartRequest requestCV = new MultipartRequest(AppConfig.URL_UPDATE_CV, myCVFile, userDetailsMap,
                     new Response.Listener<String>() {
 
                         @Override
                         public void onResponse(String response) {
 
-                            Toast.makeText(getActivity().getApplicationContext(),
-                                    response, Toast.LENGTH_LONG).show();
+//                            Toast.makeText(getActivity().getApplicationContext(),
+//                                    response, Toast.LENGTH_LONG).show();
                         }
                     },
 
@@ -176,8 +194,10 @@ public class EditProfileFragment extends Fragment {
                     }
             );
             VolleyApplication.getInstance().getRequestQueue().add(requestCV);
+        }else if(cvExists.equals("null")){
+            Toast.makeText(getActivity(), "You need to choose a CV file", Toast.LENGTH_LONG).show();
         }else{
-            Toast.makeText(getActivity(), "You need to choose a CV", Toast.LENGTH_LONG).show();
+
         }
         mImageLoaderFlush = VolleySingleton.getInstance().evictAllImages();
     }
@@ -196,6 +216,7 @@ public class EditProfileFragment extends Fragment {
             if(entry.getKey().equals("email")){
                 mEditText = (TextView) rootView.findViewById(R.id.emailText);
                 mEditText.setText(entry.getValue());
+                user = entry.getValue();
             }
             if(entry.getKey().equals("first_name")){
                 first_name = entry.getValue();
@@ -277,7 +298,7 @@ public class EditProfileFragment extends Fragment {
             }
         }
         db.updateUserDetails(userDetailsMap);
-        myCVFile  = new File(getActivity().getExternalCacheDir() + "/RecruitSwift" + File.separator + cvFileName);
+        myCVFile  = new File(getActivity().getExternalCacheDir() + File.separator + "RecruitSwift" + File.separator +user + File.separator  + cvFileName);
 
         if(go == true)
         saveDetails();

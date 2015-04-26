@@ -8,22 +8,37 @@ import android.view.MenuItem;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
+import java.io.File;
+import java.util.Map;
+
+import recruitapp.ittproject3.com.recruitmentapp.helper.SQLiteHandler;
+
 
 public class VideoPlayerActivity extends ActionBarActivity {
 
 
+    private SQLiteHandler db;
+    private Map<String, String> userDeatilsMap;
+    private String user = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_player);
+        db = new SQLiteHandler(getApplicationContext());
+        userDeatilsMap = db.getUserDetails();
+        for (Map.Entry<String, String> entry : userDeatilsMap.entrySet()) {
+            if (entry.getKey().equals("email")) {
+
+                user = entry.getValue();
+            }
+        }
 
         // Set the videoView according to the id
-        final VideoView videoView =
-                (VideoView) findViewById(R.id.videoView1);
+        final VideoView videoView =(VideoView) findViewById(R.id.videoView1);
+
 
         // Set the path to the stored video
-        videoView.setVideoURI(
-                Uri.parse(getExternalCacheDir() + "/RecruitSwift/intro.mp4"));
+        videoView.setVideoURI(Uri.parse(getExternalCacheDir() + File.separator +"RecruitSwift" + File.separator + user +File.separator +"intro.mp4"));
         MediaController mediaController = new
         MediaController(this);
         mediaController.setAnchorView(videoView);
