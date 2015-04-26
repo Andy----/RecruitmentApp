@@ -35,7 +35,7 @@
                 android:id="@+id/profileImageBtn"
                 android:layout_gravity="center"
                 android:background="@android:color/transparent"
-                android:onClick="selectImage" />
+                android:onClick="selectProfileImage" />
 
 
         </RelativeLayout>
@@ -128,7 +128,7 @@
                     android:textColor="@color/white"
                     android:background="@color/light_blue"
                     android:textSize="15sp"
-                    android:onClick="buttonOnClickRecord"
+                    android:onClick="recordIntroVideo"
                     android:drawableLeft="@drawable/add_video_icon"
                     android:padding="10dp"
                     android:paddingBottom="5dp"

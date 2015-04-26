@@ -44,7 +44,7 @@ public class EditProfileFragment extends Fragment {
     private ImageLoader mImageLoader;
     private ImageLoader mImageLoaderFlush;
     private Map<String, String> userDetailsMap;
-    private Map<String, String> userDeatilsMap2;
+    private Map<String, String> userDetailsMap2;
     private SQLiteHandler db;
     private String profileImageDir;
     private String cvFileName;
@@ -106,8 +106,8 @@ public class EditProfileFragment extends Fragment {
                         @Override
                         public void onResponse(String response) {
 
-                            Toast.makeText(getActivity().getApplicationContext(),
-                                    response, Toast.LENGTH_LONG).show();
+//                            Toast.makeText(getActivity().getApplicationContext(),
+//                                    response, Toast.LENGTH_LONG).show();
                         }
                     },
 
@@ -216,7 +216,7 @@ public class EditProfileFragment extends Fragment {
 
     public void updateUser() {
 
-        userDeatilsMap2 = db.getUserDetails();
+        userDetailsMap2 = db.getUserDetails();
         mEditText = (EditText) rootView.findViewById(R.id.nameText);
         String name = mEditText.getText().toString();
         String[] names = name.split(" ");
@@ -229,7 +229,7 @@ public class EditProfileFragment extends Fragment {
         mEditText = (TextView) rootView.findViewById(R.id.cityText);
 
         userDetailsMap.put("city", mEditText.getText().toString());
-        for (Map.Entry<String, String> entry : userDeatilsMap2.entrySet()){
+        for (Map.Entry<String, String> entry : userDetailsMap2.entrySet()){
             if(entry.getKey().equals("profile_image_path")){
                 userDetailsMap.put("profile_image_path", entry.getValue());
             }
@@ -252,7 +252,5 @@ public class EditProfileFragment extends Fragment {
         }catch(Exception e) {
             Toast.makeText(getActivity().getApplicationContext(),"Error Retrieving Profile Photo", Toast.LENGTH_LONG).show();
         }
-
-
     }
 }
