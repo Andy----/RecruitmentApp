@@ -126,7 +126,7 @@ public class EditProfileFragment extends Fragment {
         else{
             Toast.makeText(getActivity(), "You need to record a video", Toast.LENGTH_LONG).show();
         }
-        if(myImageFile.isFile() == true) {
+        if(myImageFile != null) {
             MultipartRequest requestImage = new MultipartRequest(AppConfig.URL_UPDATE_IMAGE, myImageFile, userDetailsMap,
                     new Response.Listener<String>() {
 
