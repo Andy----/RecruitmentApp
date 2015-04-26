@@ -216,17 +216,55 @@ public class EditProfileFragment extends Fragment {
 
     public void updateUser() {
 
+        boolean go = true;
         userDetailsMap2 = db.getUserDetails();
         mEditText = (EditText) rootView.findViewById(R.id.nameText);
         String name = mEditText.getText().toString();
-        String[] names = name.split(" ");
-        String firstName = names[0];
-        String sureName = names[1];
-        userDetailsMap.put("first_name",firstName);
-        userDetailsMap.put("last_name", sureName);
+        if(name != "") {
+            String[] names = name.split(" ");
+            if (names.length == 2) {
+                String firstName = names[0].substring(0, 1).toUpperCase() + names[0].substring(1);
+                String surName = names[1].substring(0, 1).toUpperCase() + names[1].substring(1);
+                mEditText.setText(firstName + " " + surName);
+                userDetailsMap.put("first_name", firstName);
+                userDetailsMap.put("last_name", surName);
+            } else {
+                mEditText.setText("");
+                Toast.makeText(getActivity().getApplicationContext(),
+                        "Enter your First name, then a space followed by your Surname, if you have a double barrel surname please hyphenate it",
+                        Toast.LENGTH_LONG).show();
+                go = false;
+            }
+        }else{
+            Toast.makeText(getActivity().getApplicationContext(),
+                    "Please enter your full name",
+                    Toast.LENGTH_LONG).show();
+            go = false;
+        }
+        
         mEditText = (TextView) rootView.findViewById(R.id.emailText);
         userDetailsMap.put("email", mEditText.getText().toString());
         mEditText = (TextView) rootView.findViewById(R.id.cityText);
+        String city = mEditText.getText().toString();
+        if(city != "") {
+            String[] cityMistake = city.split(" ");
+            if (cityMistake.length == 1 && !city.isEmpty()) {
+                city = cityMistake[0].substring(0, 1).toUpperCase() + cityMistake[0].substring(1);
+                mEditText.setText(city);
+                userDetailsMap.put("city", city);
+            } else {
+                mEditText.setText("");
+                Toast.makeText(getActivity().getApplicationContext(),
+                        "If your city is more than 1 word please hyphenate it",
+                        Toast.LENGTH_LONG).show();
+                go = false;
+            }
+        }else{
+            Toast.makeText(getActivity().getApplicationContext(),
+                    "Please enter the name of your city",
+                    Toast.LENGTH_LONG).show();
+            go = false;
+        }
 
         userDetailsMap.put("city", mEditText.getText().toString());
         for (Map.Entry<String, String> entry : userDetailsMap2.entrySet()){
@@ -240,6 +278,8 @@ public class EditProfileFragment extends Fragment {
         }
         db.updateUserDetails(userDetailsMap);
         myCVFile  = new File(getActivity().getExternalCacheDir() + "/RecruitSwift" + File.separator + cvFileName);
+
+        if(go == true)
         saveDetails();
     }
 
