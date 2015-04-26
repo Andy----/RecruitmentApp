@@ -14,7 +14,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="350dp"
+            android:layout_height="340dp"
             android:gravity="center"
             tools:ignore="HardcodedText"
             android:background="@drawable/profile_background">
@@ -67,8 +67,7 @@
                     android:textColor="@android:color/white"
                     android:layout_row="1"
                     android:layout_column="0"
-                    android:padding="10dp"
-                     />
+                    android:paddingLeft="1dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -91,7 +90,7 @@
                     android:textColor="@android:color/white"
                     android:layout_row="3"
                     android:layout_column="0"
-                    android:padding="10dp" />
+                    android:paddingLeft="1dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -111,11 +110,12 @@
                     android:layout_height="match_parent"
                     android:id="@+id/viewVideoButton"
                     android:text=" View introduction video"
-                    android:textColor="#000"
+                    android:textColor="@color/white"
+                    android:background="@color/light_blue"
                     android:textSize="15sp"
                     android:onClick="buttonOnClickView"
                     android:drawableLeft="@drawable/add_video_icon"
-                    android:padding="15dp"
+                    android:padding="10dp"
                     android:layout_gravity="center_vertical"
                     android:paddingBottom="5dp"
                     android:layout_row="4"
