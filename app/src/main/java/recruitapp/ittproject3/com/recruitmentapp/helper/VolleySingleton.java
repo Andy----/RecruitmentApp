@@ -3,6 +3,8 @@ package recruitapp.ittproject3.com.recruitmentapp.helper;
 /**
  * Created by Cloud on 13/04/2015.
  */
+import android.app.Application;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v4.util.LruCache;
 
@@ -10,7 +12,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 
-public class VolleySingleton {
+public class VolleySingleton extends Application {
     private static VolleySingleton mInstance = null;
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
@@ -18,6 +20,7 @@ public class VolleySingleton {
 
 
     private VolleySingleton(){
+
         mRequestQueue = Volley.newRequestQueue(VolleyApplication.getAppContext());
 
         mImageLoader = new ImageLoader(this.mRequestQueue, mImageCache  = new ImageLoader.ImageCache(){

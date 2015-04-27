@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -45,7 +44,6 @@ public class EditProfileFragment extends Fragment {
     private ImageLoader mImageLoader;
     private ImageLoader mImageLoaderFlush;
     private Map<String, String> userDetailsMap;
-    private Map<String, String> userDetailsMap2;
     private SQLiteHandler db;
     private String profileImageDir;
     private String cvFileName;
@@ -120,19 +118,24 @@ public class EditProfileFragment extends Fragment {
 
                         @Override
                         public void onResponse(String response) {
-                            if(response != null)
-                            Toast.makeText(getActivity(),
-                                    response.toString(), Toast.LENGTH_LONG).show();
+                            try {
+                                Toast.makeText(getActivity(),
+                                        response.toString(), Toast.LENGTH_LONG).show();
+                            }catch (NullPointerException  e) {
+
+                            }
                         }
                     },
 
                     new Response.ErrorListener() {
-
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            if(error != null)
+                            try {
                             Toast.makeText(getActivity().getApplicationContext(),
                                     error.toString(), Toast.LENGTH_LONG).show();
+                            }catch (NullPointerException  e) {
+                                System.out.println(e);
+                            }
                         }
                     }
             );
@@ -145,12 +148,14 @@ public class EditProfileFragment extends Fragment {
         if(myImageFile.isFile()) {
             MultipartRequest requestImage = new MultipartRequest(AppConfig.URL_UPDATE_IMAGE, myImageFile, userDetailsMap,
                     new Response.Listener<String>() {
-
                         @Override
                         public void onResponse(String response) {
-                            if(response != null)
-                            Toast.makeText(getActivity().getApplicationContext(),
-                                    response.toString(), Toast.LENGTH_LONG).show();
+                            try {
+                                Toast.makeText(getActivity().getApplicationContext(),
+                                        response.toString(), Toast.LENGTH_LONG).show();
+                            }catch (NullPointerException  e) {
+                                System.out.println(e);
+                            }
                         }
                     },
 
@@ -158,9 +163,12 @@ public class EditProfileFragment extends Fragment {
 
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            if(error != null)
+                            try {
                             Toast.makeText(getActivity().getApplicationContext(),
                                     error.toString(), Toast.LENGTH_LONG).show();
+                            }catch (NullPointerException  e) {
+                                System.out.println(e);
+                            }
                         }
                     }
             );
@@ -177,9 +185,12 @@ public class EditProfileFragment extends Fragment {
 
                         @Override
                         public void onResponse(String response) {
-                            if(response != null)
-                            Toast.makeText(getActivity().getApplicationContext(),
-                                    response.toString(), Toast.LENGTH_LONG).show();
+                            try {
+                                Toast.makeText(getActivity().getApplicationContext(),
+                                        response, Toast.LENGTH_LONG).show();
+                            }catch (NullPointerException  e) {
+                                System.out.println(e);
+                            }
                         }
                     },
 
@@ -187,9 +198,12 @@ public class EditProfileFragment extends Fragment {
 
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            if(error != null)
+                            try {
                             Toast.makeText(getActivity().getApplicationContext(),
                                     error.toString(), Toast.LENGTH_LONG).show();
+                            }catch (NullPointerException  e) {
+                                System.out.println(e);
+                            }
                         }
                     }
             );
@@ -238,7 +252,7 @@ public class EditProfileFragment extends Fragment {
     public void updateUser() {
 
         boolean go = true;
-        userDetailsMap2 = db.getUserDetails();
+        userDetailsMap = db.getUserDetails();
         mEditText = (EditText) rootView.findViewById(R.id.nameText);
         String name = mEditText.getText().toString();
         if(name != "") {
@@ -288,7 +302,7 @@ public class EditProfileFragment extends Fragment {
         }
 
         userDetailsMap.put("city", mEditText.getText().toString());
-        for (Map.Entry<String, String> entry : userDetailsMap2.entrySet()){
+        for (Map.Entry<String, String> entry : userDetailsMap.entrySet()){
             if(entry.getKey().equals("profile_image_path")){
                 userDetailsMap.put("profile_image_path", entry.getValue());
             }

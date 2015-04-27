@@ -234,6 +234,7 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
         if (takeVideoIntent.resolveActivity(getPackageManager()) != null) {
 
             Uri videoUri = Uri.fromFile(videoFile);
+            takeVideoIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 10);
             takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri);
             startActivityForResult(takeVideoIntent, RECORDED_VIDEO);
         }
