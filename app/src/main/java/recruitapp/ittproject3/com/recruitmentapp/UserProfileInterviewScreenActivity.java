@@ -264,7 +264,7 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         profileImage = (ImageView) findViewById(R.id.profileImage);
-        imageDir = getExternalCacheDir() + File.separator + "RecruitSwift" + File.separator + user + File.separator + "profile.jpg" + File.separator;
+        imageDir = getExternalCacheDir() + File.separator + "RecruitSwift" + File.separator + user + File.separator + "profile.jpg";
 
         if (resultCode == RESULT_OK) {
             if (requestCode == CAMERA_PHOTO) {
@@ -404,6 +404,7 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
 
     public Bitmap rotateImage(Bitmap thumbnail, String imageDir){
 
+        System.out.println("im in here");
         try {
             thumbnail = ShrinkBitmap(imageDir, 400, 400);
             ExifInterface exif = new ExifInterface(imageDir);

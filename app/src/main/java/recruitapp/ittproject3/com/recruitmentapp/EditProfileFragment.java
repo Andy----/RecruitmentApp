@@ -119,9 +119,9 @@ public class EditProfileFragment extends Fragment {
 
                         @Override
                         public void onResponse(String response) {
-
-//                            Toast.makeText(getActivity().getApplicationContext(),
-//                                    response, Toast.LENGTH_LONG).show();
+                            if(response != null)
+                            Toast.makeText(getActivity().getApplicationContext(),
+                                    response, Toast.LENGTH_LONG).show();
                         }
                     },
 
@@ -129,7 +129,7 @@ public class EditProfileFragment extends Fragment {
 
                         @Override
                         public void onErrorResponse(VolleyError error) {
-
+                            if(error != null)
                             Toast.makeText(getActivity().getApplicationContext(),
                                     error.toString(), Toast.LENGTH_LONG).show();
                         }
@@ -142,15 +142,14 @@ public class EditProfileFragment extends Fragment {
         }
 
         if(myImageFile.isFile()) {
-//            System.out.println(myImageFile.toString());
             MultipartRequest requestImage = new MultipartRequest(AppConfig.URL_UPDATE_IMAGE, myImageFile, userDetailsMap,
                     new Response.Listener<String>() {
 
                         @Override
                         public void onResponse(String response) {
-
-//                            Toast.makeText(getActivity().getApplicationContext(),
-//                                    response, Toast.LENGTH_LONG).show();
+                            if(response != null)
+                            Toast.makeText(getActivity().getApplicationContext(),
+                                    response, Toast.LENGTH_LONG).show();
                         }
                     },
 
@@ -158,7 +157,7 @@ public class EditProfileFragment extends Fragment {
 
                         @Override
                         public void onErrorResponse(VolleyError error) {
-
+                            if(error != null)
                             Toast.makeText(getActivity().getApplicationContext(),
                                     error.toString(), Toast.LENGTH_LONG).show();
                         }
@@ -168,7 +167,7 @@ public class EditProfileFragment extends Fragment {
         }else if(profileImageExists.equals("null")){
             Toast.makeText(getActivity(), "You need to choose a profile image", Toast.LENGTH_LONG).show();
         }else{
-//            System.out.println(profileImageExists);
+
         }
 
         if(myCVFile.isFile()) {
@@ -177,9 +176,9 @@ public class EditProfileFragment extends Fragment {
 
                         @Override
                         public void onResponse(String response) {
-
-//                            Toast.makeText(getActivity().getApplicationContext(),
-//                                    response, Toast.LENGTH_LONG).show();
+                            if(response != null)
+                            Toast.makeText(getActivity().getApplicationContext(),
+                                    response, Toast.LENGTH_LONG).show();
                         }
                     },
 
@@ -187,7 +186,7 @@ public class EditProfileFragment extends Fragment {
 
                         @Override
                         public void onErrorResponse(VolleyError error) {
-
+                            if(error != null)
                             Toast.makeText(getActivity().getApplicationContext(),
                                     error.toString(), Toast.LENGTH_LONG).show();
                         }
