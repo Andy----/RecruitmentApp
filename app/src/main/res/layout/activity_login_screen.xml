@@ -56,7 +56,7 @@
             android:layout_height="wrap_content"
             android:text="LOGIN"
             android:textColor="@color/white"
-            android:background="@color/light_blue"
+            android:background="@drawable/ripple"
             android:layout_below="@+id/passwordInput"
             android:layout_marginTop="40dp"
             android:onClick="OnClick"/>

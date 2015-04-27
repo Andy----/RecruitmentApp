@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -120,8 +121,8 @@ public class EditProfileFragment extends Fragment {
                         @Override
                         public void onResponse(String response) {
                             if(response != null)
-                            Toast.makeText(getActivity().getApplicationContext(),
-                                    response, Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(),
+                                    response.toString(), Toast.LENGTH_LONG).show();
                         }
                     },
 
@@ -149,7 +150,7 @@ public class EditProfileFragment extends Fragment {
                         public void onResponse(String response) {
                             if(response != null)
                             Toast.makeText(getActivity().getApplicationContext(),
-                                    response, Toast.LENGTH_LONG).show();
+                                    response.toString(), Toast.LENGTH_LONG).show();
                         }
                     },
 
@@ -178,7 +179,7 @@ public class EditProfileFragment extends Fragment {
                         public void onResponse(String response) {
                             if(response != null)
                             Toast.makeText(getActivity().getApplicationContext(),
-                                    response, Toast.LENGTH_LONG).show();
+                                    response.toString(), Toast.LENGTH_LONG).show();
                         }
                     },
 
@@ -302,6 +303,8 @@ public class EditProfileFragment extends Fragment {
         if(go == true)
         saveDetails();
     }
+
+
 
     @Override
     public void onResume(){

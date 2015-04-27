@@ -113,11 +113,12 @@ public class VideoPlayerActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+        System.out.println(id);
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (item.getItemId() == R.id.action_close) {
+            finish();
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }
