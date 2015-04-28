@@ -271,6 +271,7 @@ public class LoginScreenActivity extends Activity {
             Log.i(TAG, "App version changed.");
             return "";
         }
+        Log.i(TAG, registrationId);
         return registrationId;
     }
 
