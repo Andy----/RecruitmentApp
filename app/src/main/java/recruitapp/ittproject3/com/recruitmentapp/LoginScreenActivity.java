@@ -265,7 +265,8 @@ public class LoginScreenActivity extends Activity {
         // since the existing registration ID is not guaranteed to work with
         // the new app version.
         int registeredVersion = prefs.getInt(PROPERTY_APP_VERSION, Integer.MIN_VALUE);
-        int currentVersion = getAppVersion(context);
+//        int currentVersion = getAppVersion(context);
+        int currentVersion = 1;
         if (registeredVersion != currentVersion) {
             Log.i(TAG, "App version changed.");
             return "";
