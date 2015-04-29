@@ -1,6 +1,7 @@
 package recruitapp.ittproject3.com.recruitmentapp.helper;
 
 import android.app.IntentService;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -66,7 +67,7 @@ public class GcmIntentService extends IntentService {
                 }
                 Log.i(TAG, "Completed work @ " + SystemClock.elapsedRealtime());
                 // Post notification of received message.
-                sendNotification("Received: " + extras.toString());
+                sendNotification(extras.get("message").toString());
                 Log.i(TAG, "Received: " + extras.toString());
             }
         }
@@ -87,11 +88,11 @@ public class GcmIntentService extends IntentService {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.nav_logo)
-                        .setContentTitle("GCM Notification")
+                        .setContentTitle("JobSwift")
+                        .setDefaults(Notification.DEFAULT_ALL)
                         .setStyle(new NotificationCompat.BigTextStyle()
-                                .bigText(msg))
+                         .bigText(msg))
                         .setContentText(msg);
-        Log.d(TAG, "MESSAGEMESSAGEMESSAGEMESSAGEMESSAGEMESSAGE" + " " +msg);
         mBuilder.setContentIntent(contentIntent);
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
     }

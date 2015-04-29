@@ -66,6 +66,7 @@ public class LoginScreenActivity extends Activity {
     private SessionManager session;
     private SQLiteHandler db;
     private JSONObject userDetailsObject;
+    private String currentUserEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,24 +130,13 @@ public class LoginScreenActivity extends Activity {
             }
 
         });
+
     }
 
     /**
      * function to verify login details in mysql db
      * */
     private void checkLogin(final String email, final String password) {
-
-        if (checkPlayServices()) {
-            gcm = GoogleCloudMessaging.getInstance(this);
-            regid = getRegistrationId(context);
-
-            if (regid.isEmpty()) {
-                registerInBackground();
-            }
-        } else {
-            Log.i(TAG, "No valid Google Play Services APK found.");
-        }
-
         // Tag used to cancel the request
         String tag_string_req = "req_login";
 
@@ -156,7 +146,6 @@ public class LoginScreenActivity extends Activity {
         Map<String, String> postParams = new HashMap<String, String>();
         postParams.put("email", email);
         postParams.put("password", password);
-        postParams.put("gcmid", regid);
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Method.POST, AppConfig.URL_LOGIN, new JSONObject(postParams),
                 new Response.Listener<JSONObject>() {
@@ -175,11 +164,12 @@ public class LoginScreenActivity extends Activity {
                                 // user successfully logged in
                                 // Create login session
                                 session.setLogin(true);
-
                                 db.addUser(response.getLong("app_id"), response.getString("first_name"), response.getString("last_name"), response.getString("email"),
                                         response.getString("city"), response.getString("cvFilePath"), response.getString("profileImage"), response.getString("cvFileName"));
 
                                 userDetailsObject = new JSONObject(response.toString());
+
+                                startGCM();
 
                                 // Launch main activity
                                 Intent intent = new Intent(LoginScreenActivity.this, UserProfileInterviewScreenActivity.class);
@@ -217,6 +207,7 @@ public class LoginScreenActivity extends Activity {
 
         // Adding request to request queue
         VolleyApplication.getInstance().addToRequestQueue(jsonObjReq, tag_string_req);
+
     }
 
     private void showDialog() {
@@ -230,6 +221,18 @@ public class LoginScreenActivity extends Activity {
     }
 
 
+    private void startGCM() {
+        if (checkPlayServices()) {
+            gcm = GoogleCloudMessaging.getInstance(this);
+            regid = getRegistrationId(context);
+
+            if (regid.isEmpty()) {
+                registerInBackground();
+            }
+        } else {
+            Log.i(TAG, "No valid Google Play Services APK found.");
+        }
+    }
 
 
     private boolean checkPlayServices() {
@@ -363,7 +366,53 @@ public class LoginScreenActivity extends Activity {
      * using the 'from' address in the message.
      */
     private void sendRegistrationIdToBackend() {
-        // Your implementation here.
+         /*
+        * If logged in, send the device GCM id to the web server
+         */
+
+        if (db.getCurrentUserEmail() != null) {
+            Map<String, String> postParams = new HashMap<String, String>();
+            postParams.put("email", db.getCurrentUserEmail());
+            postParams.put("gcmid", regid);
+
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Method.POST, AppConfig.URL_SEND_GCM, new JSONObject(postParams),
+                    new Response.Listener<JSONObject>() {
+
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Log.d(TAG, response.toString());
+                            pDialog.setMessage(response.toString());
+                            hideDialog();
+
+                            try {
+                                boolean error = response.getBoolean("error");
+                            } catch (JSONException e) {
+                                // JSON error
+                                e.printStackTrace();
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    VolleyLog.d(TAG, "Error: " + error.getMessage());
+                    hideDialog();
+                }
+            }) {
+
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    HashMap<String, String> headers = new HashMap<String, String>();
+                    headers.put("Content-Type", "application/json");
+                    headers.put("charset", "utf-8");
+                    return headers;
+                }
+
+            };
+
+            // Adding request to request queue
+            VolleyApplication.getInstance().addToRequestQueue(jsonObjReq);
+        }
     }
 
     /**
