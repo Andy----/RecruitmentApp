@@ -39,5 +39,6 @@ dependencies {
         exclude module: 'httpclient'
     }
     compile 'org.apache.httpcomponents:httpclient-android:4.3.5'
+    compile "com.google.android.gms:play-services:3.1.+"
 }
 

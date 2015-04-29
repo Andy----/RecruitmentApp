@@ -18,6 +18,9 @@ public class AppConfig {
     // Server user login url
     public static final String URL_LOGIN = URL + "/androidlogin";
 
+    // Server user login url
+    public static final String URL_SEND_GCM = URL + "/sendgcm";
+
     // Server register URL
     public static final String URL_REGISTER = URL + "/androidregister";
 
