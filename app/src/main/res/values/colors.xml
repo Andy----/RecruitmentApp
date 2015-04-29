@@ -8,6 +8,7 @@
     <item name="light_blue" type="color">#D9226bb3</item>
     <item name="dark_background_highlight" type="color">#40444A</item>
 
+
     <color name="bg_login">#26ae90</color>
     <color name="bg_main">#428bca</color>
     <color name="white">#ffffff</color>

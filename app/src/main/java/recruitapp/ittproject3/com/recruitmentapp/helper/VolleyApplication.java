@@ -9,7 +9,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
 /**
- * Created by Cloud on 01/04/2015.
+ * This class is used for network request
  */
 public class VolleyApplication extends Application {
 
@@ -19,6 +19,7 @@ public class VolleyApplication extends Application {
 
     private RequestQueue mRequestQueue;
     private static Context mAppContext;
+
 
     @Override
     public void onCreate() {

@@ -21,7 +21,7 @@ public class VolleySingleton extends Application {
 
     private VolleySingleton(){
 
-        mRequestQueue = Volley.newRequestQueue(VolleyApplication.getAppContext());
+        mRequestQueue = Volley.newRequestQueue(VolleyApplication.getInstance());
 
         mImageLoader = new ImageLoader(this.mRequestQueue, mImageCache  = new ImageLoader.ImageCache(){
             private final LruCache<String, Bitmap> mCache = new LruCache<String, Bitmap>(10);

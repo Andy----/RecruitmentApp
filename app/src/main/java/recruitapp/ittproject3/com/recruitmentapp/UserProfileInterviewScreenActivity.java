@@ -234,8 +234,10 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
         if (takeVideoIntent.resolveActivity(getPackageManager()) != null) {
 
             Uri videoUri = Uri.fromFile(videoFile);
-            takeVideoIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 10);
+            takeVideoIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
+            takeVideoIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 60);
             takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri);
+
             startActivityForResult(takeVideoIntent, RECORDED_VIDEO);
         }
     }
@@ -405,7 +407,7 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
 
     public Bitmap rotateImage(Bitmap thumbnail, String imageDir){
 
-        System.out.println("im in here");
+
         try {
             thumbnail = ShrinkBitmap(imageDir, 400, 400);
             ExifInterface exif = new ExifInterface(imageDir);

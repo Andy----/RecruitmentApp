@@ -17,9 +17,12 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyLog;
 
+/**
+ * This class is used for to convert media files into a
+ * ByteArray before being sent via a Volley request
+ */
 public class MultipartRequest extends Request<String> {
 
-// private MultipartEntity entity = new MultipartEntity();
 
     MultipartEntityBuilder entity = MultipartEntityBuilder.create();
     HttpEntity httpentity;
@@ -41,10 +44,13 @@ public class MultipartRequest extends Request<String> {
         buildMultipartEntity();
     }
 
+    // addStringBody method can be used to add a key and value to the entity
     public void addStringBody(String param, String value) {
+
         mStringPart.put(param, value);
     }
 
+    // buildMultipartEntity adds the file key, the file body and a map contain keys and values
     private void buildMultipartEntity() {
         entity.addPart(FILE_PART_NAME, new FileBody(mFilePart));
         for (Map.Entry<String, String> entry : mStringPart.entrySet()) {
@@ -54,9 +60,12 @@ public class MultipartRequest extends Request<String> {
 
     @Override
     public String getBodyContentType() {
+
         return httpentity.getContentType().getValue();
     }
 
+    // getBody method writes the contents of the entity created in buildMultipartEntity to a byteStream
+    // and returns the stream
     @Override
     public byte[] getBody() throws AuthFailureError {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -69,13 +78,16 @@ public class MultipartRequest extends Request<String> {
         return bos.toByteArray();
     }
 
+    // This is th response returned to volley after a successful response has been returned from the server
     @Override
     protected Response<String> parseNetworkResponse(NetworkResponse response) {
         return Response.success("Uploaded", getCacheEntry());
     }
 
+
     @Override
     protected void deliverResponse(String response) {
+
         mListener.onResponse(response);
     }
 

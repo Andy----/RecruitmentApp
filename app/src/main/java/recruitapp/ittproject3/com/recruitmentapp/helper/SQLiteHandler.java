@@ -164,6 +164,9 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         return user;
     }
 
+    /**
+     * update user data in the datbase
+     * */
     public void updateUserDetails(Map<String, String> user) {
 
             SQLiteDatabase db = this.getWritableDatabase();
