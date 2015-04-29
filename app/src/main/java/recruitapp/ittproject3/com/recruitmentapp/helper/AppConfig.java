@@ -9,14 +9,17 @@ import android.content.Context;
 public class AppConfig {
 
 
-    private static final String URLA = "http://192.168.0.27:9000";
+    private static final String URL = "http://192.168.0.27:9000";
     private static final String URLC = "http://192.168.1.2:9000";
     public static final String URLB = "http://recruit.x64.me";
-    private static final String URL = "http://johnkiernan.ie";
+    private static final String URLA = "http://johnkiernan.ie";
 
 
     // Server user login url
     public static final String URL_LOGIN = URL + "/androidlogin";
+
+    // Server user login url
+    public static final String URL_SEND_GCM = URL + "/sendgcm";
 
     // Server register URL
     public static final String URL_REGISTER = URL + "/androidregister";
