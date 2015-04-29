@@ -458,7 +458,6 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
         session.setLogin(false);
 
         db.deleteTable("user");
-        db.deleteTable("jobapplication");
         db.deleteTable("questiontable");
 
         // Launching the login activity

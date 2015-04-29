@@ -39,10 +39,10 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_LOGIN_TABLE = "CREATE TABLE user(app_id LONG PRIMARY KEY, first_name VARCHAR, last_name VARCHAR, email VARCHAR, city VARCHAR, cv_filePath VARCHAR, profile_image_path VARCHAR, cv_fileName VARCHAR);";
-        String CREATE_JOB_APPLICATION_TABLE = "CREATE TABLE jobapplication (app_id LONG PRIMARY KEY, job_id LONG, job_title VARCHAR, job_description TEXT, job_location VARCHAR, status VARCHAR);";
-        String CREATE_QUESTION_TABLE = "CREATE TABLE questiontable (question_id LONG PRIMARY KEY, question VARCHAR, job_id LONG, FOREIGN KEY(job_id) REFERENCES joblisting(job_id));";
+//        String CREATE_JOB_APPLICATION_TABLE = "CREATE TABLE jobapplication (app_id LONG PRIMARY KEY, job_id LONG, job_title VARCHAR, job_description TEXT, job_location VARCHAR, status VARCHAR);";
+        String CREATE_QUESTION_TABLE = "CREATE TABLE questiontable (question_id LONG PRIMARY KEY, question VARCHAR, job_id LONG);";
         db.execSQL(CREATE_LOGIN_TABLE);
-        db.execSQL(CREATE_JOB_APPLICATION_TABLE);
+//        db.execSQL(CREATE_JOB_APPLICATION_TABLE);
         db.execSQL(CREATE_QUESTION_TABLE);
 
         Log.d(TAG, "Database tables created");
@@ -53,7 +53,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop older table if existed
         db.execSQL("DROP TABLE IF EXISTS user");
-        db.execSQL("DROP TABLE IF EXISTS jobapplication");
+//        db.execSQL("DROP TABLE IF EXISTS jobapplication");
         db.execSQL("DROP TABLE IF EXISTS questiontable");
 
         // Create tables again
@@ -86,23 +86,23 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     /**
      * Storing user's job applications in database
      * */
-    public void addJobApplication (Long app_id, Long job_id, String job_title, String job_description, String job_location, String status) {
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        ContentValues values = new ContentValues();
-        values.put("app_id", app_id);
-        values.put("job_id", job_id);
-        values.put("job_title", job_title);
-        values.put("job_description", job_description);
-        values.put("job_location", job_location);
-        values.put("status", status);
-
-        // Inserting Row
-        db.insert("jobapplication", null, values);
-        db.close(); // Closing database connection
-
-        Log.d(TAG, "New job application inserted into sqlite: " + app_id );
-    }
+//    public void addJobApplication (Long app_id, Long job_id, String job_title, String job_description, String job_location, String status) {
+//        SQLiteDatabase db = this.getWritableDatabase();
+//
+//        ContentValues values = new ContentValues();
+//        values.put("app_id", app_id);
+//        values.put("job_id", job_id);
+//        values.put("job_title", job_title);
+//        values.put("job_description", job_description);
+//        values.put("job_location", job_location);
+//        values.put("status", status);
+//
+//        // Inserting Row
+//        db.insert("jobapplication", null, values);
+//        db.close(); // Closing database connection
+//
+//        Log.d(TAG, "New job application inserted into sqlite: " + app_id );
+//    }
 
     /**
      * Storing interview questions in database
