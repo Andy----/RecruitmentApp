@@ -228,6 +228,8 @@ public class LoginScreenActivity extends Activity {
 
             if (regid.isEmpty()) {
                 registerInBackground();
+            } else {
+                sendRegistrationIdToBackend();
             }
         } else {
             Log.i(TAG, "No valid Google Play Services APK found.");
