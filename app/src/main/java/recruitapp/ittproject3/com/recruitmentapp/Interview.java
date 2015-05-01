@@ -99,6 +99,11 @@ public class Interview extends Activity {
             });
     }
 
+    /*
+    * Private inner asynctask class
+    * displays a 30 second countdown timer with the current question on screen
+    * Calls the video recording activity when finished
+     */
     private class InterviewQuestionSyncTask extends AsyncTask<InterviewTaskParams, String, InterviewTaskParams> {
 
         @Override
@@ -116,7 +121,7 @@ public class Interview extends Activity {
         @Override
         protected InterviewTaskParams doInBackground(InterviewTaskParams... params) {
 
-            for (int j = 10; j >= 0; j--) {
+            for (int j = 30; j >= 0; j--) {
                 try {
                     Thread.sleep(1000);
                     publishProgress(Integer.toString(params[0].questionNumber), params[0].question, Integer.toString(j));
