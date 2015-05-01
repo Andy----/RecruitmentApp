@@ -198,8 +198,11 @@ public class MediaRecorderActivity extends Activity {
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
         mediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
 
+        // Set the output of video to WebM
+//        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.WEBM);
+//        mediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.VP8);
+//        mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.VORBIS);
         mediaRecorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_LOW));
-
 
         mediaRecorder.setOutputFile(getExternalCacheDir() + "/RecruitSwift" + fileName);
         mediaRecorder.setOrientationHint(270);
