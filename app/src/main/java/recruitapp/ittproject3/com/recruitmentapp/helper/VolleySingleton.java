@@ -1,7 +1,7 @@
 package recruitapp.ittproject3.com.recruitmentapp.helper;
 
 /**
- * Created by Cloud on 13/04/2015.
+ * This class is used for displaying the profile picture
  */
 import android.app.Application;
 import android.content.Context;
@@ -23,6 +23,7 @@ public class VolleySingleton extends Application {
 
         mRequestQueue = Volley.newRequestQueue(VolleyApplication.getInstance());
 
+        // The modified Imageloader we used for storing the profile picture in cache
         mImageLoader = new ImageLoader(this.mRequestQueue, mImageCache  = new ImageLoader.ImageCache(){
             private final LruCache<String, Bitmap> mCache = new LruCache<String, Bitmap>(10);
             public void flushLruCache(){ mCache.evictAll();};
@@ -45,6 +46,8 @@ public class VolleySingleton extends Application {
         return mInstance;
     }
 
+
+    // Method used to empty cache
     public ImageLoader evictAllImages() {
         if (mImageCache != null) {
             mImageCache.flushLruCache();

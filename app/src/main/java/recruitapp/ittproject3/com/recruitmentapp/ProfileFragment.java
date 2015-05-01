@@ -31,6 +31,7 @@ public class ProfileFragment extends Fragment {
     private static final String ARG_SECTION_NUMBER = "section_number";
     private TextView mTextView;
     private View rootView;
+    // This appears to be unused but is
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
     private  NetworkImageView avatar;
@@ -76,6 +77,7 @@ public class ProfileFragment extends Fragment {
         }
     }
 
+    // Set the fields in the edit profile fragment using the data in the SQLite DB
     public void setUserDetails() {
 
         String first_name ="";
@@ -108,7 +110,9 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
+        // Getting the profile picture
         avatar = (NetworkImageView)getActivity().findViewById(R.id.profileImage);
+        // Displaying the profile picture
         avatar.setImageUrl(AppConfig.IMAGE_URL  + profileImageDir ,mImageLoader);
 
     }

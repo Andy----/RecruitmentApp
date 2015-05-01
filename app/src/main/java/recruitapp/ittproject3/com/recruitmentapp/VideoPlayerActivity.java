@@ -25,6 +25,7 @@ public class VideoPlayerActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_player);
         db = new SQLiteHandler(getApplicationContext());
+        // Get the current user
         userDeatilsMap = db.getUserDetails();
         for (Map.Entry<String, String> entry : userDeatilsMap.entrySet()) {
             if (entry.getKey().equals("email")) {
@@ -42,6 +43,7 @@ public class VideoPlayerActivity extends ActionBarActivity {
         MediaController mediaController = new
         MediaController(this);
         mediaController.setAnchorView(videoView);
+        // Add media controls
         videoView.setMediaController(mediaController);
         videoView.start();
     }

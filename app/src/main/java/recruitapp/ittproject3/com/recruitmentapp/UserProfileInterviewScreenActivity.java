@@ -84,6 +84,7 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
 
         db = new SQLiteHandler(getApplicationContext());
 
+        // Get current user
         userDeatilsMap = db.getUserDetails();
         for (Map.Entry<String, String> entry : userDeatilsMap.entrySet()) {
             if (entry.getKey().equals("email")) {
@@ -122,6 +123,7 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
                 .commit();
     }
 
+    // Set the fragment titles
     public void onSectionAttached(int number) {
         switch (number) {
             default:
@@ -173,8 +175,10 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
         return super.onOptionsItemSelected(item);
     }
 
+    // Choose profile picture
     public void selectProfileImage(View v) {
 
+        // Set profile picture directory
         File newDir = new File(getExternalCacheDir(), "RecruitSwift"+ File.separator + user+ File.separator);
         if (!newDir.isDirectory())
             newDir.mkdirs();
@@ -188,6 +192,7 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
 
         final CharSequence[] options = {"Take Photo", "Choose from Gallery", "Cancel"};
 
+        // Dialog to choose photo option
         AlertDialog.Builder builder = new AlertDialog.Builder(UserProfileInterviewScreenActivity.this);
         builder.setTitle("Add Photo!");
         builder.setItems(options, new DialogInterface.OnClickListener() {
@@ -195,6 +200,7 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
             public void onClick(DialogInterface dialog, int item) {
                 if (options[item].equals("Take Photo")) {
 
+                    // Launch camera app
                     Intent takeProfileImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     if (takeProfileImage.resolveActivity(getPackageManager()) != null) {
 
@@ -204,11 +210,13 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
                     }
                 } else if (options[item].equals("Choose from Gallery")) {
 
+                    // Lunch gallery
                     Intent takeProfileImage = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     startActivityForResult(takeProfileImage, GALLERY_PHOTO);
 
                 } else if (options[item].equals("Cancel")) {
 
+                    // Close
                     dialog.dismiss();
                 }
             }
@@ -249,6 +257,7 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
         this.startActivity(intent);
     }
 
+    // open the file manger and select a file as your CV
     public void selectCV(View v) {
 
         File newDir = new File(getExternalCacheDir(),  File.separator +"RecruitSwift"+ File.separator + user + File.separator);
@@ -262,7 +271,7 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
         startActivityForResult(intent, CV_FILE);
     }
 
-
+    // Returned content from, video, profile picture and CV
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -338,6 +347,7 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
         }
     }
 
+    // Shrinks the size of the passed in Bitmap and passes it back
    public Bitmap ShrinkBitmap(String file, int width, int height) {
 
         BitmapFactory.Options bmpFactoryOptions = new BitmapFactory.Options();
@@ -359,6 +369,7 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
         return bitmap;
     }
 
+    // Saves the passed in Bitmap as a .jpg to the Application cache directory
     public void saveBitmap(Bitmap thumbnail){
 
         try {
@@ -375,6 +386,8 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
             e.printStackTrace();
         }
     }
+
+    // Saves the passed in Uri as a file based on the file type name that is passed in
     public void saveFile(Uri sourceUri, String name)
     {
         String sourceFilename= sourceUri.getPath();
@@ -404,9 +417,8 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
         }
     }
 
-
+    // Rotates the image to landscape orientation
     public Bitmap rotateImage(Bitmap thumbnail, String imageDir){
-
 
         try {
             thumbnail = ShrinkBitmap(imageDir, 400, 400);
@@ -427,6 +439,8 @@ public class UserProfileInterviewScreenActivity extends ActionBarActivity implem
         }
      return thumbnail;
     }
+
+    // Returns the full file name of the passed in Uri
     public String getFilename(Uri uri)
     {
 /*  Intent intent = getIntent();

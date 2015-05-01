@@ -40,8 +40,10 @@ public class EditProfileFragment extends Fragment {
     private File myVideoFile;
     private File myImageFile;
     private File myCVFile;
+    // This appears to be unused but is
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
+    // This appears to be unused but is
     private ImageLoader mImageLoaderFlush;
     private Map<String, String> userDetailsMap;
     private SQLiteHandler db;
@@ -77,6 +79,7 @@ public class EditProfileFragment extends Fragment {
         mRequestQueue = VolleySingleton.getInstance().getRequestQueue();
         mImageLoader = VolleySingleton.getInstance().getImageLoader();
         Button mButton = (Button) rootView.findViewById(R.id.saveBtn);
+        // onClick for save button
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,6 +105,7 @@ public class EditProfileFragment extends Fragment {
         String cvExists ="";
         String profileImageExists ="";
         userDetailsMap = db.getUserDetails();
+        // Get the latest file_paths
         for (Map.Entry<String, String> entry : userDetailsMap.entrySet()) {
             if (entry.getKey().equals("cv_filePath")) {
                 cvExists = entry.getValue();
@@ -112,6 +116,8 @@ public class EditProfileFragment extends Fragment {
                 System.out.println(entry.getValue());
             }
         }
+
+        // If there is a video file add it to the multipart request
         if(myVideoFile.isFile()) {
             MultipartRequest requestVideo = new MultipartRequest(AppConfig.URL_UPDATE, myVideoFile, userDetailsMap,
                     new Response.Listener<String>() {
@@ -139,12 +145,13 @@ public class EditProfileFragment extends Fragment {
                         }
                     }
             );
+            // Add the multipart request to a Volley request queue
             VolleyApplication.getInstance().getRequestQueue().add(requestVideo);
         }
         else{
             Toast.makeText(getActivity(), "You need to record a video", Toast.LENGTH_LONG).show();
         }
-
+        // If there is a profile image add it to the multipart request
         if(myImageFile.isFile()) {
             MultipartRequest requestImage = new MultipartRequest(AppConfig.URL_UPDATE_IMAGE, myImageFile, userDetailsMap,
                     new Response.Listener<String>() {
@@ -172,13 +179,14 @@ public class EditProfileFragment extends Fragment {
                         }
                     }
             );
+            // Add the multipart request to a Volley request queue
             VolleyApplication.getInstance().getRequestQueue().add(requestImage);
         }else if(profileImageExists.equals("null")){
             Toast.makeText(getActivity(), "You need to choose a profile image", Toast.LENGTH_LONG).show();
         }else{
 
         }
-
+        // If there is a CV file add it to the multipart request
         if(myCVFile.isFile()) {
             MultipartRequest requestCV = new MultipartRequest(AppConfig.URL_UPDATE_CV, myCVFile, userDetailsMap,
                     new Response.Listener<String>() {
@@ -207,16 +215,19 @@ public class EditProfileFragment extends Fragment {
                         }
                     }
             );
+            // Add the multipart request to a Volley request queue
             VolleyApplication.getInstance().getRequestQueue().add(requestCV);
         }else if(cvExists.equals("null")){
             Toast.makeText(getActivity(), "You need to choose a CV file", Toast.LENGTH_LONG).show();
         }else{
 
         }
+
+        // Empty the LruCache, refresh the profile picture
         mImageLoaderFlush = VolleySingleton.getInstance().evictAllImages();
     }
 
-
+    // Set the fields in the edit profile fragment using the data in the SQLite DB
     public void setUserDetails()  {
 
         String first_name ="";
@@ -249,14 +260,17 @@ public class EditProfileFragment extends Fragment {
         mEditText.setText(first_name + " " + last_name);
     }
 
+    //
     public void updateUser() {
 
+        // get the user details from the editText fields and add them to the map and SQLite DB
         boolean go = true;
         userDetailsMap = db.getUserDetails();
         mEditText = (EditText) rootView.findViewById(R.id.nameText);
         String name = mEditText.getText().toString();
         if(name != "") {
             String[] names = name.split(" ");
+            //Error checking for name
             if (names.length == 2) {
                 String firstName = names[0].substring(0, 1).toUpperCase() + names[0].substring(1);
                 String surName = names[1].substring(0, 1).toUpperCase() + names[1].substring(1);
@@ -283,6 +297,7 @@ public class EditProfileFragment extends Fragment {
         String city = mEditText.getText().toString();
         if(city != "") {
             String[] cityMistake = city.split(" ");
+            // Error checking for city
             if (cityMistake.length == 1 && !city.isEmpty()) {
                 city = cityMistake[0].substring(0, 1).toUpperCase() + cityMistake[0].substring(1);
                 mEditText.setText(city);
@@ -312,9 +327,10 @@ public class EditProfileFragment extends Fragment {
             }
         }
         db.updateUserDetails(userDetailsMap);
+        // Create a file for the CV
         myCVFile  = new File(getActivity().getExternalCacheDir() + File.separator + "RecruitSwift" + File.separator +user + File.separator  + cvFileName);
 
-        if(go == true)
+        if(go)
         saveDetails();
     }
 
@@ -323,8 +339,10 @@ public class EditProfileFragment extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
+        // Getting the profile picture
         NetworkImageView avatar = (NetworkImageView)getActivity().findViewById(R.id.profileImage);
         try {
+            // Displaying the profile picture
             avatar.setImageUrl(AppConfig.IMAGE_URL + profileImageDir ,mImageLoader);
         }catch(Exception e) {
             Toast.makeText(getActivity().getApplicationContext(),"Error Retrieving Profile Photo", Toast.LENGTH_LONG).show();
